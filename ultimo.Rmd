@@ -1,0 +1,86 @@
+---
+title: "4 analise"
+output: revealjs::revealjs_presentation 
+date: "2024-05-06"
+---
+
+```{r}
+
+knitr::opts_chunk$set(
+  message=FALSE, 
+  warning=FALSE,
+  fig.cap= "Testes Neurocognitivos")
+
+
+install.packages("ggtext")
+
+library(dplyr)
+library(ggplot2)
+library(readxl)
+library(tidyr)
+library(ggpubr)
+library(ggtext)
+
+
+getwd()
+
+list.files()
+
+data <- readxl::read_excel("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO.xlsx")
+
+data
+
+
+#######################################    BOX PLOT-Test.T  #############################################
+
+p1 <- data %>%  select(GROUP , BPA_CONC_POINTS,BPA_DIVID_POINTS, BPA_ALTERN_POINTS )
+
+p1 <- data %>% 
+  select(GROUP, BPA_CONC_POINTS, BPA_DIVID_POINTS, BPA_ALTERN_POINTS)
+
+
+     # Reorganizar os dados para o formato 'long' usando a função pivot_longer() do pacote tidyr
+
+p1_long <- tidyr::pivot_longer(p1, cols = -GROUP, names_to = "Variable", values_to = "Value")
+
+
+                                    #Gráfico facetado
+
+plot1 <- ggplot(p1_long, aes(x = GROUP, y = Value, fill = GROUP)) + 
+  
+  geom_boxplot(outlier.shape = NA, alpha = 0.5, width = 0.7, coef = 0, lwd = 0.4, color = "black") +
+  geom_jitter(aes(color = GROUP), size = 1.5, width = 0.15, alpha = 0.5) +
+  
+  labs(x = NULL, y = NULL) + 
+  
+  scale_fill_manual(values = c("#1a2887", "#799de4")) +  
+  scale_color_manual(values = c("#1a2887", "#799de4")) +
+  
+  facet_wrap(~ Variable, scales = "free_y", 
+             labeller = labeller(Variable = 
+                                   c(BPA_CONC_POINTS = "Conc Points",
+                                     BPA_DIVID_POINTS = "Divid Points",
+                                     BPA_ALTERN_POINTS = "Altern Points"))) +
+  
+  scale_y_continuous(limits = c(20, 130), breaks = seq(20, 120, by = 20)) +
+  
+  theme(axis.text = element_text(size = 20, color = "black"),
+        axis.title = element_text(size = 25, color = "black"),
+        panel.background = element_rect(fill = "white"),
+        axis.line = element_line(color = "black"),
+        plot.title = element_text(size = 20,  face = "bold"),
+        text = element_text(size = 20),
+        legend.position = "bottom",
+        strip.background = element_blank(),
+        strip.text = element_text(size = 14,  face = "bold"))
+
+
+                            #  Test-T
+
+plot1 <- plot1 + stat_compare_means(method = "t.test", label.x = 1.38)
+
+plot1
+
+ggsave("bxplot_BPAs.pdf", plot = plot1, width = 13, height = 10)
+```
+

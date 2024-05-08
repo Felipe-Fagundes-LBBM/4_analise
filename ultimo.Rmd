@@ -9,7 +9,7 @@ date: "2024-05-06"
 knitr::opts_chunk$set(
   message=FALSE, 
   warning=FALSE,
-  fig.cap= "Testes Neurocognitivos")
+  fig.cap= "Box Plots Test-T")
 
 
 #install.packages("ggtext")
@@ -85,11 +85,266 @@ ggsave("bxplot_BPAs.pdf", plot = plot1, width = 13, height = 10)
                                     #BPA Total
 #colnames(data)
 
-#p2 <- data %>%  select(GROUP ,  )
+#ptotal <- data %>%  select(GROUP ,  )
 
 
 
 #######################################    BOX PLOT-Test.T FDTs #############################################
+
+
+df <- read_excel("BPAs_FDTs_ RAVLTs_EscoreZ.xlsx", sheet = 2)
+
+df
+
+                                      #Filtrando FDTs
+
+p2 <- df %>%  select(GROUP , FDT_READING_TIME ,FDT_COUNTING_TIME, FDT_CHOOSING_TIME, FDT_CHANGING_TIME,
+                       FDT_INHIBITION, FDT_FLEXIBILITY )
+
+
+     # Reorganizar os dados para o formato 'long' usando a função pivot_longer() do pacote tidyr
+
+p2_long <- tidyr::pivot_longer(p2, cols = -GROUP, names_to = "Variable", values_to = "Value")
+
+
+                                          # P2
+
+plot2 <- ggplot(p2_long, aes(x = GROUP, y = Value, fill = GROUP)) + 
+  geom_boxplot(outlier.shape = NA, alpha = 0.5, width = 0.7, coef = 0, lwd = 0.4, color = "black") +
+  geom_jitter(aes(color = GROUP), size = 1.5, width = 0.15, alpha = 0.5) +
+  labs(x = NULL, y = NULL) + 
+  scale_fill_manual(values = c("#1a2887", "#799de4")) +  
+  scale_color_manual(values = c("#1a2887", "#799de4")) +
+  facet_wrap(~ Variable, scales = "free_y", 
+             labeller = labeller(Variable = 
+                                   c(FDT_READING_TIME = "Reading Time",
+                                     FDT_COUNTING_TIME = "Counting Time",
+                                     FDT_CHOOSING_TIME = "Choosing Time",
+                                     FDT_CHANGING_TIME = "Chaging Time",
+                                     FDT_INHIBITION =  "Inhibition", 
+                                     FDT_FLEXIBILITY = "Flexibility"))) +
+  #scale_y_continuous(limits = c(20, 130), breaks = seq(20, 100, by = 20)) +
+  theme(axis.text = element_text(size = 11, color = "black"),
+        axis.title = element_text(size = 15, color = "black"),
+        panel.background = element_rect(fill = "white"),
+        axis.line = element_line(color = "black"),
+        plot.title = element_text(size = 14, family = "", face = "bold"),
+        text = element_text(size = 12, family = ""),
+        legend.position = "bottom",
+        strip.background = element_blank(),
+        strip.text = element_text(size = 14, family = "", face = "bold"))
+
+
+# Ajuste as escalas de acordo com o mínimo e máximo dos dados
+#plot1 <- plot1 + ylim(min(p1_long$Value), max(p1_long$Value))
+
+plot2 + stat_compare_means(method = "t.test" , label.x = 2)
+
+
+#######################################    BOX PLOT-Test.T RAVLTs #############################################
+
+
+
+df <- read_excel("BPAs_FDTs_ RAVLTs_EscoreZ.xlsx", sheet = 3)
+
+df
+
+colnames(df)
+
+                                      #Filtrando RAVLTs
+
+
+p3 <- df %>%  select(GROUP , RAVLT_A1 ,RAVLT_A2, RAVLT_A3, RAVLT_A4   )
+
+p4 <- df %>%  select(GROUP , RAVLT_A5, RAVLT_A6, RAVLT_A7)
+
+p5 <- df %>%  select(GROUP , RAVLT_TOTALSCORE)
+
+p6 <- df %>%  select(RAVLT_B1,RAVLT_REC,RAVLT_RETENTION)
+
+p7 <- df %>%  select(GROUP,RAVLT_RETENTION,RAVLT_RETRO_INTERFERENCE)
+
+
+
+     # Reorganizar os dados para o formato 'long' usando a função pivot_longer() do pacote tidyr
+
+p3_long <- tidyr::pivot_longer(p3, cols = -GROUP, names_to = "Variable", values_to = "Value")
+
+
+                                          # P3
+
+plot3 <- ggplot(p3_long, aes(x = GROUP, y = Value, fill = GROUP)) + 
+  geom_boxplot(outlier.shape = NA, alpha = 0.5, width = 0.7, coef = 0, lwd = 0.4, color = "black") +
+  geom_jitter(aes(color = GROUP), size = 1.5, width = 0.15, alpha = 0.5) +
+  labs(x = NULL, y = NULL) + 
+  scale_fill_manual(values = c("#1a2887", "#799de4")) +  
+  scale_color_manual(values = c("#1a2887", "#799de4")) +
+  facet_wrap(~ Variable, scales = "free_y", 
+             labeller = labeller(Variable = 
+                                   c(RAVLT_A1 = "RAVLT_A1",
+                                     RAVLT_A2 = " RAVLT_A2",
+                                     RAVLT_A3 = "RAVLT_A3",
+                                     RAVLT_A4 = "RAVLT_A4"))) +
+  scale_y_continuous(limits = c(0, 20)) +
+  theme(axis.text = element_text(size = 11, color = "black"),
+        axis.title = element_text(size = 15, color = "black"),
+        panel.background = element_rect(fill = "white"),
+        axis.line = element_line(color = "black"),
+        plot.title = element_text(size = 14, family = "Tahoma", face = "bold"),
+        text = element_text(size = 12, family = "Tahoma"),
+        legend.position = "bottom",
+        strip.background = element_blank(),
+        strip.text = element_text(size = 14, family = "Tahoma", face = "bold"))
+
+
+
+plot3 + stat_compare_means(method = "t.test" , label.y = 18, label.x = 1.1)
+
+
+
+     # Reorganizar os dados para o formato 'long' usando a função pivot_longer() do pacote tidyr
+
+p4_long <- tidyr::pivot_longer(p4, cols = -GROUP, names_to = "Variable", values_to = "Value")
+
+
+                                          # P4
+
+plot4 <- ggplot(p4_long, aes(x = GROUP, y = Value, fill = GROUP)) + 
+  geom_boxplot(outlier.shape = NA, alpha = 0.5, width = 0.7, coef = 0, lwd = 0.4, color = "black") +
+  geom_jitter(aes(color = GROUP), size = 1.5, width = 0.15, alpha = 0.5) +
+  labs(x = NULL, y = NULL) + 
+  scale_fill_manual(values = c("#1a2887", "#799de4")) +  
+  scale_color_manual(values = c("#1a2887", "#799de4")) +
+  facet_wrap(~ Variable, scales = "free_y", 
+             labeller = labeller(Variable = 
+                                   c(RAVLT_A5 = "RAVLT_A5",
+                                     RAVLT_A6 = " RAVLT_A6",
+                                     RAVLT_A7 = "RAVLT_A7"))) +
+  scale_y_continuous(limits = c(0, 20)) +
+  theme(axis.text = element_text(size = 11, color = "black"),
+        axis.title = element_text(size = 15, color = "black"),
+        panel.background = element_rect(fill = "white"),
+        axis.line = element_line(color = "black"),
+        plot.title = element_text(size = 14, family = "Tahoma", face = "bold"),
+        text = element_text(size = 12, family = "Tahoma"),
+        legend.position = "bottom",
+        strip.background = element_blank(),
+        strip.text = element_text(size = 14, family = "Tahoma", face = "bold"))
+
+
+# Ajuste as escalas de acordo com o mínimo e máximo dos dados
+#plot1 <- plot1 + ylim(min(p1_long$Value), max(p1_long$Value))
+
+plot4 + stat_compare_means(method = "t.test" , label.y = 18, label.x = 1.1)
+
+
+
+
+     # Reorganizar os dados para o formato 'long' usando a função pivot_longer() do pacote tidyr
+
+p5_long <- tidyr::pivot_longer(p5, cols = -GROUP, names_to = "Variable", values_to = "Value")
+
+                                          # P5
+
+plot5 <- ggplot(p5_long, aes(x = GROUP, y = Value, fill = GROUP)) + 
+  geom_boxplot(outlier.shape = NA, alpha = 0.5, width = 0.7, coef = 0, lwd = 0.4, color = "black") +
+  geom_jitter(aes(color = GROUP), size = 1.5, width = 0.15, alpha = 0.5) +
+  labs(x = NULL, y = NULL) + 
+  scale_fill_manual(values = c("#1a2887", "#799de4")) +  
+  scale_color_manual(values = c("#1a2887", "#799de4")) +
+  facet_wrap(~ Variable, scales = "free_y", 
+             labeller = labeller(Variable = 
+                                   c(RAVLT_TOTALSCORE = "RAVLT_TOTALSCORE"))) +
+  #scale_y_continuous(limits = c(0, 20)) +
+  theme(axis.text = element_text(size = 11, color = "black"),
+        axis.title = element_text(size = 15, color = "black"),
+        panel.background = element_rect(fill = "white"),
+        axis.line = element_line(color = "black"),
+        plot.title = element_text(size = 14, family = "Tahoma", face = "bold"),
+        text = element_text(size = 12, family = "Tahoma"),
+        legend.position = "bottom",
+        strip.background = element_blank(),
+        strip.text = element_text(size = 14, family = "Tahoma", face = "bold"))
+
+
+# Ajuste as escalas de acordo com o mínimo e máximo dos dados
+#plot1 <- plot1 + ylim(min(p1_long$Value), max(p1_long$Value))
+
+plot5 + stat_compare_means(method = "t.test" ,  label.y = 65, label.x =1.7)
+
+
+
+
+
+
+     # Reorganizar os dados para o formato 'long' usando a função pivot_longer() do pacote tidyr
+
+p6_long <- tidyr::pivot_longer(p6, cols = -GROUP, names_to = "Variable", values_to = "Value")
+
+                                          # P6
+
+plot6 <- ggplot(p6_long, aes(x = GROUP, y = Value, fill = GROUP)) + 
+  geom_boxplot(outlier.shape = NA, alpha = 0.5, width = 0.7, coef = 0, lwd = 0.4, color = "black") +
+  geom_jitter(aes(color = GROUP), size = 1.5, width = 0.15, alpha = 0.5) +
+  labs(x = NULL, y = NULL) + 
+  scale_fill_manual(values = c("#1a2887", "#799de4")) +  
+  scale_color_manual(values = c("#1a2887", "#799de4")) +
+  facet_wrap(~ Variable, scales = "free_y", 
+             labeller = labeller(Variable = 
+                                   c(RAVLT_B1 = "RAVLT_B1",
+                                     RAVLT_REC = " RAVLT_REC"
+                                     ))) +
+  scale_y_continuous(limits = c(0, 20)) +
+  theme(axis.text = element_text(size = 11, color = "black"),
+        axis.title = element_text(size = 15, color = "black"),
+        panel.background = element_rect(fill = "white"),
+        axis.line = element_line(color = "black"),
+        plot.title = element_text(size = 14, family = "Tahoma", face = "bold"),
+        text = element_text(size = 12, family = "Tahoma"),
+        legend.position = "bottom",
+        strip.background = element_blank(),
+        strip.text = element_text(size = 14, family = "Tahoma", face = "bold"))
+
+
+# Ajuste as escalas de acordo com o mínimo e máximo dos dados
+#plot1 <- plot1 + ylim(min(p1_long$Value), max(p1_long$Value))
+
+plot6 + stat_compare_means(method = "t.test", label.y = 18, label.x = 1.1)
+
+
+
+
+     # Reorganizar os dados para o formato 'long' usando a função pivot_longer() do pacote tidyr
+
+p7_long <- tidyr::pivot_longer(p7, cols = -GROUP, names_to = "Variable", values_to = "Value")
+
+
+                                          # P7
+
+plot7 <- ggplot(p7_long, aes(x = GROUP, y = Value, fill = GROUP)) + 
+  geom_boxplot(outlier.shape = NA, alpha = 0.5, width = 0.7, coef = 0, lwd = 0.4, color = "black") +
+  geom_jitter(aes(color = GROUP), size = 1.5, width = 0.15, alpha = 0.5) +
+  labs(x = NULL, y = NULL) + 
+  scale_fill_manual(values = c("#1a2887", "#799de4")) +  
+  scale_color_manual(values = c("#1a2887", "#799de4")) +
+  facet_wrap(~ Variable, scales = "free_y", 
+             labeller = labeller(Variable = 
+                                   c(
+                                     RAVLT_RETENTION = "RAVLT_RETENTION",
+                                     RAVLT_RETRO_INTERFERENCE = "RAVLT_RETRO_INTERFERENCE"))) +
+  scale_y_continuous(limits = c(0, 2)) +
+  theme(axis.text = element_text(size = 11, color = "black"),
+        axis.title = element_text(size = 15, color = "black"),
+        panel.background = element_rect(fill = "white"),
+        axis.line = element_line(color = "black"),
+        plot.title = element_text(size = 14, family = "Tahoma", face = "bold"),
+        text = element_text(size = 12, family = "Tahoma"),
+        legend.position = "bottom",
+        strip.background = element_blank(),
+        strip.text = element_text(size = 14, family = "Tahoma", face = "bold"))
+
+
+plot7 + stat_compare_means(method = "t.test" )
 
 ```
 
@@ -370,6 +625,8 @@ write.xlsx(FDT_EscoreZ, file = "FDT_EscoreZ.xlsx")
 ################################## RAVLTS Z-Score Calculating  #####################################
 
 ```
+
+
 ```{r}
 
 library(tibble)
@@ -1450,8 +1707,6 @@ pp22
 
 
 ```
-
-
 
 ```{r}
 

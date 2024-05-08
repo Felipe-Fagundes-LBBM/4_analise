@@ -1,0 +1,42 @@
+---
+title: "curva de crescimento"
+output: html_document
+date: "2024-05-02"
+---
+
+```{r}
+#install.packages('reshape2')
+
+library(ggplot2)
+library(dplyr)
+library(readxl)
+library(reshape2)
+
+getwd()
+
+
+df <- read_excel("BPAs_FDTs_ RAVLTs_EscoreZ.xlsx", sheet = 3)
+
+colnames(df)
+
+df.RAVLTs <- df %>% select(GROUP,AGE,RAVLT_A1,RAVLT_A2,RAVLT_A3,RAVLT_A4,RAVLT_A5)
+
+
+df.melted <- melt(df.RAVLTs, id.vars = c("AGE", "GROUP"), variable.name = "Variável", value.name = "Pontuação")
+
+# Criar o gráfico de linhas
+p <- ggplot(df.melted, aes(x = AGE, y = Pontuação, color = GROUP)) +
+  geom_point(alpha=0.3, position = "jitter") +
+  stat_smooth( method = "loess", span = 0.8, se = F)+
+  labs(title = "Gráfico de Linhas RAVLT por Grupo",
+       x = "AGE",
+       y = "Pontuação RAVLT",
+       color = "Grupos") +
+  facet_wrap(~ Variável) +  # Separação por GROUP (caso e controle)
+  theme_minimal()
+
+
+
+p
+```
+

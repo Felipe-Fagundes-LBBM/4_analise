@@ -1,376 +1,9 @@
 ---
-title: "4 analise"
-output: revealjs::revealjs_presentation 
-date: "2024-05-06"
+title: "R Notebook"
+output: html_notebook
 ---
 
-```{r}
-
-knitr::opts_chunk$set(
-  message=FALSE, 
-  warning=FALSE,
-  fig.cap= "Testes Neurocognitivos")
-
-
-#install.packages("ggtext")
-
-library(dplyr)
-library(ggplot2)
-library(readxl)
-library(tidyr)
-library(ggpubr)
-library(ggtext)
-
-
-getwd()
-
-list.files()
-
-data <- readxl::read_excel("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO.xlsx")
-
-data
-
-
-#######################################    BOX PLOT-Test.T BPAs #############################################
-
-p1 <- data %>%  select(GROUP , BPA_CONC_POINTS,BPA_DIVID_POINTS, BPA_ALTERN_POINTS )
-
-
-     # Reorganizar os dados para o formato 'long' usando a função pivot_longer() do pacote tidyr
-
-p1_long <- tidyr::pivot_longer(p1, cols = -GROUP, names_to = "Variable", values_to = "Value")
-
-
-                                    #Gráfico facetado BPA-Conc,Divid,Altern.
-
-plot1 <- ggplot(p1_long, aes(x = GROUP, y = Value, fill = GROUP)) + 
-  
-  geom_boxplot(outlier.shape = NA, alpha = 0.5, width = 0.7, coef = 0, lwd = 0.4, color = "black") +
-  geom_jitter(aes(color = GROUP), size = 2.5, width = 0.15, alpha = 0.5) +
-  
-  labs(x = NULL, y = NULL) + 
-  
-  scale_fill_manual(values = c("#1a2887", "#799de4")) +  
-  scale_color_manual(values = c("#1a2887", "#799de4")) +
-  
-  facet_wrap(~ Variable, scales = "free_y", 
-             labeller = labeller(Variable = 
-                                   c(BPA_CONC_POINTS = "Conc Points",
-                                     BPA_DIVID_POINTS = "Divid Points",
-                                     BPA_ALTERN_POINTS = "Altern Points"))) +
-  
-  scale_y_continuous(limits = c(20, 130), breaks = seq(20, 120, by = 20)) +
-  
-  theme(axis.text = element_text(size = 20, color = "black"),
-        axis.title = element_text(size = 25, color = "black"),
-        panel.background = element_rect(fill = "white"),
-        axis.line = element_line(color = "black"),
-        plot.title = element_text(size = 20,  face = "bold"),
-        text = element_text(size = 20),
-        legend.position = "bottom",
-        strip.background = element_blank(),
-        strip.text = element_text(size = 14,  face = "bold"))
-
-
-                            #  Test-T
-
-plot1 <- plot1 + stat_compare_means(method = "t.test", label.x = 1.38)
-
-plot1
-
-ggsave("bxplot_BPAs.pdf", plot = plot1, width = 13, height = 10)
-
-
-
-                                    #BPA Total
-colnames(data)
-
-p2 <- data %>%  select(GROUP ,  )
-
-
-
-
-```
-
-```{r}
-
-library(tibble)
-library(readxl)
-library(dplyr)
-library(gtExtras)
-library(ggplot2)
-library(plotly)
-library(viridis)
-library(hrbrthemes)
-library(openxlsx)
-
-
-#data <- readxl::read_xlsx ("BPAs_FDTs_ RAVLTs_EscoreZ.xlsx", sheet = 1)
-
-
-#install.packages("tibble")
-#install.packages("openxlsx")
-
-
-
-
-#setwd("C:/Users/User/Desktop/Analysis in R/NeuroCovid")
-
-getwd()
-
-
-data <- readxl::read_xlsx ("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO.xlsx")
-
- 
-################################## BPA Z-Score Calculating  #####################################
-
-
-
-                                # 1º Try
-                  # TENTATIVA DE CRIAÇÃO DE FUNÇÃO
-
-cbind(data)
-
-calcular_z_score <- function(x, media, desvio_padrao) {
-  if (x >= 21 & x <= 30) {
-    z_score <- (x - media) / desvio_padrao
-    return(z_score)
-  }
-}
-
-
-                                # 2º Try
-                # DETERMINANDO LIMITES A SEREM APLICADOS
-
-limites_idade <- c(18, 20, 30, 40, 49)
-
-
-data <- data %>%
-  mutate(LIMIT_AGE = cut(AGE, breaks = limites_idade, labels =
-                           c("18-20", "21-30", "31-40", "41-49"))) %>% 
-  arrange(AGE)
-  
-data
-
-
-                                # 3º Try
-
-# Definir os valores constantes de média e desvio padrão para cada faixa etária
-constantes <- tribble(
-  ~LIMIT_AGE, ~media_constante, ~desvio_padrao_constante,
-  "18-20", 85.79, 22.53,
-  "21-30", 87.08, 21.50,
-  "31-40", 85.48, 22.56,
-  "41-49", 80.72, 22.85
-)
-
-                                # 4º Try
-
-# Calcular o Z-score usando as constantes para cada faixa etária
-
-
-#BPA_CONC
-
-BPA_CONC_EscoreZ <- data %>%
-  mutate(BPA_CONC_EscoreZ = case_when(
-    LIMIT_AGE == "18-20" ~ (BPA_CONC_POINTS - 85.79) / 22.53,
-    LIMIT_AGE == "21-30" ~ (BPA_CONC_POINTS - 87.08) / 21.50,
-    LIMIT_AGE == "31-40" ~ (BPA_CONC_POINTS - 85.48) / 22.56,
-    LIMIT_AGE == "41-49" ~ (BPA_CONC_POINTS - 80.72) / 22.85,
-    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
-  )) %>%
-  select(ID,BPA_CONC_POINTS, AGE, LIMIT_AGE, BPA_CONC_EscoreZ) %>% 
-  arrange(ID)
-
-BPA_CONC_EscoreZ
-
-
-#BPA_DIVD
-
-BPA_DIVID_EscoreZ <- data %>%
-  mutate(BPA_DIVID_EscoreZ = case_when(
-    LIMIT_AGE == "18-20" ~ (BPA_DIVID_POINTS - 79.42) / 23.49,
-    LIMIT_AGE == "21-30" ~ (BPA_DIVID_POINTS - 77.19) / 24.42,
-    LIMIT_AGE == "31-40" ~ (BPA_DIVID_POINTS - 71.28) / 25.33,
-    LIMIT_AGE == "41-49" ~ (BPA_DIVID_POINTS - 61.22) / 26.53,
-    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
-  )) %>%
-  select(ID,BPA_DIVID_POINTS, AGE, LIMIT_AGE, BPA_DIVID_EscoreZ) %>% 
-  arrange(ID)
-
-BPA_DIVID_EscoreZ
-
-
-#BPA_ALTERN
-
-BPA_ALTERN_EscoreZ <- data %>%
-  mutate(BPA_ALTERN_EscoreZ = case_when(
-    LIMIT_AGE == "18-20" ~ (BPA_ALTERN_POINTS - 93.21) / 21.76,
-    LIMIT_AGE == "21-30" ~ (BPA_ALTERN_POINTS - 87.53) / 23.56,
-    LIMIT_AGE == "31-40" ~ (BPA_ALTERN_POINTS - 82.28) / 24.84,
-    LIMIT_AGE == "41-49" ~ (BPA_ALTERN_POINTS - 72.70) / 25.80,
-    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
-  )) %>%
-  select(ID,BPA_ALTERN_POINTS, AGE, LIMIT_AGE, BPA_ALTERN_EscoreZ) %>% 
-  arrange(ID)
-
-BPA_ALTERN_EscoreZ 
-
-
-
-BPAs_EscoreZ <- bind_cols(BPA_CONC_EscoreZ, BPA_DIVID_EscoreZ, BPA_ALTERN_EscoreZ) %>%  
-  select(-ID...6, -ID...11, -AGE...13, -AGE...8, -LIMIT_AGE...9, -LIMIT_AGE...14) %>% 
-  #rename(ID = ID...1, AGE = AGE...2, LIMIT_AGE = LIMIT_AGE...3) %>% 
-  select(ID...1, AGE...3, LIMIT_AGE...4, everything())
-
-
-write.xlsx(BPAs_EscoreZ, file = "BPAs_EscoreZ.xlsx")
-
-
-
-
-################################## FDT Z-Score Calculating  #####################################
-
-
-data <- readxl::read_xlsx ("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO.xlsx")
-
-data <- data %>% dplyr::tbl_df() %>% dplyr::glimpse()
-
-
-                # DETERMINANDO LIMITES A SEREM APLICADOS
-
-limites_idade <- c(18, 19, 34, 49)
-
-                # ADICIONANDO COLUNA AO DADO, RELACIONADO AOS LIMITES DESEJADOS
-
-data <- data %>%
-  mutate(LIMIT_AGE = cut(AGE, breaks = limites_idade, labels =
-                           c("18", "19-34", "35-49"))) %>% 
-  arrange(AGE)
-  
-data
-
-
-#FDT READING
-
-FDT_READING_TIME_Z <- data %>%
-  mutate(FDT_READING_TIME_Z = case_when(
-    LIMIT_AGE == "18" ~ (FDT_READING_TIME - 20.4) / 4.1,
-    LIMIT_AGE == "19-34" ~ (FDT_READING_TIME - 22) / 5.6,
-    LIMIT_AGE == "35-49" ~ (FDT_READING_TIME - 23.9) / 6.5,
-    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
-  )) %>%
-  select(ID,FDT_READING_TIME, AGE, LIMIT_AGE, FDT_READING_TIME_Z) %>% 
-  arrange(ID)
-
-
-FDT_READING_TIME_Z
-
-
-
-#FDT COUTING
-
-FDT_COUNTING_TIME_Z <- data %>%
-  mutate(FDT_COUNTING_TIME_Z = case_when(
-    LIMIT_AGE == "18" ~ (FDT_COUNTING_TIME - 23.8) / 3.5,
-    LIMIT_AGE == "19-34" ~ (FDT_COUNTING_TIME - 24.2) / 5.2,
-    LIMIT_AGE == "35-49" ~ (FDT_COUNTING_TIME - 27.1) / 7.2,
-    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
-  )) %>%
-  select(ID,FDT_COUNTING_TIME, AGE, LIMIT_AGE, FDT_COUNTING_TIME_Z) %>% 
-  arrange(ID)
-
-
-FDT_COUNTING_TIME_Z
-
-
-#FDT CHOOSING
-
-FDT_CHOOSING_TIME_Z <- data %>%
-  mutate(FDT_CHOOSING_TIME_Z = case_when(
-    LIMIT_AGE == "18" ~ (FDT_CHOOSING_TIME - 34) / 5.9,
-    LIMIT_AGE == "19-34" ~ (FDT_CHOOSING_TIME - 36.9) / 10,
-    LIMIT_AGE == "35-49" ~ (FDT_CHOOSING_TIME - 41.7) / 14.5,
-    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
-  )) %>%
-  select(ID,FDT_CHOOSING_TIME, AGE, LIMIT_AGE, FDT_CHOOSING_TIME_Z) %>% 
-  arrange(ID)
-
-
-FDT_CHOOSING_TIME_Z
-
-
-
-#FDT CHANGING
-
-FDT_CHANGING_TIME_Z <- data %>%
-  mutate(FDT_CHANGING_TIME_Z = case_when(
-    LIMIT_AGE == "18" ~ (FDT_CHANGING_TIME - 44.8) / 9.1,
-    LIMIT_AGE == "19-34" ~ (FDT_CHANGING_TIME - 46) / 13,
-    LIMIT_AGE == "35-49" ~ (FDT_CHANGING_TIME - 53.6) / 18.4,
-    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
-  )) %>%
-  select(ID,FDT_CHANGING_TIME, AGE, LIMIT_AGE, FDT_CHANGING_TIME_Z) %>% 
-  arrange(ID)
-
-
-FDT_CHANGING_TIME_Z
-
-
-
-
-#FDT INHIBITION
-
-FDT_INHIBITION_Z <- data %>%
-  mutate(FDT_INHIBITION_Z = case_when(
-    LIMIT_AGE == "18" ~ (FDT_INHIBITION - 13.6) / 4.9,
-    LIMIT_AGE == "19-34" ~ (FDT_INHIBITION - 14.8) / 8.3,
-    LIMIT_AGE == "35-49" ~ (FDT_INHIBITION - 17.8) / 12,
-    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
-  )) %>%
-  select(ID,FDT_INHIBITION, AGE, LIMIT_AGE, FDT_INHIBITION_Z) %>% 
-  arrange(ID)
-
-
-FDT_INHIBITION_Z
-
-
-
-
-#FDT FLEXBILITY
-
-FDT_FLEXIBILITY_Z <- data %>%
-  mutate(FDT_FLEXIBILITY_Z = case_when(
-    LIMIT_AGE == "18" ~ (FDT_FLEXIBILITY - 24.4) / 7.8,
-    LIMIT_AGE == "19-34" ~ (FDT_FLEXIBILITY - 23.9) / 10.8,
-    LIMIT_AGE == "35-49" ~ (FDT_FLEXIBILITY - 29.7) / 15.7,
-    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
-  )) %>%
-  select(ID,FDT_FLEXIBILITY, AGE, LIMIT_AGE, FDT_FLEXIBILITY_Z) %>% 
-  arrange(ID)
-
-
-FDT_FLEXIBILITY_Z
-
-
-
-#BIND COLS E SALVAR
-
-FDT_EscoreZ <- bind_cols(FDT_READING_TIME_Z,FDT_COUNTING_TIME_Z,FDT_CHOOSING_TIME_Z,
-                         FDT_CHANGING_TIME_Z,FDT_INHIBITION_Z,FDT_FLEXIBILITY_Z) %>% 
-   select(ID...1, AGE...3, LIMIT_AGE...4, everything())
-
-
-
-write.xlsx(FDT_EscoreZ, file = "FDT_EscoreZ.xlsx")
-
-
-
-################################## RAVLTS Z-Score Calculating  #####################################
-
-```
-```{r}
-
+```{r warning = F, message = F }
 library(tibble)
 library(readxl)
 library(dplyr)
@@ -380,17 +13,23 @@ library(plotly)
 library(viridis)
 library(hrbrthemes)
 
-
-#setwd("C:/Users/felip/Desktop/R/3_analise")
+setwd("C:/Users/felip/Desktop/R/3_analise")
 
 data <- readxl::read_xlsx ("BPAs_FDTs_ RAVLTs_EscoreZ.xlsx", sheet = 1)
 
 data
 
+#gt_plt_summary(data)
+
+
+
+#######################     BPA ANALYSIS
+
+
 summary(data)
 
+#utils::View(data)
 
-                                  # Filtrando dados BPAs
 
 p1 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,EDU_LEVEL , AGE, BPA_CONC_POINTS , BPA_CONC_EscoreZ  )
 
@@ -400,10 +39,9 @@ p3 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,EDU_LEVEL ,AGE, BPA_ALTERN_POINTS , 
 
 
 
-######################################  Bubble Plots BPAs Zscore  ###############################
+ 
+ ####################################     P1
 
-                                                #   P1  
-  
 
 coresBPA <- c("#1a2887", "#799de4")
 
@@ -438,7 +76,7 @@ p1 <- data %>%
     )
     
 
-            # Gráfico interativo da bibliotexa ggplottly
+#p1
 
 pp1 <- ggplotly(p1, tooltip="text") 
 
@@ -446,7 +84,7 @@ pp1 <- ggplotly(p1, tooltip="text")
 pp1
 
 
-                                #   P2
+ ##################################       P2
 
 p2 <- data %>%
   arrange(ID) %>%
@@ -478,15 +116,16 @@ p2 <- data %>%
     
 
 
-                      # Gráfico interativo da bibliotexa ggplottly
+#p2
 
 pp2 <- ggplotly(p2, tooltip="text")
  
+
 pp2 
 
 
 
-                                      #   P3
+######################################     P3
 
 p3 <- data %>% 
   mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
@@ -517,9 +156,10 @@ p3 <- data %>%
     )
   
 
-                    # Gráfico interativo da bibliotexa ggplottly
+#p3
 
 pp3 <-  ggplotly(p3, tooltip="text")
+
 
 
 pp3
@@ -527,8 +167,22 @@ pp3
 
 
 
+``` 
 
-######################################  Bubble Plots FDTs Zscore  ###############################
+
+```{r}
+
+
+library(tibble)
+library(readxl)
+library(dplyr)
+library(gtExtras)
+library(ggplot2)
+library(plotly)
+library(viridis)
+library(hrbrthemes)
+
+setwd("C:/Users/felip/Desktop/R/3_analise")
 
 data <- readxl::read_xlsx ("BPAs_FDTs_ RAVLTs_EscoreZ.xlsx", sheet = 2)
 
@@ -537,7 +191,7 @@ data
 
 
 
-                                      #  Filtrando FDTs 
+#######################     FDTs ANALYSIS
 
 
 
@@ -556,7 +210,7 @@ p9 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,AGE, FDT_FLEXIBILITY , FDT_FLEXIBILI
 
 
 
-                                            #  P4
+########################  P4
 
 
 coresFDT <- c("#f1948a", "#abebc6")
@@ -592,13 +246,14 @@ p4 <- data %>%
     )
     
 
+#p4
+
 pp4 <- ggplotly(p4, tooltip="text") 
 
 
 pp4
 
-
-                                      #  P5
+#######################   P5
 
 p5 <- data %>% 
   arrange(ID) %>% 
@@ -629,13 +284,15 @@ p5 <- data %>%
     )
     
 
+#p5
+
 pp5 <- ggplotly(p5, tooltip="text") 
 
 
 pp5
 
 
-                                      #  P6
+#######################   P6
 
 
 p6 <- data %>% 
@@ -667,13 +324,15 @@ p6 <- data %>%
     )
     
 
+#p6
+
 pp6 <- ggplotly(p6, tooltip="text") 
 
 
 pp6
 
 
-                                      # P7
+#######################   P7
 
 
 p7<- data %>% 
@@ -705,13 +364,16 @@ p7<- data %>%
     )
     
 
+#p7
+
 pp7 <- ggplotly(p7, tooltip="text") 
 
 
 pp7
 
 
-                                      # P8
+
+#######################   P8
 
 
 p8<- data %>% 
@@ -741,6 +403,9 @@ p8<- data %>%
     legend.position = "",
     legend.text = element_text(size = 5)
     )
+    
+
+#p8
 
 pp8 <- ggplotly(p8, tooltip="text") 
 
@@ -748,7 +413,7 @@ pp8 <- ggplotly(p8, tooltip="text")
 pp8
 
 
-                                    #   P9
+#######################   P9
 
 p9<- data %>% 
   arrange(ID) %>% 
@@ -779,13 +444,13 @@ p9<- data %>%
     )
     
 
+#p9
+
 pp9 <- ggplotly(p9, tooltip="text") 
 
 
 pp9
-######################################  Bubble Plots RAVLTs Zscore  ###############################
 ``` 
-
 
 
 ```{r}
@@ -1357,47 +1022,3 @@ pp22
 
 
 ```
-
-
-
-```{r}
-
-#install.packages('reshape2')
-
-library(ggplot2)
-library(dplyr)
-library(readxl)
-library(reshape2)
-
-getwd()
-
-
-df <- read_excel("BPAs_FDTs_ RAVLTs_EscoreZ.xlsx", sheet = 3)
-
-colnames(df)
-
-######################################  Curva de Crescimento ##########################################
-
-df.RAVLTs <- df %>% select(GROUP,AGE,RAVLT_A1,RAVLT_A2,RAVLT_A3,RAVLT_A4,RAVLT_A5)
-
-
-df.melted <- melt(df.RAVLTs, id.vars = c("AGE", "GROUP"), variable.name = "Variável", value.name = "Pontuação")
-
-# Criar o gráfico de linhas
-p <- ggplot(df.melted, aes(x = AGE, y = Pontuação, color = GROUP)) +
-  geom_point(alpha=0.3, position = "jitter") +
-  stat_smooth( method = "loess", span = 0.8, se = F)+
-  labs(title = "Gráfico de Linhas RAVLT por Grupo",
-       x = "AGE",
-       y = "Pontuação RAVLT",
-       color = "Grupos") +
-  facet_wrap(~ Variável) +  # Separação por GROUP (caso e controle)
-  theme_minimal()
-
-
-
-p
-
-```
-
-

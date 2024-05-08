@@ -1,0 +1,1304 @@
+---
+title: "Z-Score Testes Neurocognitivos"
+output: html_notebook
+---
+
+![](images/machine_learning_746x419-01.jpg)
+
+```{r message=FALSE, warning=FALSE}
+library(tibble)
+library(readxl)
+library(dplyr)
+library(gtExtras)
+library(ggplot2)
+library(plotly)
+library(viridis)
+library(hrbrthemes)
+
+getwd()
+
+#data0 <- readxl::read_xlsx ("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO(1).xlsx", sheet = 1)
+
+data <- readxl::read_xlsx ("BPAs_FDTs_ RAVLTs_EscoreZ.xlsx", sheet = 1)
+
+#colnames(data0)
+
+data
+
+#gt_plt_summary(data)
+
+
+
+#######################     BPA ANALYSIS
+
+
+
+# Calcular o Z-score usando as constantes para cada faixa etária
+#BPA_CONC_EscoreZ <- data %>%
+ # mutate(BPA_CONC_EscoreZ = case_when(
+    #LIMIT_AGE == "18-21" ~ (BPA_CONC_POINTS - 85.79) / 22.53,
+    #LIMIT_AGE == "21-30" ~ (BPA_CONC_POINTS - 87.08) / 21.50,
+    #LIMIT_AGE == "31-40" ~ (BPA_CONC_POINTS - 85.48) / 22.56,
+    #LIMIT_AGE == "41-49" ~ (BPA_CONC_POINTS - 80.72) / 22.85,
+    #TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
+  #)) %>%
+  #select(BPA_CONC_POINTS, AGE, LIMIT_AGE, BPA_CONC_EscoreZ) %>% 
+  #arrange(BPA_CONC_EscoreZ)
+
+
+#BPA_CONC_EscoreZ
+
+
+#summary(data)
+
+#utils::View(data)
+
+
+p1 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,EDU_LEVEL , AGE, BPA_CONC_POINTS , BPA_CONC_EscoreZ  )
+
+p2 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,EDU_LEVEL, AGE, BPA_DIVID_POINTS , BPA_DIVID_EscoreZ  )
+
+p3 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,EDU_LEVEL ,AGE, BPA_ALTERN_POINTS , BPA_ALTERN_EscoreZ )
+
+
+
+ 
+ ####################################     P1
+
+
+coresBPA <- c("#1a2887", "#799de4")
+
+
+
+p1 <- data %>% 
+  arrange(ID) %>% 
+  mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
+                      "\nPoints: ", BPA_CONC_POINTS,
+                      "\nZ-Score: ", BPA_CONC_EscoreZ, sep="")) %>%
+  ggplot(aes(x = AGE, y = BPA_CONC_EscoreZ, fill= GROUP, stroke = 0,
+             size = AGE, shape = EDU_LEVEL , text = text)) +
+  geom_point(alpha = 0.7) +
+  scale_fill_manual(values = coresBPA) +
+  scale_size(range = c(2, 5)) +
+  scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
+  scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
+  geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
+  geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
+  labs(y = "Y", title = "Z Score BPA Focused Attention", shape= "", size = "") +
+  theme_classic() +
+  
+    theme(
+      text = element_text(family = "Arial Narrow", size = 11.5),
+    plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    plot.caption = element_text(size = 9, face = "italic"),
+    axis.title = element_text(size = 10),
+    legend.position = "",
+    legend.text = element_text(size = 5) 
+    )
+    
+
+#p1
+
+pp1 <- ggplotly(p1, tooltip="text") %>%  
+  
+    layout(legend = list(x = 0.001, y = 0.001,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
+
+
+pp1
+
+
+ ##################################       P2
+
+p2 <- data %>%
+  arrange(ID) %>%
+  mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
+                      "\nPoints: ", BPA_DIVID_POINTS,
+                      "\nZ-Score: ", BPA_DIVID_EscoreZ, sep="")) %>%
+  ggplot(aes(x = AGE, y = BPA_DIVID_EscoreZ, fill= GROUP, stroke = 0,
+             size = AGE, shape = EDU_LEVEL , text = text)) +
+  geom_point(alpha = 0.7) +
+  scale_fill_manual(values = coresBPA) + 
+  scale_size(range = c(2, 5)) +
+  scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
+  scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
+  geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
+  geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
+  labs(y = "Y", title = "Z Score BPA Divid Attention", shape= "", size = "") +
+  theme_classic() +
+  
+    theme(
+      text = element_text(family = "Arial Narrow", size = 11.5),
+    plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    plot.caption = element_text(size = 9, face = "italic"),
+    axis.title = element_text(size = 10),
+    legend.position = "",
+    legend.text = element_text(size = 5)
+    )
+    
+
+
+#p2
+
+pp2 <- ggplotly(p2, tooltip="text") %>%  
+  
+    layout(legend = list(x = 0.001, y = 0.001,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
+ 
+
+pp2 
+
+
+
+######################################     P3
+
+p3 <- data %>% 
+  mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
+                      "\nPoints: ", BPA_ALTERN_POINTS,
+                      "\nZ-Score: ", BPA_ALTERN_EscoreZ, sep="")) %>%
+  
+  ggplot(aes(x = AGE, y = BPA_ALTERN_EscoreZ, fill= GROUP, stroke = 0,
+             size = AGE, shape = EDU_LEVEL , text = text)) +
+  geom_point(alpha = 0.7) +
+  scale_fill_manual(values = coresBPA) +
+  scale_size(range = c(2, 5)) +
+  scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
+  scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
+  geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
+  geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
+  labs(y = "Y", title = "Z Score BPA Alterned Attention", shape= "", size = "") +
+  theme_classic() +
+  
+    theme(
+      text = element_text(family = "Arial Narrow", size = 11.5),
+    plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    plot.caption = element_text(size = 9, face = "italic"),
+    axis.title = element_text(size = 12),
+    legend.text = element_text(size = 5)
+    )
+  
+
+#p3
+
+pp3 <-  ggplotly(p3, tooltip="text") %>%  
+  
+    layout(legend = list(x = 0.001, y = 0.001,
+                     title = " ",               #Titulo da legenda some
+                     bgcolor = "#ecf0f1",       #cor da caixa
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),                                       #fonte da legenda
+                     orientation = 50,
+                     tracegroupgap = 10,
+                     traceorder = "normal"
+                     ))
+
+
+
+pp3
+
+
+
+
+```
+
+```{r}
+
+
+library(tibble)
+library(readxl)
+library(dplyr)
+library(gtExtras)
+library(ggplot2)
+library(plotly)
+library(viridis)
+library(hrbrthemes)
+
+setwd("C:/Users/felip/Desktop/R/3_analise")
+
+data <- readxl::read_xlsx ("BPAs_FDTs_ RAVLTs_EscoreZ.xlsx", sheet = 2)
+
+data
+
+
+
+
+#######################     FDTs ANALYSIS
+
+
+
+p4 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,AGE, FDT_READING_TIME , FDT_READING_TIME_Z  )
+
+p5 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,AGE, FDT_COUNTING_TIME , FDT_COUNTING_TIME_Z  )
+
+p6 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,AGE, FDT_CHOOSING_TIME , FDT_CHOOSING_TIME_Z )
+
+p7 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,AGE, FDT_CHANGING_TIME , FDT_CHANGING_TIME_Z )
+
+p8 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,AGE, FDT_INHIBITION , FDT_INHIBITION_Z )
+
+p9 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,AGE, FDT_FLEXIBILITY , FDT_FLEXIBILITY_Z )
+
+
+
+
+########################  P4
+
+
+coresFDT <- c("#ff6b41", "#55c12a")
+
+
+
+p4 <- data %>% 
+  arrange(ID) %>% 
+  mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
+                      "\nPoints: ", FDT_READING_TIME,
+                      "\nZ-Score: ", FDT_READING_TIME_Z, sep="")) %>%
+  ggplot(aes(x = AGE, y = FDT_READING_TIME_Z, fill= GROUP, stroke = 0,
+             size = AGE, shape = EDU_LEVEL , text = text)) +
+  geom_point(alpha = 0.7) +
+  scale_fill_manual(values = coresFDT) +
+  scale_size(range = c(2, 5)) +
+  scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
+  scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
+  geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
+  geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
+  labs(y = "Y", title = "Z Score FDT Reading Time", shape= "", size = "") +
+  theme_classic() +
+  
+    theme(
+      text = element_text(family = "Arial Narrow", size = 11.5),
+    plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    plot.caption = element_text(size = 9, face = "italic"),
+    axis.title = element_text(size = 10),
+    legend.position = "",
+    legend.text = element_text(size = 5)
+    )
+    
+
+#p4
+
+pp4 <- ggplotly(p4, tooltip="text") %>%  
+  
+    layout(legend = list(x = 0.001, y = 0.001,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
+
+
+pp4
+
+#######################   P5
+
+p5 <- data %>% 
+  arrange(ID) %>% 
+  mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
+                      "\nPoints: ", FDT_COUNTING_TIME,
+                      "\nZ-Score: ", FDT_COUNTING_TIME_Z, sep="")) %>%
+  ggplot(aes(x = AGE, y = FDT_COUNTING_TIME_Z, fill= GROUP, stroke = 0,
+             size = AGE, shape = EDU_LEVEL , text = text)) +
+  geom_point(alpha = 0.7) +
+  scale_fill_manual(values = coresFDT) +
+  scale_size(range = c(2, 5)) +
+  scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
+  scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
+  geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
+  geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
+  labs(y = "Y", title = "Z Score FDT Counting Time", shape= "", size = "") +
+  theme_classic() +
+  
+    theme(
+      text = element_text(family = "Arial Narrow", size = 11.5),
+    plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    plot.caption = element_text(size = 9, face = "italic"),
+    axis.title = element_text(size = 10),
+    legend.position = "",
+    legend.text = element_text(size = 5)
+    )
+    
+
+#p5
+
+pp5 <- ggplotly(p5, tooltip="text") %>%  
+  
+    layout(legend = list(x = 0.001, y = 0.001,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
+
+
+
+pp5
+
+
+#######################   P6
+
+
+p6 <- data %>% 
+  arrange(ID) %>% 
+  mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
+                      "\nPoints: ", FDT_CHOOSING_TIME,
+                      "\nZ-Score: ", FDT_CHOOSING_TIME_Z, sep="")) %>%
+  ggplot(aes(x = AGE, y = FDT_CHOOSING_TIME_Z, fill= GROUP, stroke = 0,
+             size = AGE, shape = EDU_LEVEL , text = text)) +
+  geom_point(alpha = 0.7) +
+  scale_fill_manual(values = coresFDT) +
+  scale_size(range = c(2, 5)) +
+  scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
+  scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
+  geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
+  geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
+  labs(y = "Y", title = "Z Score FDT Chossing Time", shape= "", size = "") +
+  theme_classic() +
+  
+    theme(
+      text = element_text(family = "Arial Narrow", size = 11.5),
+    plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    plot.caption = element_text(size = 9, face = "italic"),
+    axis.title = element_text(size = 10),
+    legend.position = "",
+    legend.text = element_text(size = 5)
+    )
+    
+
+#p6
+
+pp6 <- ggplotly(p6, tooltip="text") %>%  
+  
+    layout(legend = list(x = 0.001, y = 0.001,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
+
+
+
+pp6
+
+
+#######################   P7
+
+
+p7<- data %>% 
+  arrange(ID) %>% 
+  mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
+                      "\nPoints: ", FDT_CHANGING_TIME,
+                      "\nZ-Score: ", FDT_CHANGING_TIME_Z, sep="")) %>%
+  ggplot(aes(x = AGE, y = FDT_CHANGING_TIME_Z, fill= GROUP, stroke = 0,
+             size = AGE, shape = EDU_LEVEL , text = text)) +
+  geom_point(alpha = 0.7) +
+  scale_fill_manual(values = coresFDT) +
+  scale_size(range = c(2, 5)) +
+  scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
+  scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
+  geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
+  geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
+  labs(y = "Y", title = "Z Score FDT Changing Time", shape= "", size = "") +
+  theme_classic() +
+  
+    theme(
+      text = element_text(family = "Arial Narrow", size = 11.5),
+    plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    plot.caption = element_text(size = 9, face = "italic"),
+    axis.title = element_text(size = 10),
+    legend.position = "",
+    legend.text = element_text(size = 5)
+    )
+    
+
+#p7
+
+pp7 <- ggplotly(p7, tooltip="text") %>%  
+  
+    layout(legend = list(x = 0.001, y = 0.001,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
+
+
+
+pp7
+
+
+
+#######################   P8
+
+
+p8<- data %>% 
+  arrange(ID) %>% 
+  mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
+                      "\nPoints: ", FDT_INHIBITION,
+                      "\nZ-Score: ", FDT_INHIBITION_Z, sep="")) %>%
+  ggplot(aes(x = AGE, y = FDT_INHIBITION_Z, fill= GROUP, stroke = 0,
+             size = AGE, shape = EDU_LEVEL , text = text)) +
+  geom_point(alpha = 0.7) +
+  scale_fill_manual(values = coresFDT) +
+  scale_size(range = c(2, 5)) +
+  scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
+  scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
+  geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
+  geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
+  labs(y = "Y", title = "Z Score FDT Inbition", shape= "", size = "") +
+  theme_classic() +
+  
+    theme(
+      text = element_text(family = "Arial Narrow", size = 11.5),
+    plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    plot.caption = element_text(size = 9, face = "italic"),
+    axis.title = element_text(size = 10),
+    legend.position = "",
+    legend.text = element_text(size = 5)
+    )
+    
+
+#p8
+
+pp8 <- ggplotly(p8, tooltip="text") %>%  
+  
+    layout(legend = list(x = 0.001, y = 0.001,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
+
+
+
+pp8
+
+
+#######################   P9
+
+p9<- data %>% 
+  arrange(ID) %>% 
+  mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
+                      "\nPoints: ", FDT_FLEXIBILITY,
+                      "\nZ-Score: ", FDT_FLEXIBILITY_Z, sep="")) %>%
+  ggplot(aes(x = AGE, y = FDT_FLEXIBILITY_Z, fill= GROUP, stroke = 0,
+             size = AGE, shape = EDU_LEVEL , text = text)) +
+  geom_point(alpha = 0.7) +
+  scale_fill_manual(values = coresFDT) +
+  scale_size(range = c(2, 5)) +
+  scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
+  scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
+  geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
+  geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
+  labs(y = "Y", title = "Z Score FDT Flexibility", shape= "", size = "") +
+  theme_classic() +
+  
+    theme(
+      text = element_text(family = "Arial Narrow", size = 11.5),
+    plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    plot.caption = element_text(size = 9, face = "italic"),
+    axis.title = element_text(size = 10),
+    legend.position = "",
+    legend.text = element_text(size = 5)
+    )
+    
+
+#p9
+
+pp9 <- ggplotly(p9, tooltip="text") %>%  
+  
+    layout(legend = list(x = 0.001, y = 0.001,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
+
+
+
+pp9
+```
+
+```{r}
+library(tibble)
+library(readxl)
+library(dplyr)
+library(gtExtras)
+library(ggplot2)
+library(plotly)
+library(viridis)
+library(hrbrthemes)
+
+setwd("C:/Users/felip/Desktop/R/3_analise")
+
+data <- readxl::read_xlsx ("BPAs_FDTs_ RAVLTs_EscoreZ.xlsx", sheet = 3)
+
+data
+
+
+#######################     RAVLTs ANALYSIS
+
+
+
+p10 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,AGE, RAVLT_A1 , RAVLT_A1_Z  )
+
+p11 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,AGE, RAVLT_A2 , RAVLT_A2_Z  )
+
+p12 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,AGE, RAVLT_A3 , RAVLT_A3_Z )
+
+p13 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,AGE, RAVLT_A4 , RAVLT_A4_Z )
+
+p14 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,AGE, RAVLT_A5 , RAVLT_A5_Z )
+
+p15 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,AGE, RAVLT_B1 , RAVLT_B1_Z )
+
+p16 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,AGE, RAVLT_A6 , RAVLT_A6_Z )
+
+p17 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,AGE, RAVLT_A7 , RAVLT_A7_Z )
+
+p18 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,AGE, RAVLT_TOTALSCORE , RAVLT_TOTALSCORE_Z )
+
+p19 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,AGE, RAVLT_REC , RAVLT_REC_Z )
+
+p20 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,AGE, RAVLT_RETENTION , RAVLT_RETENTION_Z )
+
+p21 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,AGE, RAVLT_PROAT_INTERFERENCE , RAVLT_PROAT_INTERFERENCE_Z )
+
+p22 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,AGE, RAVLT_RETRO_INTERFERENCE , RAVLT_RETRO_INTERFERENCE_Z )
+
+
+########################  P10
+
+
+coresRAVLT<- c("#0c6482", "#0c7924")
+
+
+
+p10 <- data %>% 
+  arrange(ID) %>% 
+  mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
+                      "\nPoints: ", RAVLT_A1,
+                      "\nZ-Score: ", RAVLT_A1_Z, sep="")) %>%
+  ggplot(aes(x = AGE, y = RAVLT_A1_Z, fill= GROUP, stroke = 0,
+             size = AGE, shape = EDU_LEVEL , text = text)) +
+  geom_point(alpha = 0.7) +
+  scale_fill_manual(values = coresRAVLT) +
+  scale_size(range = c(2, 5)) +
+  scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
+  scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
+  geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
+  geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
+  labs(y = "Y", title = "Z Score RAVLT A1", shape= "", size = "") +
+  theme_classic() +
+  
+    theme(
+      text = element_text(family = "Arial Narrow", size = 11.5),
+    plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    plot.caption = element_text(size = 9, face = "italic"),
+    axis.title = element_text(size = 10),
+    legend.position = "",
+    legend.text = element_text(size = 5)
+    )
+    
+
+#p10
+
+pp10 <- ggplotly(p10, tooltip="text") %>%  
+  
+    layout(legend = list(x = 0, y = 1.01,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
+
+
+
+pp10
+
+########################  P11
+
+
+p11 <- data %>% 
+  arrange(ID) %>% 
+  mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
+                      "\nPoints: ", RAVLT_A2,
+                      "\nZ-Score: ", RAVLT_A2_Z, sep="")) %>%
+  ggplot(aes(x = AGE, y = RAVLT_A2_Z, fill= GROUP, stroke = 0,
+             size = AGE, shape = EDU_LEVEL , text = text)) +
+  geom_point(alpha = 0.7) +
+  scale_fill_manual(values = coresRAVLT) +
+  scale_size(range = c(2, 5)) +
+  scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
+  scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
+  geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
+  geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
+  labs(y = "Y", title = "Z Score RAVLT A2", shape= "", size = "") +
+  theme_classic() +
+  
+    theme(
+      text = element_text(family = "Arial Narrow", size = 11.5),
+    plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    plot.caption = element_text(size = 9, face = "italic"),
+    axis.title = element_text(size = 10),
+    legend.position = "",
+    legend.text = element_text(size = 5)
+    )
+    
+
+#p11
+
+pp11 <- ggplotly(p11, tooltip="text") %>%  
+  
+    layout(legend = list(x = 0, y = 1.01,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
+
+
+
+pp11
+
+
+
+########################  P12
+
+
+p12 <- data %>% 
+  arrange(ID) %>% 
+  mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
+                      "\nPoints: ", RAVLT_A3,
+                      "\nZ-Score: ", RAVLT_A3_Z, sep="")) %>%
+  ggplot(aes(x = AGE, y = RAVLT_A3_Z, fill= GROUP, stroke = 0,
+             size = AGE, shape = EDU_LEVEL , text = text)) +
+  geom_point(alpha = 0.7) +
+  scale_fill_manual(values = coresRAVLT) +
+  scale_size(range = c(2, 5)) +
+  scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
+  scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
+  geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
+  geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
+  labs(y = "Y", title = "Z Score RAVLT A3", shape= "", size = "") +
+  theme_classic() +
+  
+    theme(
+      text = element_text(family = "Arial Narrow", size = 11.5),
+    plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    plot.caption = element_text(size = 9, face = "italic"),
+    axis.title = element_text(size = 10),
+    legend.position = "",
+    legend.text = element_text(size = 5)
+    )
+    
+
+#p12
+
+pp12 <- ggplotly(p12, tooltip="text") %>%  
+  
+    layout(legend = list(x = 0, y = 1.01,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
+
+
+
+pp12
+
+
+########################  P13
+
+
+p13 <- data %>% 
+  arrange(ID) %>% 
+  mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
+                      "\nPoints: ", RAVLT_A4,
+                      "\nZ-Score: ", RAVLT_A4_Z, sep="")) %>%
+  ggplot(aes(x = AGE, y = RAVLT_A4_Z, fill= GROUP, stroke = 0,
+             size = AGE, shape = EDU_LEVEL , text = text)) +
+  geom_point(alpha = 0.7) +
+  scale_fill_manual(values = coresRAVLT) +
+  scale_size(range = c(2, 5)) +
+  scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
+  scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
+  geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
+  geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
+  labs(y = "Y", title = "Z Score RAVLT A4", shape= "", size = "") +
+  theme_classic() +
+  
+    theme(
+      text = element_text(family = "Arial Narrow", size = 11.5),
+    plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    plot.caption = element_text(size = 9, face = "italic"),
+    axis.title = element_text(size = 10),
+    legend.position = "",
+    legend.text = element_text(size = 5)
+    )
+    
+
+#p13
+
+pp13 <- ggplotly(p13, tooltip="text") %>%  
+  
+    layout(legend = list(x = 0, y = 1.01,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
+
+
+
+pp13
+
+
+########################  P14
+
+
+p14 <- data %>% 
+  arrange(ID) %>% 
+  mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
+                      "\nPoints: ", RAVLT_A5,
+                      "\nZ-Score: ", RAVLT_A5_Z, sep="")) %>%
+  ggplot(aes(x = AGE, y = RAVLT_A5_Z, fill= GROUP, stroke = 0,
+             size = AGE, shape = EDU_LEVEL , text = text)) +
+  geom_point(alpha = 0.7) +
+  scale_fill_manual(values = coresRAVLT) +
+  scale_size(range = c(2, 5)) +
+  scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
+  scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
+  geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
+  geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
+  labs(y = "Y", title = "Z Score RAVLT A5", shape= "", size = "") +
+  theme_classic() +
+  
+    theme(
+      text = element_text(family = "Arial Narrow", size = 11.5),
+    plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    plot.caption = element_text(size = 9, face = "italic"),
+    axis.title = element_text(size = 10),
+    legend.position = "",
+    legend.text = element_text(size = 5)
+    )
+    
+
+#p14
+
+pp14 <- ggplotly(p14, tooltip="text") %>%  
+  
+    layout(legend = list(x = 0, y = 1.01,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
+
+
+
+pp14
+
+
+########################  P15
+
+
+p15 <- data %>% 
+  arrange(ID) %>% 
+  mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
+                      "\nPoints: ", RAVLT_B1,
+                      "\nZ-Score: ", RAVLT_B1_Z, sep="")) %>%
+  ggplot(aes(x = AGE, y = RAVLT_B1_Z, fill= GROUP, stroke = 0,
+             size = AGE, shape = EDU_LEVEL , text = text)) +
+  geom_point(alpha = 0.7) +
+  scale_fill_manual(values = coresRAVLT) +
+  scale_size(range = c(2, 5)) +
+  scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
+  scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
+  geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
+  geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
+  labs(y = "Y", title = "Z Score RAVLT B1", shape= "", size = "") +
+  theme_classic() +
+  
+    theme(
+      text = element_text(family = "Arial Narrow", size = 11.5),
+    plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    plot.caption = element_text(size = 9, face = "italic"),
+    axis.title = element_text(size = 10),
+    legend.position = "",
+    legend.text = element_text(size = 5)
+    )
+    
+
+#p15
+
+pp15 <- ggplotly(p15, tooltip="text") %>%  
+  
+    layout(legend = list(x = 0, y = 1.01,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
+
+
+
+pp15
+
+
+
+########################  P16
+
+
+p16 <- data %>% 
+  arrange(ID) %>% 
+  mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
+                      "\nPoints: ", RAVLT_A6,
+                      "\nZ-Score: ", RAVLT_A6_Z, sep="")) %>%
+  ggplot(aes(x = AGE, y = RAVLT_A6_Z, fill= GROUP, stroke = 0,
+             size = AGE, shape = EDU_LEVEL , text = text)) +
+  geom_point(alpha = 0.7) +
+  scale_fill_manual(values = coresRAVLT) +
+  scale_size(range = c(2, 5)) +
+  scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
+  scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
+  geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
+  geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
+  labs(y = "Y", title = "Z Score RAVLT A6", shape= "", size = "") +
+  theme_classic() +
+  
+    theme(
+      text = element_text(family = "Arial Narrow", size = 11.5),
+    plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    plot.caption = element_text(size = 9, face = "italic"),
+    axis.title = element_text(size = 10),
+    legend.position = "",
+    legend.text = element_text(size = 5)
+    )
+    
+
+#p16
+
+pp16 <- ggplotly(p16, tooltip="text") %>%  
+  
+    layout(legend = list(x = 0, y = 1.01,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
+
+
+
+pp16
+
+
+
+########################  P17
+
+p17 <- data %>% 
+  arrange(ID) %>% 
+  mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
+                      "\nPoints: ", RAVLT_A7,
+                      "\nZ-Score: ", RAVLT_A7_Z, sep="")) %>%
+  ggplot(aes(x = AGE, y = RAVLT_A7_Z, fill= GROUP, stroke = 0,
+             size = AGE, shape = EDU_LEVEL , text = text)) +
+  geom_point(alpha = 0.7) +
+  scale_fill_manual(values = coresRAVLT) +
+  scale_size(range = c(2, 5)) +
+  scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
+  scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
+  geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
+  geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
+  labs(y = "Y", title = "Z Score RAVLT A7", shape= "", size = "") +
+  theme_classic() +
+  
+    theme(
+      text = element_text(family = "Arial Narrow", size = 11.5),
+    plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    plot.caption = element_text(size = 9, face = "italic"),
+    axis.title = element_text(size = 10),
+    legend.position = "",
+    legend.text = element_text(size = 5)
+    )
+    
+
+#p17
+
+pp17 <- ggplotly(p17, tooltip="text") %>%  
+  
+    layout(legend = list(x = 0, y = 1.01,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
+
+
+
+pp17
+
+########################  P18
+
+p18 <- data %>% 
+  arrange(ID) %>% 
+  mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
+                      "\nPoints: ", RAVLT_TOTALSCORE,
+                      "\nZ-Score: ", RAVLT_TOTALSCORE_Z, sep="")) %>%
+  ggplot(aes(x = AGE, y = RAVLT_TOTALSCORE_Z, fill= GROUP, stroke = 0,
+             size = AGE, shape = EDU_LEVEL , text = text)) +
+  geom_point(alpha = 0.7) +
+  scale_fill_manual(values = coresRAVLT) +
+  scale_size(range = c(2, 5)) +
+  scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
+  scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
+  geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
+  geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
+  labs(y = "Y", title = "Z Score RAVLT Total Score", shape= "", size = "") +
+  theme_classic() +
+  
+    theme(
+      text = element_text(family = "Arial Narrow", size = 11.5),
+    plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    plot.caption = element_text(size = 9, face = "italic"),
+    axis.title = element_text(size = 10),
+    legend.position = "",
+    legend.text = element_text(size = 5)
+    )
+    
+
+#p18
+
+pp18 <- ggplotly(p18, tooltip="text") %>%  
+  
+    layout(legend = list(x = 0, y = 1.01,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
+
+
+
+pp18
+
+
+
+########################  P19
+
+p19 <- data %>% 
+  arrange(ID) %>% 
+  mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
+                      "\nPoints: ", RAVLT_REC,
+                      "\nZ-Score: ", RAVLT_REC_Z, sep="")) %>%
+  ggplot(aes(x = AGE, y = RAVLT_REC_Z, fill= GROUP, stroke = 0,
+             size = AGE, shape = EDU_LEVEL , text = text)) +
+  geom_point(alpha = 0.7) +
+  scale_fill_manual(values = coresRAVLT) +
+  scale_size(range = c(2, 5)) +
+  scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
+  scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
+  geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
+  geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
+  labs(y = "Y", title = "Z Score RAVLT Recognition", shape= "", size = "") +
+  theme_classic() +
+  
+    theme(
+      text = element_text(family = "Arial Narrow", size = 11.5),
+    plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    plot.caption = element_text(size = 9, face = "italic"),
+    axis.title = element_text(size = 10),
+    legend.position = "",
+    legend.text = element_text(size = 5)
+    )
+    
+
+#p19
+
+pp19 <- ggplotly(p19, tooltip="text") %>%  
+  
+    layout(legend = list(x = 0, y = 1.01,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
+
+
+
+pp19
+
+
+########################  P20
+
+p20 <- data %>% 
+  arrange(ID) %>% 
+  mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
+                      "\nPoints: ", RAVLT_RETENTION,
+                      "\nZ-Score: ", RAVLT_RETENTION_Z, sep="")) %>%
+  ggplot(aes(x = AGE, y = RAVLT_RETENTION_Z, fill= GROUP, stroke = 0,
+             size = AGE, shape = EDU_LEVEL , text = text)) +
+  geom_point(alpha = 0.7) +
+  scale_fill_manual(values = coresRAVLT) +
+  scale_size(range = c(2, 5)) +
+  scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
+  scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
+  geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
+  geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
+  labs(y = "Y", title = "Z Score RAVLT Retention", shape= "", size = "") +
+  theme_classic() +
+  
+    theme(
+      text = element_text(family = "Arial Narrow", size = 11.5),
+    plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    plot.caption = element_text(size = 9, face = "italic"),
+    axis.title = element_text(size = 10),
+    legend.position = "",
+    legend.text = element_text(size = 5)
+    )
+    
+
+#p20
+
+pp20 <- ggplotly(p20, tooltip="text") %>%  
+  
+    layout(legend = list(x = 0, y = 1.01,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
+
+
+
+pp20
+
+
+########################  P21
+
+p21 <- data %>% 
+  arrange(ID) %>% 
+  mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
+                      "\nPoints: ", RAVLT_PROAT_INTERFERENCE,
+                      "\nZ-Score: ", RAVLT_PROAT_INTERFERENCE_Z, sep="")) %>%
+  ggplot(aes(x = AGE, y = RAVLT_PROAT_INTERFERENCE_Z, fill= GROUP, stroke = 0,
+             size = AGE, shape = EDU_LEVEL , text = text)) +
+  geom_point(alpha = 0.7) +
+  scale_fill_manual(values = coresRAVLT) +
+  scale_size(range = c(2, 5)) +
+  scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
+  scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
+  geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
+  geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
+  labs(y = "Y", title = "Z Score RAVLT Proative Interference", shape= "", size = "") +
+  theme_classic() +
+  
+    theme(
+      text = element_text(family = "Arial Narrow", size = 11.5),
+    plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    plot.caption = element_text(size = 9, face = "italic"),
+    axis.title = element_text(size = 10),
+    legend.position = "",
+    legend.text = element_text(size = 5)
+    )
+    
+
+#p21
+
+pp21 <- ggplotly(p21, tooltip="text") %>%  
+  
+    layout(legend = list(x = 0, y = 1.01,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
+
+
+
+pp21
+
+
+########################  P22
+
+p22 <- data %>% 
+  arrange(ID) %>% 
+  mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
+                      "\nPoints: ", RAVLT_RETRO_INTERFERENCE,
+                      "\nZ-Score: ", RAVLT_RETRO_INTERFERENCE_Z, sep="")) %>%
+  ggplot(aes(x = AGE, y = RAVLT_RETRO_INTERFERENCE_Z, fill= GROUP, stroke = 0,
+             size = AGE, shape = EDU_LEVEL , text = text)) +
+  geom_point(alpha = 0.7) +
+  scale_fill_manual(values = coresRAVLT) +
+  scale_size(range = c(2, 5)) +
+  scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
+  scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
+  geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
+  geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
+  labs(y = "Y", title = "Z Score RAVLT Retroative Interference", shape= "", size = "") +
+  theme_classic() +
+  
+    theme(
+      text = element_text(family = "Arial Narrow", size = 11.5),
+    plot.title = element_text(size = 12, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    plot.caption = element_text(size = 9, face = "italic"),
+    axis.title = element_text(size = 10),
+    legend.position = "",
+    legend.text = element_text(size = 5)
+    )
+    
+
+#p22
+
+pp22 <- ggplotly(p22, tooltip="text") %>%  
+  
+    layout(legend = list(x = 0, y = 1.01,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
+
+
+
+pp22
+
+
+```

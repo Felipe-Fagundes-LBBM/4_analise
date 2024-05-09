@@ -24,7 +24,7 @@ library(ggtext)
 
 getwd()
 
-list.files()
+#list.files()
 
 data <- readxl::read_excel("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO.xlsx")
 
@@ -83,11 +83,48 @@ ggsave("bxplot_BPAs.pdf", plot = plot1, width = 13, height = 10)
 
 
                                     #BPA Total
-#colnames(data)
 
-#ptotal <- data %>%  select(GROUP ,  )
+ptotal <- df %>%  select(GROUP , BPA_TOTAL)
+
+# Reorganizar os dados para o formato 'long' usando a função pivot_longer() do pacote tidyr
+
+p_bpa<- tidyr::pivot_longer(ptotal, cols = -GROUP, names_to = "Variable", values_to = "Value")
 
 
+                                    #Gráfico facetado BPA-Conc,Divid,Altern.
+
+plototal <- ggplot(p_bpa, aes(x = GROUP, y = Value, fill = GROUP)) + 
+  
+  geom_boxplot(outlier.shape = NA, alpha = 0.5, width = 0.7, coef = 0, lwd = 0.4, color = "black") +
+  geom_jitter(aes(color = GROUP), size = 2.5, width = 0.15, alpha = 0.5) +
+  
+  labs(x = NULL, y = NULL) + 
+  
+  scale_fill_manual(values = c("#1a2887", "#799de4")) +  
+  scale_color_manual(values = c("#1a2887", "#799de4")) +
+  
+  facet_wrap(~ Variable, scales = "free_y", 
+             labeller = labeller(Variable = 
+                                   c(BPA_TOTAL = "Total Score"))) +
+  
+  scale_y_continuous(limits = c(20, 130), breaks = seq(20, 120, by = 20)) +
+  
+  theme(axis.text = element_text(size = 20, color = "black"),
+        axis.title = element_text(size = 25, color = "black"),
+        panel.background = element_rect(fill = "white"),
+        axis.line = element_line(color = "black"),
+        plot.title = element_text(size = 20,  face = "bold"),
+        text = element_text(size = 20),
+        legend.position = "bottom",
+        strip.background = element_blank(),
+        strip.text = element_text(size = 14,  face = "bold"))
+
+
+                            #  Test-T
+
+plototal <- plototal + stat_compare_means(method = "t.test", label.x = 1.38)
+
+plototal
 
 #######################################    BOX PLOT-Test.T FDTs #############################################
 

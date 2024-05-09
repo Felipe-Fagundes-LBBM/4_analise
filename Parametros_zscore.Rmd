@@ -33,6 +33,8 @@ data
 
 ```{r}
 
+## mann  whitney pq nao?
+
 hist(data$BPA_CONC_POINTS, breaks = 15, xlab = "BPA_CONC_EscoreZ", main="BPA_CONC_EscoreZ")
 
 #lillie.test(data$BPA_CONC_POINTS)

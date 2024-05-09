@@ -696,8 +696,10 @@ data <- readxl::read_xlsx ("BPAs_EscoreZ.xlsx", sheet = 1)
 data
 
 summary(data)
+colnames(data)
 
-
+data <- data %>% rename(ID = ID...1) %>% select(-ID...8,-ID...11,-ID...14)
+  
                                         # Filtrando dados BPAs
 
 p1 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,EDU_LEVEL , AGE, BPA_CONC_POINTS , BPA_CONC_EscoreZ  )
@@ -782,11 +784,11 @@ p2 <- data %>%
   
     theme(
       text = element_text(family = "Arial Narrow", size = 11.5),
-    plot.title = element_text(size = 12, face = "bold"),
-    plot.subtitle = element_text(size = 12),
+    plot.title = element_text(size = 18, face = "bold"),
+    plot.subtitle = element_text(size = 18,face = "bold"),
     strip.text = element_text(size = 12),
     plot.caption = element_text(size = 9, face = "italic"),
-    axis.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
     legend.position = "",
     legend.text = element_text(size = 5)
     )
@@ -831,11 +833,11 @@ p3 <- data %>%
   
     theme(
       text = element_text(family = "Arial Narrow", size = 11.5),
-    plot.title = element_text(size = 12, face = "bold"),
-    plot.subtitle = element_text(size = 12),
+    plot.title = element_text(size = 18, face = "bold"),
+    plot.subtitle = element_text(size = 18,face = "bold"),
     strip.text = element_text(size = 12),
     plot.caption = element_text(size = 9, face = "italic"),
-    axis.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
     legend.position = "",
     legend.text = element_text(size = 5)
     )
@@ -860,6 +862,54 @@ pp3 <-  ggplotly(p3, tooltip="text") %>%
 pp3
 
 
+
+                              #BPA_TOTAL
+
+ptotal <- data %>% 
+  arrange(ID) %>% 
+  mutate(text = paste("Identification: ", ID , "\nAge: ", AGE , 
+                      "\nPoints: ", BPA_TOTAL,
+                      "\nZ-Score: ", BPA_TOTAL_EscoreZ, sep="")) %>%
+  ggplot(aes(x = AGE, y = BPA_TOTAL_EscoreZ, fill= GROUP, stroke = 0,
+             size = AGE, shape = EDU_LEVEL , text = text)) +
+  geom_point(alpha = 0.7,position = "jitter") +
+  scale_fill_manual(values = coresBPA) +
+  scale_size(range = c(2, 5)) +
+  scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
+  scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
+  geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
+  geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
+  labs(y = "Y", title = "Z Score Total", shape= "", size = "") +
+  theme_classic() +
+  
+    theme(
+      text = element_text(family = "Arial Narrow", size = 11.5),
+    plot.title = element_text(size = 18, face = "bold"),
+    plot.subtitle = element_text(size = 18,face = "bold"),
+    strip.text = element_text(size = 12),
+    plot.caption = element_text(size = 9, face = "italic"),
+    axis.title = element_text(size = 15),
+    legend.position = "",
+    legend.text = element_text(size = 5)
+    )
+    
+            # Gráfico interativo da bibliotexa ggplottly
+
+pptotal <- ggplotly(ptotal, tooltip="text") %>%
+  
+  layout(legend = list(x = 0, y = 1.01,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
+  
+
+pptotal
 
 ######################################  Bubble Plots FDTs Zscore  ###############################
 

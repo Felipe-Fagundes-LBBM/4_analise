@@ -413,6 +413,8 @@ getwd()
 
 data <- readxl::read_xlsx ("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO.xlsx")
 
+data <- na.omit(data)
+
  
 ################################## BPA Z-Score Calculating  #####################################
 
@@ -523,8 +525,8 @@ BPA_TOTAL_EscoreZ
 
 
 
-BPAs_EscoreZ <- bind_cols(BPA_CONC_EscoreZ, BPA_DIVID_EscoreZ, BPA_ALTERN_EscoreZ, BPA_TOTAL_EscoreZ) 
-
+BPAs_EscoreZ <- bind_cols(BPA_CONC_EscoreZ, BPA_DIVID_EscoreZ, BPA_ALTERN_EscoreZ, BPA_TOTAL_EscoreZ) %>% 
+          na.omit()
 
 write.xlsx(BPAs_EscoreZ, file = "BPAs_EscoreZ.xlsx")
 

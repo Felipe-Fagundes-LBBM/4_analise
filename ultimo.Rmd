@@ -28,8 +28,9 @@ getwd()
 
 data <- readxl::read_excel("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO.xlsx")
 
-data
+data <- na.omit(data)
 
+data
 
 #######################################    BOX PLOT-Test.T BPAs #############################################
 
@@ -84,30 +85,25 @@ ggsave("bxplot_BPAs.pdf", plot = plot1, width = 13, height = 10)
 
                                     #BPA Total
 
-ptotal <- df %>%  select(GROUP , BPA_TOTAL)
+ptotal <- data %>%  select(GROUP ,BPA_TOTAL)
 
 # Reorganizar os dados para o formato 'long' usando a função pivot_longer() do pacote tidyr
 
-p_bpa<- tidyr::pivot_longer(ptotal, cols = -GROUP, names_to = "Variable", values_to = "Value")
+#p_bpa<- tidyr::pivot_longer(ptotal, cols = -GROUP, names_to = "Variable", values_to = "Value")
 
 
-                                    #Gráfico facetado BPA-Conc,Divid,Altern.
-
-plototal <- ggplot(p_bpa, aes(x = GROUP, y = Value, fill = GROUP)) + 
+                                    
+plototal <- ggplot(ptotal, aes(x = GROUP, y = BPA_TOTAL, fill = GROUP)) + 
   
   geom_boxplot(outlier.shape = NA, alpha = 0.5, width = 0.7, coef = 0, lwd = 0.4, color = "black") +
   geom_jitter(aes(color = GROUP), size = 2.5, width = 0.15, alpha = 0.5) +
   
   labs(x = NULL, y = NULL) + 
-  
+  ggtitle("Total Score") +
   scale_fill_manual(values = c("#1a2887", "#799de4")) +  
   scale_color_manual(values = c("#1a2887", "#799de4")) +
   
-  facet_wrap(~ Variable, scales = "free_y", 
-             labeller = labeller(Variable = 
-                                   c(BPA_TOTAL = "Total Score"))) +
-  
-  scale_y_continuous(limits = c(20, 130), breaks = seq(20, 120, by = 20)) +
+  scale_y_continuous(limits = c(100, 400), breaks = seq(100, 400, by = 50)) +
   
   theme(axis.text = element_text(size = 20, color = "black"),
         axis.title = element_text(size = 25, color = "black"),
@@ -125,6 +121,9 @@ plototal <- ggplot(p_bpa, aes(x = GROUP, y = Value, fill = GROUP)) +
 plototal <- plototal + stat_compare_means(method = "t.test", label.x = 1.38)
 
 plototal
+
+ggsave("bxplot_BPAsTOTAL.pdf", plot = plototal, width = 13, height = 10)
+
 
 #######################################    BOX PLOT-Test.T FDTs #############################################
 
@@ -710,35 +709,44 @@ p1 <- data %>%
                       "\nZ-Score: ", BPA_CONC_EscoreZ, sep="")) %>%
   ggplot(aes(x = AGE, y = BPA_CONC_EscoreZ, fill= GROUP, stroke = 0,
              size = AGE, shape = EDU_LEVEL , text = text)) +
-  geom_point(alpha = 0.7) +
+  geom_point(alpha = 0.7,position = "jitter") +
   scale_fill_manual(values = coresBPA) +
   scale_size(range = c(2, 5)) +
   scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
   scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
   geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
   geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
-  labs(y = "Y", title = "Z Score BPA Focused Attention", shape= "", size = "") +
+  labs(y = "Y", title = "Z Score Focused Attention", shape= "", size = "") +
   theme_classic() +
   
     theme(
       text = element_text(family = "Arial Narrow", size = 11.5),
-    plot.title = element_text(size = 12, face = "bold"),
-    plot.subtitle = element_text(size = 12),
+    plot.title = element_text(size = 18, face = "bold"),
+    plot.subtitle = element_text(size = 18,face = "bold"),
     strip.text = element_text(size = 12),
     plot.caption = element_text(size = 9, face = "italic"),
-    axis.title = element_text(size = 10),
+    axis.title = element_text(size = 15),
     legend.position = "",
     legend.text = element_text(size = 5)
     )
     
-
             # Gráfico interativo da bibliotexa ggplottly
 
-pp1 <- ggplotly(p1, tooltip="text") 
-
+pp1 <- ggplotly(p1, tooltip="text") %>%
+  
+  layout(legend = list(x = 0, y = 1.01,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
+  
 
 pp1
-
 
                                 #   P2
 
@@ -749,14 +757,14 @@ p2 <- data %>%
                       "\nZ-Score: ", BPA_DIVID_EscoreZ, sep="")) %>%
   ggplot(aes(x = AGE, y = BPA_DIVID_EscoreZ, fill= GROUP, stroke = 0,
              size = AGE, shape = EDU_LEVEL , text = text)) +
-  geom_point(alpha = 0.7) +
+  geom_point(alpha = 0.7, position = "jitter") +
   scale_fill_manual(values = coresBPA) +
   scale_size(range = c(2, 5)) +
   scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
   scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
   geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
   geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
-  labs(y = "Y", title = "Z Score BPA Focused Attention", shape= "", size = "") +
+  labs(y = "Y", title = "Z Score Divid Attention", shape= "", size = "") +
   theme_classic() +
   
     theme(
@@ -774,11 +782,20 @@ p2 <- data %>%
 
                       # Gráfico interativo da bibliotexa ggplottly
 
-pp2 <- ggplotly(p2, tooltip="text")
+pp2 <- ggplotly(p2, tooltip="text") %>%  
+ 
+   layout(legend = list(x = 0, y = 1.01,
+                    title = " ",
+                    bgcolor = "#ecf0f1",
+                    bordercolor = "white",
+                    borderwidth = 1,
+                    font = list(size = 9, family = "Arial", color = "black"),
+                    orientation = 50,
+                    tracegroupgap = 20,
+                    traceorder = "normal"
+                    ))
  
 pp2 
-
-
 
                                       #   P3
 
@@ -789,14 +806,14 @@ p3 <- data %>%
   
   ggplot(aes(x = AGE, y = BPA_ALTERN_EscoreZ, fill= GROUP, stroke = 0,
              size = AGE, shape = EDU_LEVEL , text = text)) +
-  geom_point(alpha = 0.7) +
+  geom_point(alpha = 0.7,position = "jitter") +
   scale_fill_manual(values = coresBPA) +
   scale_size(range = c(2, 5)) +
   scale_x_continuous(name = "Age", limits = c(10, 52), breaks = seq(10, 50, by = 10)) +
   scale_y_continuous(name = "Z Score", limits = c(-3, 3), breaks = seq(-3, 3)) +
   geom_hline(yintercept = -3:3, color = "black", alpha = 0.1) + 
   geom_hline(yintercept = 0, color = "red", alpha = 0.3, linetype = "") +
-  labs(y = "Y", title = "Z Score BPA Focused Attention", shape= "", size = "") +
+  labs(y = "Y", title = "Z Score Altern Attention", shape= "", size = "") +
   theme_classic() +
   
     theme(
@@ -813,12 +830,21 @@ p3 <- data %>%
 
                     # Gráfico interativo da bibliotexa ggplottly
 
-pp3 <-  ggplotly(p3, tooltip="text")
+pp3 <-  ggplotly(p3, tooltip="text") %>%  
+  
+    layout(legend = list(x = 0, y = 1.01,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
 
 
 pp3
-
-
 
 
 

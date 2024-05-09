@@ -445,7 +445,7 @@ constantes <- tribble(
 )
 
                                 # 3º Try
-                # COMEÇAR DAQUI ----->  DETERMINANDO LIMITES A SEREM APLICADOS
+  # COMEÇAR DAQUI ----->  DETERMINANDO LIMITES A SEREM APLICADOS
 
 limites_idade <- c(18, 20, 30, 40, 50)
 
@@ -694,8 +694,6 @@ getwd()
 ######################################  Bubble Plots BPAs Zscore  ###############################
 
 data <- readxl::read_xlsx ("BPAs_EscoreZ.xlsx", sheet = 1)
-
-data
 
 summary(data)
 colnames(data)

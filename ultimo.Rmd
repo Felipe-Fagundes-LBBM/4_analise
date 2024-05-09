@@ -160,7 +160,7 @@ p4 <- df %>%  select(GROUP , RAVLT_A5, RAVLT_A6, RAVLT_A7)
 
 p5 <- df %>%  select(GROUP , RAVLT_TOTALSCORE)
 
-p6 <- df %>%  select(RAVLT_B1,RAVLT_REC,RAVLT_RETENTION)
+p6 <- df %>%  select(GROUP,RAVLT_B1,RAVLT_REC,RAVLT_RETENTION)
 
 p7 <- df %>%  select(GROUP,RAVLT_RETENTION,RAVLT_RETRO_INTERFERENCE)
 
@@ -1724,7 +1724,7 @@ df <- read_excel("BPAs_FDTs_ RAVLTs_EscoreZ.xlsx", sheet = 3)
 
 colnames(df)
 
-######################################  Curva de Crescimento ##########################################
+######################################  Curva de Crescimento  ##########################################
 
 df.RAVLTs <- df %>% select(GROUP,AGE,RAVLT_A1,RAVLT_A2,RAVLT_A3,RAVLT_A4,RAVLT_A5)
 

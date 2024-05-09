@@ -432,20 +432,6 @@ calcular_z_score <- function(x, media, desvio_padrao) {
 
 
                                 # 2º Try
-                # DETERMINANDO LIMITES A SEREM APLICADOS
-
-limites_idade <- c(18, 20, 30, 40, 49)
-
-
-data <- data %>%
-  mutate(LIMIT_AGE = cut(AGE, breaks = limites_idade, labels =
-                           c("18-20", "21-30", "31-40", "41-49"))) %>% 
-  arrange(AGE)
-  
-data
-
-
-                                # 3º Try
 
 # Definir os valores constantes de média e desvio padrão para cada faixa etária
 constantes <- tribble(
@@ -456,7 +442,18 @@ constantes <- tribble(
   "41-49", 80.72, 22.85
 )
 
-                                # 4º Try
+                                # 3º Try
+                # COMEÇAR DAQUI ----->  DETERMINANDO LIMITES A SEREM APLICADOS
+
+limites_idade <- c(18, 20, 30, 40, 50)
+
+
+data <- data %>%
+  mutate(LIMIT_AGE = cut(AGE, breaks = limites_idade, labels =
+                           c("18-20", "21-30", "31-40", "41-50"))) %>% 
+  arrange(AGE)
+  
+data
 
 # Calcular o Z-score usando as constantes para cada faixa etária
 
@@ -468,10 +465,10 @@ BPA_CONC_EscoreZ <- data %>%
     LIMIT_AGE == "18-20" ~ (BPA_CONC_POINTS - 85.79) / 22.53,
     LIMIT_AGE == "21-30" ~ (BPA_CONC_POINTS - 87.08) / 21.50,
     LIMIT_AGE == "31-40" ~ (BPA_CONC_POINTS - 85.48) / 22.56,
-    LIMIT_AGE == "41-49" ~ (BPA_CONC_POINTS - 80.72) / 22.85,
+    LIMIT_AGE == "41-50" ~ (BPA_CONC_POINTS - 80.72) / 22.85,
     TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
   )) %>%
-  select(ID,BPA_CONC_POINTS, AGE, LIMIT_AGE, BPA_CONC_EscoreZ) %>% 
+  select(ID, AGE,GROUP,EDU_LEVEL, LIMIT_AGE,BPA_CONC_POINTS, BPA_CONC_EscoreZ) %>% 
   arrange(ID)
 
 BPA_CONC_EscoreZ
@@ -484,10 +481,10 @@ BPA_DIVID_EscoreZ <- data %>%
     LIMIT_AGE == "18-20" ~ (BPA_DIVID_POINTS - 79.42) / 23.49,
     LIMIT_AGE == "21-30" ~ (BPA_DIVID_POINTS - 77.19) / 24.42,
     LIMIT_AGE == "31-40" ~ (BPA_DIVID_POINTS - 71.28) / 25.33,
-    LIMIT_AGE == "41-49" ~ (BPA_DIVID_POINTS - 61.22) / 26.53,
+    LIMIT_AGE == "41-50" ~ (BPA_DIVID_POINTS - 61.22) / 26.53,
     TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
   )) %>%
-  select(ID,BPA_DIVID_POINTS, AGE, LIMIT_AGE, BPA_DIVID_EscoreZ) %>% 
+  select(ID,BPA_DIVID_POINTS, BPA_DIVID_EscoreZ) %>% 
   arrange(ID)
 
 BPA_DIVID_EscoreZ
@@ -500,20 +497,33 @@ BPA_ALTERN_EscoreZ <- data %>%
     LIMIT_AGE == "18-20" ~ (BPA_ALTERN_POINTS - 93.21) / 21.76,
     LIMIT_AGE == "21-30" ~ (BPA_ALTERN_POINTS - 87.53) / 23.56,
     LIMIT_AGE == "31-40" ~ (BPA_ALTERN_POINTS - 82.28) / 24.84,
-    LIMIT_AGE == "41-49" ~ (BPA_ALTERN_POINTS - 72.70) / 25.80,
+    LIMIT_AGE == "41-50" ~ (BPA_ALTERN_POINTS - 72.70) / 25.80,
     TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
   )) %>%
-  select(ID,BPA_ALTERN_POINTS, AGE, LIMIT_AGE, BPA_ALTERN_EscoreZ) %>% 
+  select(ID,BPA_ALTERN_POINTS, BPA_ALTERN_EscoreZ) %>% 
   arrange(ID)
 
 BPA_ALTERN_EscoreZ 
 
 
+#BPA_TOTAL
 
-BPAs_EscoreZ <- bind_cols(BPA_CONC_EscoreZ, BPA_DIVID_EscoreZ, BPA_ALTERN_EscoreZ) %>%  
-  select(-ID...6, -ID...11, -AGE...13, -AGE...8, -LIMIT_AGE...9, -LIMIT_AGE...14) %>% 
-  #rename(ID = ID...1, AGE = AGE...2, LIMIT_AGE = LIMIT_AGE...3) %>% 
-  select(ID...1, AGE...3, LIMIT_AGE...4, everything())
+BPA_TOTAL_EscoreZ <- data %>%
+  mutate(BPA_TOTAL_EscoreZ = case_when(
+    LIMIT_AGE == "18-20" ~ (BPA_TOTAL - 258.42) / 56.59,
+    LIMIT_AGE == "21-30" ~ (BPA_TOTAL - 251.79) / 58.61,
+    LIMIT_AGE == "31-40" ~ (BPA_TOTAL - 239.04) / 62.77,
+    LIMIT_AGE == "41-50" ~ (BPA_TOTAL - 214.65) / 64.33,
+    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
+  )) %>%
+  select(ID,BPA_TOTAL, BPA_TOTAL_EscoreZ) %>% 
+  arrange(ID)
+
+BPA_TOTAL_EscoreZ
+
+
+
+BPAs_EscoreZ <- bind_cols(BPA_CONC_EscoreZ, BPA_DIVID_EscoreZ, BPA_ALTERN_EscoreZ, BPA_TOTAL_EscoreZ) 
 
 
 write.xlsx(BPAs_EscoreZ, file = "BPAs_EscoreZ.xlsx")
@@ -677,10 +687,11 @@ library(hrbrthemes)
 
 #setwd("C:/Users/felip/Desktop/R/3_analise")
 
+getwd()
 
 ######################################  Bubble Plots BPAs Zscore  ###############################
 
-data <- readxl::read_xlsx ("BPAs_FDTs_ RAVLTs_EscoreZ.xlsx", sheet = 1)
+data <- readxl::read_xlsx ("BPAs_EscoreZ.xlsx", sheet = 1)
 
 data
 
@@ -694,6 +705,8 @@ p1 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,EDU_LEVEL , AGE, BPA_CONC_POINTS , B
 p2 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,EDU_LEVEL, AGE, BPA_DIVID_POINTS , BPA_DIVID_EscoreZ  )
 
 p3 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,EDU_LEVEL ,AGE, BPA_ALTERN_POINTS , BPA_ALTERN_EscoreZ )
+
+ptotal <- data %>%  select(ID,EDU_LEVEL ,GROUP ,EDU_LEVEL ,AGE, BPA_ALTERN_POINTS , BPA_ALTERN_EscoreZ )
 
                                                 #   P1  
   

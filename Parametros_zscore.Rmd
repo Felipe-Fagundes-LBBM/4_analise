@@ -1,0 +1,48 @@
+---
+title: "Dados de Parâmetros Z-Score"
+output: html_document
+date: "2024-05-09"
+---
+
+```{r}
+knitr::opts_chunk$set(
+  message=FALSE, 
+  warning=FALSE,
+  fig.cap= "Z-Scores Parametros")
+
+
+install.packages("Lilliefors")
+install.packages("MKinfer")
+
+
+library(readxl)
+library(Lilliefors)
+library(MKinfer)
+
+getwd()
+
+data <- readxl::read_excel("BPAs_FDTs_ RAVLTs_EscoreZ.xlsx")
+ 
+data 
+```
+
+# **Checking differences between groups**
+## **Scores/Z-Score** {.tabset .tabset-fade}
+### BPA_CONC_EscoreZ                                                  #variavel avaliada
+<p style="color:red; background-color:black;">**XXXXXX**</p>   #iguais ou diferentes
+
+```{r}
+
+hist(data$BPA_CONC_POINTS, breaks = 15, xlab = "BPA_CONC_EscoreZ", main="BPA_CONC_EscoreZ")
+
+#lillie.test(data$BPA_CONC_POINTS)
+
+shapiro.test(data$BPA_CONC_POINTS)
+
+      #     TEST-T MUTIPLAÇÃO POR SIMULAÇÕES  FAORECENDO A TENDENCIA A SE APROXIMAR DE UMA AMOSTRA PARAMETRICA
+          #   NÃO É TAO RIGOROSO!
+boot.t.test(BPA_CONC_POINTS ~ GROUP, data)
+
+```
+
+

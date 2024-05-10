@@ -1,6 +1,6 @@
 ---
 title: "Dados de Parâmetros Z-Score"
-output: html_document
+output: html_notebook
 date: "2024-05-09"
 ---
 
@@ -11,10 +11,11 @@ knitr::opts_chunk$set(
   fig.cap= "Z-Scores Parametros")
 
 
-install.packages("nortest") 
+#install.packages("nortest") 
 #install.packages("MKinfer")
 
-
+library(ggplot2)
+library(ggExtra)
 library(nortest)             # Carrega o pacote para lilletest
 library(readxl)
 library(MKinfer)
@@ -35,7 +36,20 @@ data
 
 ## mann  whitney pq nao?
 
-hist(data$BPA_CONC_EscoreZ, breaks = 15, xlab = "BPA_CONC_EscoreZ", main="BPA_CONC_EscoreZ")
+#hist(data$BPA_CONC_EscoreZ, breaks = 15, xlab = "BPA_CONC_EscoreZ", main="BPA_CONC_EscoreZ")
+
+media <- mean(data$BPA_CONC_EscoreZ)
+desvio <- sd(data$BPA_CONC_EscoreZ)
+
+p <- ggplot(data, aes(x = BPA_CONC_EscoreZ)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
+  stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
+  
+  labs(x = "BPA_CONC_EscoreZ", 
+       y = "Density", 
+       title = "BPA ALTERN Z-escore, Gaussian Density Curve") +
+  theme_minimal()
+p
 
 lillie.test(data$BPA_CONC_EscoreZ)
 
@@ -56,7 +70,22 @@ boot.t.test(BPA_CONC_EscoreZ ~ GROUP, data)
 
 ```{r}
 
-hist(data$BPA_DIVID_EscoreZ, breaks = 15, xlab = "BPA_DIVID_EscoreZ", main="BPA_DIVID_EscoreZ")
+#hist(data$BPA_DIVID_EscoreZ, breaks = 15, xlab = "BPA_DIVID_EscoreZ", main="BPA_DIVID_EscoreZ")
+
+
+media <- mean(data$BPA_DIVID_EscoreZ)
+desvio <- sd(data$BPA_DIVID_EscoreZ)
+
+p <- ggplot(data, aes(x = BPA_DIVID_EscoreZ)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
+  stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
+  
+  labs(x = "BPA_DIVID_EscoreZ", 
+       y = "Density", 
+       title = "BPA ALTERN Z-escore, Gaussian Density Curve") +
+  theme_minimal()
+p
+
 
 lillie.test(data$BPA_DIVID_EscoreZ)
 
@@ -76,7 +105,20 @@ boot.t.test(BPA_DIVID_EscoreZ ~ GROUP, data)
 
 ```{r}
 
-hist(data$BPA_ALTERN_EscoreZ, breaks = 15, xlab = "BPA_ALTERN_EscoreZ", main="BPA_DIVID_EscoreZ")
+#hist(data$BPA_ALTERN_EscoreZ, breaks = 15, xlab = "BPA_ALTERN_EscoreZ", main="BPA_DIVID_EscoreZ")
+
+media <- mean(data$BPA_ALTERN_EscoreZ)
+desvio <- sd(data$BPA_ALTERN_EscoreZ)
+
+p <- ggplot(data, aes(x = BPA_ALTERN_EscoreZ)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
+  stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
+  
+  labs(x = "BPA_ALTERN_EscoreZ", 
+       y = "Density", 
+       title = "BPA ALTERN Z-escore, Gaussian Density Curve") +
+  theme_minimal()
+p
 
 lillie.test(data$BPA_ALTERN_EscoreZ)
 
@@ -95,7 +137,26 @@ boot.t.test(BPA_ALTERN_EscoreZ ~ GROUP, data)
 
 ```{r}
 
-hist(data$BPA_TOTAL_EscoreZ, breaks = 15, xlab = "BPA_TOTAL_EscoreZ", main="BPA_TOTAL_EscoreZ")
+# Trying to calculate the confidence interval
+
+limite_inferior <- media - 1.96 * desvio / sqrt(length(data$BPA_TOTAL_EscoreZ))
+limite_superior <- media + 1.96 * desvio / sqrt(length(data$BPA_TOTAL_EscoreZ))
+
+################################################################################
+
+media <- mean(data$BPA_TOTAL_EscoreZ)
+desvio <- sd(data$BPA_TOTAL_EscoreZ)
+
+p <- ggplot(data, aes(x = BPA_TOTAL_EscoreZ)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
+  stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
+  
+  labs(x = "BPA_TOTAL_EscoreZ", 
+       y = "Density", 
+       title = "BPA Total Z-escore, Gaussian Density Curve") +
+  theme_minimal()
+p
+
 
 lillie.test(data$BPA_TOTAL_EscoreZ)
 
@@ -120,8 +181,22 @@ data <- readxl::read_excel("./FDT_EscoreZ.xlsx")
 data <- na.omit(data)
 
 
+media <- mean(data$FDT_READING_TIME_Z)
+desvio <- sd(data$FDT_READING_TIME_Z)
 
-hist(data$FDT_READING_TIME_Z, breaks = 15, xlab = "FDT_READING_TIME_Z", main="FDT_READING_TIME_Z")
+p <- ggplot(data, aes(x = FDT_READING_TIME_Z)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
+  stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
+  
+  labs(x = "FDT_READING_TIME_Z", 
+       y = "Density", 
+       title = "BPA Total Z-escore, Gaussian Density Curve") +
+  theme_minimal()
+p
+
+
+
+#hist(data$FDT_READING_TIME_Z, breaks = 15, xlab = "FDT_READING_TIME_Z", main="FDT_READING_TIME_Z")
 
 lillie.test(data$FDT_READING_TIME_Z)
 

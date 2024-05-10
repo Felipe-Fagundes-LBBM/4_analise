@@ -11,17 +11,17 @@ knitr::opts_chunk$set(
   fig.cap= "Z-Scores Parametros")
 
 
-install.packages("Lilliefors")
-install.packages("MKinfer")
+install.packages("nortest") 
+#install.packages("MKinfer")
 
 
+library(nortest)             # Carrega o pacote para lilletest
 library(readxl)
-library(Lilliefors)
 library(MKinfer)
 
 getwd()
 
-data <- readxl::read_excel("BPAs_FDTs_ RAVLTs_EscoreZ.xlsx")
+data <- readxl::read_excel("./BPAs_EscoreZ.xlsx")
  
 data 
 ```
@@ -37,7 +37,7 @@ data
 
 hist(data$BPA_CONC_POINTS, breaks = 15, xlab = "BPA_CONC_EscoreZ", main="BPA_CONC_EscoreZ")
 
-#lillie.test(data$BPA_CONC_POINTS)
+lillie.test(data$BPA_CONC_POINTS)
 
 shapiro.test(data$BPA_CONC_POINTS)
 

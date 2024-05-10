@@ -47,7 +47,7 @@ p <- ggplot(data, aes(x = BPA_CONC_EscoreZ)) +
   
   labs(x = "BPA_CONC_EscoreZ", 
        y = "Density", 
-       title = "BPA ALTERN Z-escore, Gaussian Density Curve") +
+       title = "BPA CONC Z-escore, Gaussian Density Curve") +
   theme_minimal()
 p
 
@@ -82,7 +82,7 @@ p <- ggplot(data, aes(x = BPA_DIVID_EscoreZ)) +
   
   labs(x = "BPA_DIVID_EscoreZ", 
        y = "Density", 
-       title = "BPA ALTERN Z-escore, Gaussian Density Curve") +
+       title = "BPA DIVID Z-escore, Gaussian Density Curve") +
   theme_minimal()
 p
 

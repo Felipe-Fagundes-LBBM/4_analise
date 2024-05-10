@@ -29,22 +29,78 @@ data
 # **Checking differences between groups**
 ## **Scores/Z-Score** {.tabset .tabset-fade}
 ### BPA_CONC_EscoreZ                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**XXXXXX**</p>   #iguais ou diferentes
+<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes
 
 ```{r}
 
 ## mann  whitney pq nao?
 
-hist(data$BPA_CONC_POINTS, breaks = 15, xlab = "BPA_CONC_EscoreZ", main="BPA_CONC_EscoreZ")
+hist(data$BPA_CONC_EscoreZ, breaks = 15, xlab = "BPA_CONC_EscoreZ", main="BPA_CONC_EscoreZ")
 
-lillie.test(data$BPA_CONC_POINTS)
+lillie.test(data$BPA_CONC_EscoreZ)
 
-shapiro.test(data$BPA_CONC_POINTS)
+shapiro.test(data$BPA_CONC_EscoreZ)
 
       #     TEST-T MUTIPLAÇÃO POR SIMULAÇÕES  FAORECENDO A TENDENCIA A SE APROXIMAR DE UMA AMOSTRA PARAMETRICA
           #   NÃO É TAO RIGOROSO!
-boot.t.test(BPA_CONC_POINTS ~ GROUP, data)
+boot.t.test(BPA_CONC_EscoreZ ~ GROUP, data)
 
 ```
 
 
+
+# **Checking differences between groups**
+## **Scores/Z-Score** {.tabset .tabset-fade}
+### BPA_DIVID_EscoreZ                                                  #variavel avaliada
+<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes
+
+```{r}
+
+hist(data$BPA_DIVID_EscoreZ, breaks = 15, xlab = "BPA_DIVID_EscoreZ", main="BPA_DIVID_EscoreZ")
+
+lillie.test(data$BPA_DIVID_EscoreZ)
+
+shapiro.test(data$BPA_DIVID_EscoreZ)
+
+boot.t.test(BPA_DIVID_EscoreZ ~ GROUP, data)
+
+```
+
+
+
+
+# **Checking differences between groups**
+## **Scores/Z-Score** {.tabset .tabset-fade}
+### BPA_CONC_EscoreZ                                                  #variavel avaliada
+<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes
+
+```{r}
+
+hist(data$BPA_ALTERN_EscoreZ, breaks = 15, xlab = "BPA_ALTERN_EscoreZ", main="BPA_DIVID_EscoreZ")
+
+lillie.test(data$BPA_ALTERN_EscoreZ)
+
+shapiro.test(data$BPA_ALTERN_EscoreZ)
+
+boot.t.test(BPA_ALTERN_EscoreZ ~ GROUP, data)
+
+```
+
+
+
+# **Checking differences between groups**
+## **Scores/Z-Score** {.tabset .tabset-fade}
+### BPA_CONC_EscoreZ                                                  #variavel avaliada
+<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes
+
+```{r}
+
+hist(data$BPA_TOTAL_EscoreZ, breaks = 15, xlab = "BPA_TOTAL_EscoreZ", main="BPA_TOTAL_EscoreZ")
+
+lillie.test(data$BPA_TOTAL_EscoreZ)
+
+shapiro.test(data$BPA_TOTAL_EscoreZ)
+
+boot.t.test(BPA_TOTAL_EscoreZ ~ GROUP, data)
+
+```

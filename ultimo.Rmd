@@ -538,18 +538,18 @@ write.xlsx(BPAs_EscoreZ, file = "BPAs_EscoreZ.xlsx")
 
 data <- readxl::read_xlsx ("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO.xlsx")
 
-data <- data %>% dplyr::tbl_df() %>% dplyr::glimpse()
+#data <- data %>% dplyr::tbl_df() %>% dplyr::glimpse()
 
 
                 # DETERMINANDO LIMITES A SEREM APLICADOS
 
-limites_idade <- c(18, 19, 34, 49)
+limites_idade <- c(18, 19, 34, 50)
 
                 # ADICIONANDO COLUNA AO DADO, RELACIONADO AOS LIMITES DESEJADOS
 
 data <- data %>%
   mutate(LIMIT_AGE = cut(AGE, breaks = limites_idade, labels =
-                           c("18", "19-34", "35-49"))) %>% 
+                           c("18", "19-34", "35-50"))) %>% 
   arrange(AGE)
   
 data
@@ -561,7 +561,7 @@ FDT_READING_TIME_Z <- data %>%
   mutate(FDT_READING_TIME_Z = case_when(
     LIMIT_AGE == "18" ~ (FDT_READING_TIME - 20.4) / 4.1,
     LIMIT_AGE == "19-34" ~ (FDT_READING_TIME - 22) / 5.6,
-    LIMIT_AGE == "35-49" ~ (FDT_READING_TIME - 23.9) / 6.5,
+    LIMIT_AGE == "35-50" ~ (FDT_READING_TIME - 23.9) / 6.5,
     TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
   )) %>%
   select(ID,FDT_READING_TIME, AGE, LIMIT_AGE, FDT_READING_TIME_Z) %>% 
@@ -578,10 +578,10 @@ FDT_COUNTING_TIME_Z <- data %>%
   mutate(FDT_COUNTING_TIME_Z = case_when(
     LIMIT_AGE == "18" ~ (FDT_COUNTING_TIME - 23.8) / 3.5,
     LIMIT_AGE == "19-34" ~ (FDT_COUNTING_TIME - 24.2) / 5.2,
-    LIMIT_AGE == "35-49" ~ (FDT_COUNTING_TIME - 27.1) / 7.2,
+    LIMIT_AGE == "35-50" ~ (FDT_COUNTING_TIME - 27.1) / 7.2,
     TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
   )) %>%
-  select(ID,FDT_COUNTING_TIME, AGE, LIMIT_AGE, FDT_COUNTING_TIME_Z) %>% 
+  select(ID,FDT_COUNTING_TIME, FDT_COUNTING_TIME_Z) %>% 
   arrange(ID)
 
 
@@ -594,10 +594,10 @@ FDT_CHOOSING_TIME_Z <- data %>%
   mutate(FDT_CHOOSING_TIME_Z = case_when(
     LIMIT_AGE == "18" ~ (FDT_CHOOSING_TIME - 34) / 5.9,
     LIMIT_AGE == "19-34" ~ (FDT_CHOOSING_TIME - 36.9) / 10,
-    LIMIT_AGE == "35-49" ~ (FDT_CHOOSING_TIME - 41.7) / 14.5,
+    LIMIT_AGE == "35-50" ~ (FDT_CHOOSING_TIME - 41.7) / 14.5,
     TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
   )) %>%
-  select(ID,FDT_CHOOSING_TIME, AGE, LIMIT_AGE, FDT_CHOOSING_TIME_Z) %>% 
+  select(ID,FDT_CHOOSING_TIME, FDT_CHOOSING_TIME_Z) %>% 
   arrange(ID)
 
 
@@ -611,10 +611,10 @@ FDT_CHANGING_TIME_Z <- data %>%
   mutate(FDT_CHANGING_TIME_Z = case_when(
     LIMIT_AGE == "18" ~ (FDT_CHANGING_TIME - 44.8) / 9.1,
     LIMIT_AGE == "19-34" ~ (FDT_CHANGING_TIME - 46) / 13,
-    LIMIT_AGE == "35-49" ~ (FDT_CHANGING_TIME - 53.6) / 18.4,
+    LIMIT_AGE == "35-50" ~ (FDT_CHANGING_TIME - 53.6) / 18.4,
     TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
   )) %>%
-  select(ID,FDT_CHANGING_TIME, AGE, LIMIT_AGE, FDT_CHANGING_TIME_Z) %>% 
+  select(ID,FDT_CHANGING_TIME, FDT_CHANGING_TIME_Z) %>% 
   arrange(ID)
 
 
@@ -629,10 +629,10 @@ FDT_INHIBITION_Z <- data %>%
   mutate(FDT_INHIBITION_Z = case_when(
     LIMIT_AGE == "18" ~ (FDT_INHIBITION - 13.6) / 4.9,
     LIMIT_AGE == "19-34" ~ (FDT_INHIBITION - 14.8) / 8.3,
-    LIMIT_AGE == "35-49" ~ (FDT_INHIBITION - 17.8) / 12,
+    LIMIT_AGE == "35-50" ~ (FDT_INHIBITION - 17.8) / 12,
     TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
   )) %>%
-  select(ID,FDT_INHIBITION, AGE, LIMIT_AGE, FDT_INHIBITION_Z) %>% 
+  select(ID,FDT_INHIBITION, FDT_INHIBITION_Z) %>% 
   arrange(ID)
 
 
@@ -647,10 +647,10 @@ FDT_FLEXIBILITY_Z <- data %>%
   mutate(FDT_FLEXIBILITY_Z = case_when(
     LIMIT_AGE == "18" ~ (FDT_FLEXIBILITY - 24.4) / 7.8,
     LIMIT_AGE == "19-34" ~ (FDT_FLEXIBILITY - 23.9) / 10.8,
-    LIMIT_AGE == "35-49" ~ (FDT_FLEXIBILITY - 29.7) / 15.7,
+    LIMIT_AGE == "35-50" ~ (FDT_FLEXIBILITY - 29.7) / 15.7,
     TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
   )) %>%
-  select(ID,FDT_FLEXIBILITY, AGE, LIMIT_AGE, FDT_FLEXIBILITY_Z) %>% 
+  select(ID,FDT_FLEXIBILITY, FDT_FLEXIBILITY_Z) %>% 
   arrange(ID)
 
 
@@ -661,8 +661,7 @@ FDT_FLEXIBILITY_Z
 #BIND COLS E SALVAR
 
 FDT_EscoreZ <- bind_cols(FDT_READING_TIME_Z,FDT_COUNTING_TIME_Z,FDT_CHOOSING_TIME_Z,
-                         FDT_CHANGING_TIME_Z,FDT_INHIBITION_Z,FDT_FLEXIBILITY_Z) %>% 
-   select(ID...1, AGE...3, LIMIT_AGE...4, everything())
+                         FDT_CHANGING_TIME_Z,FDT_INHIBITION_Z,FDT_FLEXIBILITY_Z)
 
 
 

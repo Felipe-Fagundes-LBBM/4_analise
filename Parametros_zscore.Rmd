@@ -71,7 +71,7 @@ boot.t.test(BPA_DIVID_EscoreZ ~ GROUP, data)
 
 # **Checking differences between groups**
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### BPA_CONC_EscoreZ                                                  #variavel avaliada
+### BPA_ALTERN_EscoreZ                                                  #variavel avaliada
 <p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes
 
 ```{r}
@@ -84,14 +84,14 @@ shapiro.test(data$BPA_ALTERN_EscoreZ)
 
 boot.t.test(BPA_ALTERN_EscoreZ ~ GROUP, data)
 
-```
+```         
 
 
 
 # **Checking differences between groups**
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### BPA_CONC_EscoreZ                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes
+### BPA_TOTAL_EscoreZ                                                  #variavel avaliada
+<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
 
 ```{r}
 
@@ -100,7 +100,124 @@ hist(data$BPA_TOTAL_EscoreZ, breaks = 15, xlab = "BPA_TOTAL_EscoreZ", main="BPA_
 lillie.test(data$BPA_TOTAL_EscoreZ)
 
 shapiro.test(data$BPA_TOTAL_EscoreZ)
-
+          
 boot.t.test(BPA_TOTAL_EscoreZ ~ GROUP, data)
+
+```
+
+
+# **Checking differences between groups**
+## **Scores/Z-Score** {.tabset .tabset-fade}
+### FDT_READING_TIME_Z                                                  #variavel avaliada
+<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+```{r}
+
+###########################  FDT Norm ###################################
+
+data <- readxl::read_excel("./FDT_EscoreZ.xlsx")
+
+data <- na.omit(data)
+
+
+
+hist(data$FDT_READING_TIME_Z, breaks = 15, xlab = "FDT_READING_TIME_Z", main="FDT_READING_TIME_Z")
+
+lillie.test(data$FDT_READING_TIME_Z)
+
+shapiro.test(data$FDT_READING_TIME_Z)
+          
+boot.t.test(FDT_READING_TIME_Z ~ GROUP, data)
+
+```
+
+
+# **Checking differences between groups**
+## **Scores/Z-Score** {.tabset .tabset-fade}
+### FDT_COUNTING_TIME_Z                                                  #variavel avaliada
+<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+```{r}
+
+
+hist(data$FDT_COUNTING_TIME_Z, breaks = 15, xlab = "FDT_COUNTING_TIME_Z", main="FDT_COUNTING_TIME_Z")
+
+lillie.test(data$FDT_COUNTING_TIME_Z)
+
+shapiro.test(data$FDT_COUNTING_TIME_Z)
+          
+boot.t.test(FDT_COUNTING_TIME_Z ~ GROUP, data)
+
+```
+
+
+
+# **Checking differences between groups**
+## **Scores/Z-Score** {.tabset .tabset-fade}
+### FDT_CHOOSING_TIME_Z                                                  #variavel avaliada
+<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+```{r}
+
+hist(data$FDT_CHOOSING_TIME_Z, breaks = 15, xlab = "FDT_CHOOSING_TIME_Z", main="FDT_CHOOSING_TIME_Z")
+
+lillie.test(data$FDT_CHOOSING_TIME_Z)
+
+shapiro.test(data$FDT_CHOOSING_TIME_Z)
+          
+boot.t.test(FDT_CHOOSING_TIME_Z ~ GROUP, data)
+
+```
+
+
+# **Checking differences between groups**
+## **Scores/Z-Score** {.tabset .tabset-fade}
+### FDT_CHANGING_TIME_Z                                                  #variavel avaliada
+<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+```{r}
+
+hist(data$FDT_CHANGING_TIME_Z, breaks = 15, xlab = "FDT_CHANGING_TIME_Z", main="FDT_CHANGING_TIME_Z")
+
+lillie.test(data$FDT_CHANGING_TIME_Z)
+
+shapiro.test(data$FDT_CHANGING_TIME_Z)
+          
+boot.t.test(FDT_CHANGING_TIME_Z ~ GROUP, data)
+
+```
+
+
+# **Checking differences between groups**
+## **Scores/Z-Score** {.tabset .tabset-fade}
+### FDT_INHIBITION_Z                                                  #variavel avaliada
+<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+```{r}
+
+hist(data$FDT_INHIBITION_Z, breaks = 15, xlab = "FDT_INHIBITION_Z", main="FDT_INHIBITION_Z")
+
+lillie.test(data$FDT_INHIBITION_Z)
+
+shapiro.test(data$FDT_INHIBITION_Z)
+          
+boot.t.test(FDT_INHIBITION_Z ~ GROUP, data)
+
+```
+
+# **Checking differences between groups**
+## **Scores/Z-Score** {.tabset .tabset-fade}
+### FDT_FLEXIBILITY_Z                                                  #variavel avaliada
+<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+```{r}
+
+hist(data$FDT_FLEXIBILITY_Z, breaks = 15, xlab = "FDT_FLEXIBILITY_Z", main="FDT_FLEXIBILITY_Z")
+
+lillie.test(data$FDT_FLEXIBILITY_Z)
+
+shapiro.test(data$FDT_FLEXIBILITY_Z)
+          
+boot.t.test(FDT_FLEXIBILITY_Z ~ GROUP, data)
 
 ```

@@ -564,7 +564,7 @@ FDT_READING_TIME_Z <- data %>%
     LIMIT_AGE == "35-50" ~ (FDT_READING_TIME - 23.9) / 6.5,
     TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
   )) %>%
-  select(ID,FDT_READING_TIME, AGE, LIMIT_AGE, FDT_READING_TIME_Z) %>% 
+  select(ID,AGE, GROUP, LIMIT_AGE,FDT_READING_TIME,  FDT_READING_TIME_Z) %>% 
   arrange(ID)
 
 

@@ -2150,7 +2150,7 @@ library(reshape2)
 getwd()
 
 
-df <- read_excel("BPAs_FDTs_ RAVLTs_EscoreZ.xlsx", sheet = 3)
+df <- read_excel("RAVLTs_EscoreZ.xlsx")
 
 colnames(df)
 
@@ -2164,7 +2164,7 @@ df.melted <- melt(df.RAVLTs, id.vars = c("AGE", "GROUP"), variable.name = "Vari�
 # Criar o gráfico de linhas
 p <- ggplot(df.melted, aes(x = AGE, y = Pontuação, color = GROUP)) +
   geom_point(alpha=0.3, position = "jitter") +
-  stat_smooth( method = "loess", span = 0.8, se = F)+
+  stat_smooth( method = "lm", span = 0.8, se = F)+
   labs(title = "Gráfico de Linhas RAVLT por Grupo",
        x = "AGE",
        y = "Pontuação RAVLT",

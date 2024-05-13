@@ -1,0 +1,986 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Dados de Parâmetros Z-Score},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Dados de Parâmetros Z-Score}
+\author{}
+\date{\vspace{-2.5em}2024-05-09}
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{knitr}\SpecialCharTok{::}\NormalTok{opts\_chunk}\SpecialCharTok{$}\FunctionTok{set}\NormalTok{(}
+  \AttributeTok{message=}\ConstantTok{FALSE}\NormalTok{, }
+  \AttributeTok{warning=}\ConstantTok{FALSE}\NormalTok{,}
+  \AttributeTok{fig.cap=} \StringTok{"Z{-}Scores Parametros"}\NormalTok{)}
+
+
+\CommentTok{\#install.packages("nortest") }
+\CommentTok{\#install.packages("MKinfer")}
+
+\FunctionTok{library}\NormalTok{(ggplot2)}
+\FunctionTok{library}\NormalTok{(ggExtra)}
+\FunctionTok{library}\NormalTok{(nortest)             }\CommentTok{\# Carrega o pacote para lilletest}
+\FunctionTok{library}\NormalTok{(readxl)}
+\FunctionTok{library}\NormalTok{(MKinfer)}
+
+\FunctionTok{getwd}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "C:/Users/felip/Desktop/R/4_analise_"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data }\OtherTok{\textless{}{-}}\NormalTok{ readxl}\SpecialCharTok{::}\FunctionTok{read\_excel}\NormalTok{(}\StringTok{"./BPAs\_EscoreZ.xlsx"}\NormalTok{)}
+ 
+\NormalTok{data }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 129 x 16
+##    ID...1   AGE GROUP EDU_LEVEL     LIMIT_AGE BPA_CONC_POINTS BPA_CONC_EscoreZ
+##    <chr>  <dbl> <chr> <chr>         <chr>               <dbl>            <dbl>
+##  1 LC005N    20 CASE  Secondary     18-20                 118            1.43 
+##  2 LC006N    24 CASE  Postsecondary 21-30                  70           -0.794
+##  3 LC007N    22 CASE  Secondary     21-30                  71           -0.748
+##  4 LC008N    35 CASE  Postsecondary 31-40                  77           -0.376
+##  5 LC009N    29 CASE  Postsecondary 21-30                  58           -1.35 
+##  6 LC010N    24 CASE  Secondary     21-30                  96            0.415
+##  7 LC011N    32 CASE  Postsecondary 31-40                  68           -0.775
+##  8 LC012N    30 CASE  Postsecondary 21-30                 120            1.53 
+##  9 LC013N    24 CASE  Postsecondary 21-30                  84           -0.143
+## 10 LC014N    29 CASE  Secondary     21-30                  78           -0.422
+## # i 119 more rows
+## # i 9 more variables: ID...8 <chr>, BPA_DIVID_POINTS <dbl>,
+## #   BPA_DIVID_EscoreZ <dbl>, ID...11 <chr>, BPA_ALTERN_POINTS <dbl>,
+## #   BPA_ALTERN_EscoreZ <dbl>, ID...14 <chr>, BPA_TOTAL <dbl>,
+## #   BPA_TOTAL_EscoreZ <dbl>
+\end{verbatim}
+
+\section{\texorpdfstring{\textbf{Checking differences between
+groups}}{Checking differences between groups}}\label{checking-differences-between-groups}
+
+\subsection{\texorpdfstring{\textbf{Scores/Z-Score}}{Scores/Z-Score}}\label{scoresz-score}
+
+\subsubsection{BPA\_CONC\_EscoreZ \#variavel
+avaliada}\label{bpa_conc_escorez-variavel-avaliada}
+
+\textbf{Many Different}
+
+\#iguais ou diferentes
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\# mann  whitney pq nao?}
+
+\FunctionTok{hist}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{BPA\_CONC\_EscoreZ, }\AttributeTok{breaks =} \DecValTok{15}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"BPA\_CONC\_EscoreZ"}\NormalTok{, }\AttributeTok{main=}\StringTok{"BPA\_CONC\_EscoreZ"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Parametros_zscore_files/figure-latex/unnamed-chunk-2-1.pdf}
+\caption{Z-Scores Parametros}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{lillie.test}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{BPA\_CONC\_EscoreZ)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Lilliefors (Kolmogorov-Smirnov) normality test
+## 
+## data:  data$BPA_CONC_EscoreZ
+## D = 0.059649, p-value = 0.3149
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{BPA\_CONC\_EscoreZ)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  data$BPA_CONC_EscoreZ
+## W = 0.97663, p-value = 0.02499
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+      \CommentTok{\#     }\AlertTok{TEST}\CommentTok{{-}T MUTIPLAÇÃO POR SIMULAÇÕES  FAORECENDO A TENDENCIA A SE APROXIMAR DE UMA AMOSTRA PARAMETRICA}
+          \CommentTok{\#   NÃO É TAO RIGOROSO!}
+\FunctionTok{boot.t.test}\NormalTok{(BPA\_CONC\_EscoreZ }\SpecialCharTok{\textasciitilde{}}\NormalTok{ GROUP, data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Bootstrap Welch Two Sample t-test
+## 
+## data:  BPA_CONC_EscoreZ by GROUP
+## number of bootstrap samples:  9999
+## bootstrap p-value = 0.05721 
+## bootstrap difference of means (SE) = -0.2621446 (0.1342637) 
+## 95 percent bootstrap percentile confidence interval:
+##  -0.515870791  0.001919486
+## 
+## Results without bootstrap:
+## t = -1.9169, df = 102.67, p-value = 0.05803
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.529788442  0.009027884
+## sample estimates:
+##    mean in group CASE mean in group CONTROL 
+##             0.2220056             0.4823859
+\end{verbatim}
+
+\section{\texorpdfstring{\textbf{Checking differences between
+groups}}{Checking differences between groups}}\label{checking-differences-between-groups-1}
+
+\subsection{\texorpdfstring{\textbf{Scores/Z-Score}}{Scores/Z-Score}}\label{scoresz-score-1}
+
+\subsubsection{BPA\_DIVID\_EscoreZ \#variavel
+avaliada}\label{bpa_divid_escorez-variavel-avaliada}
+
+\textbf{Many Different}
+
+\#iguais ou diferentes
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{hist}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{BPA\_DIVID\_EscoreZ, }\AttributeTok{breaks =} \DecValTok{15}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"BPA\_DIVID\_EscoreZ"}\NormalTok{, }\AttributeTok{main=}\StringTok{"BPA\_DIVID\_EscoreZ"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Parametros_zscore_files/figure-latex/unnamed-chunk-3-1.pdf}
+\caption{Z-Scores Parametros}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{lillie.test}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{BPA\_DIVID\_EscoreZ)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Lilliefors (Kolmogorov-Smirnov) normality test
+## 
+## data:  data$BPA_DIVID_EscoreZ
+## D = 0.071076, p-value = 0.1137
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{BPA\_DIVID\_EscoreZ)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  data$BPA_DIVID_EscoreZ
+## W = 0.98886, p-value = 0.3847
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{boot.t.test}\NormalTok{(BPA\_DIVID\_EscoreZ }\SpecialCharTok{\textasciitilde{}}\NormalTok{ GROUP, data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Bootstrap Welch Two Sample t-test
+## 
+## data:  BPA_DIVID_EscoreZ by GROUP
+## number of bootstrap samples:  9999
+## bootstrap p-value = 0.2784 
+## bootstrap difference of means (SE) = -0.1293468 (0.1184754) 
+## 95 percent bootstrap percentile confidence interval:
+##  -0.3620840  0.1000313
+## 
+## Results without bootstrap:
+## t = -1.079, df = 111.45, p-value = 0.2829
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.3663592  0.1080251
+## sample estimates:
+##    mean in group CASE mean in group CONTROL 
+##             0.2828433             0.4120104
+\end{verbatim}
+
+\section{\texorpdfstring{\textbf{Checking differences between
+groups}}{Checking differences between groups}}\label{checking-differences-between-groups-2}
+
+\subsection{\texorpdfstring{\textbf{Scores/Z-Score}}{Scores/Z-Score}}\label{scoresz-score-2}
+
+\subsubsection{BPA\_ALTERN\_EscoreZ \#variavel
+avaliada}\label{bpa_altern_escorez-variavel-avaliada}
+
+\textbf{Many Different}
+
+\#iguais ou diferentes
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{hist}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{BPA\_ALTERN\_EscoreZ, }\AttributeTok{breaks =} \DecValTok{15}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"BPA\_ALTERN\_EscoreZ"}\NormalTok{, }\AttributeTok{main=}\StringTok{"BPA\_DIVID\_EscoreZ"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Parametros_zscore_files/figure-latex/unnamed-chunk-4-1.pdf}
+\caption{Z-Scores Parametros}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{lillie.test}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{BPA\_ALTERN\_EscoreZ)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Lilliefors (Kolmogorov-Smirnov) normality test
+## 
+## data:  data$BPA_ALTERN_EscoreZ
+## D = 0.094549, p-value = 0.006578
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{BPA\_ALTERN\_EscoreZ)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  data$BPA_ALTERN_EscoreZ
+## W = 0.95918, p-value = 0.000653
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{boot.t.test}\NormalTok{(BPA\_ALTERN\_EscoreZ }\SpecialCharTok{\textasciitilde{}}\NormalTok{ GROUP, data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Bootstrap Welch Two Sample t-test
+## 
+## data:  BPA_ALTERN_EscoreZ by GROUP
+## number of bootstrap samples:  9999
+## bootstrap p-value = 0.1242 
+## bootstrap difference of means (SE) = -0.2079691 (0.1287237) 
+## 95 percent bootstrap percentile confidence interval:
+##  -0.4587956  0.0455089
+## 
+## Results without bootstrap:
+## t = -1.5926, df = 104.73, p-value = 0.1143
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.46612898  0.05087402
+## sample estimates:
+##    mean in group CASE mean in group CONTROL 
+##             0.5174384             0.7250659
+\end{verbatim}
+
+\section{\texorpdfstring{\textbf{Checking differences between
+groups}}{Checking differences between groups}}\label{checking-differences-between-groups-3}
+
+\subsection{\texorpdfstring{\textbf{Scores/Z-Score}}{Scores/Z-Score}}\label{scoresz-score-3}
+
+\subsubsection{BPA\_TOTAL\_EscoreZ \#variavel
+avaliada}\label{bpa_total_escorez-variavel-avaliada}
+
+\textbf{Many Different}
+
+\#iguais ou diferentes
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{media }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{BPA\_TOTAL\_EscoreZ)}
+\NormalTok{desvio }\OtherTok{\textless{}{-}} \FunctionTok{sd}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{BPA\_TOTAL\_EscoreZ)}
+
+\NormalTok{limite\_inferior }\OtherTok{\textless{}{-}}\NormalTok{ media }\SpecialCharTok{{-}} \FloatTok{1.96} \SpecialCharTok{*}\NormalTok{ desvio }\SpecialCharTok{/} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{length}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{BPA\_TOTAL\_EscoreZ))}
+\NormalTok{limite\_superior }\OtherTok{\textless{}{-}}\NormalTok{ media }\SpecialCharTok{+} \FloatTok{1.96} \SpecialCharTok{*}\NormalTok{ desvio }\SpecialCharTok{/} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{length}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{BPA\_TOTAL\_EscoreZ))}
+
+
+\NormalTok{p }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ BPA\_TOTAL\_EscoreZ)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =} \FunctionTok{after\_stat}\NormalTok{(density)), }\AttributeTok{bins =} \DecValTok{15}\NormalTok{, }\AttributeTok{fill =} \StringTok{"lightblue"}\NormalTok{, }\AttributeTok{color =} \StringTok{"black"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dnorm, }\AttributeTok{args =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mean =}\NormalTok{ media, }\AttributeTok{sd =}\NormalTok{ desvio), }\AttributeTok{color =} \StringTok{"tomato"}\NormalTok{, }\AttributeTok{size =} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+  
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"BPA\_TOTAL\_EscoreZ"}\NormalTok{, }
+       \AttributeTok{y =} \StringTok{"Density"}\NormalTok{, }
+       \AttributeTok{title =} \StringTok{"BPA Total Z{-}escore, Gaussian Density Curve"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+\NormalTok{p}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Parametros_zscore_files/figure-latex/unnamed-chunk-5-1.pdf}
+\caption{Z-Scores Parametros}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{lillie.test}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{BPA\_TOTAL\_EscoreZ)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Lilliefors (Kolmogorov-Smirnov) normality test
+## 
+## data:  data$BPA_TOTAL_EscoreZ
+## D = 0.060968, p-value = 0.2833
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{BPA\_TOTAL\_EscoreZ)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  data$BPA_TOTAL_EscoreZ
+## W = 0.98763, p-value = 0.2984
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{boot.t.test}\NormalTok{(BPA\_TOTAL\_EscoreZ }\SpecialCharTok{\textasciitilde{}}\NormalTok{ GROUP, data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Bootstrap Welch Two Sample t-test
+## 
+## data:  BPA_TOTAL_EscoreZ by GROUP
+## number of bootstrap samples:  9999
+## bootstrap p-value = 0.06381 
+## bootstrap difference of means (SE) = -0.2315302 (0.1227965) 
+## 95 percent bootstrap percentile confidence interval:
+##  -0.46870919  0.01304838
+## 
+## Results without bootstrap:
+## t = -1.8644, df = 107.52, p-value = 0.06499
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.47782478  0.01463756
+## sample estimates:
+##    mean in group CASE mean in group CONTROL 
+##             0.4015722             0.6331658
+\end{verbatim}
+
+\section{\texorpdfstring{\textbf{Checking differences between
+groups}}{Checking differences between groups}}\label{checking-differences-between-groups-4}
+
+\subsection{\texorpdfstring{\textbf{Scores/Z-Score}}{Scores/Z-Score}}\label{scoresz-score-4}
+
+\subsubsection{FDT\_READING\_TIME\_Z \#variavel
+avaliada}\label{fdt_reading_time_z-variavel-avaliada}
+
+\textbf{Many Different}
+
+\#iguais ou diferentes
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  FDT Norm \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
+
+\NormalTok{data }\OtherTok{\textless{}{-}}\NormalTok{ readxl}\SpecialCharTok{::}\FunctionTok{read\_excel}\NormalTok{(}\StringTok{"./FDT\_EscoreZ.xlsx"}\NormalTok{)}
+
+\NormalTok{data }\OtherTok{\textless{}{-}} \FunctionTok{na.omit}\NormalTok{(data)}
+
+
+
+\FunctionTok{hist}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{FDT\_READING\_TIME\_Z, }\AttributeTok{breaks =} \DecValTok{15}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"FDT\_READING\_TIME\_Z"}\NormalTok{, }\AttributeTok{main=}\StringTok{"FDT\_READING\_TIME\_Z"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Parametros_zscore_files/figure-latex/unnamed-chunk-6-1.pdf}
+\caption{Z-Scores Parametros}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{lillie.test}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{FDT\_READING\_TIME\_Z)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Lilliefors (Kolmogorov-Smirnov) normality test
+## 
+## data:  data$FDT_READING_TIME_Z
+## D = 0.11582, p-value = 0.0002012
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{FDT\_READING\_TIME\_Z)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  data$FDT_READING_TIME_Z
+## W = 0.93546, p-value = 1.014e-05
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{boot.t.test}\NormalTok{(FDT\_READING\_TIME\_Z }\SpecialCharTok{\textasciitilde{}}\NormalTok{ GROUP, data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Bootstrap Welch Two Sample t-test
+## 
+## data:  FDT_READING_TIME_Z by GROUP
+## number of bootstrap samples:  9999
+## bootstrap p-value = 0.016 
+## bootstrap difference of means (SE) = 0.4539007 (0.1696031) 
+## 95 percent bootstrap percentile confidence interval:
+##  0.1096841 0.7872110
+## 
+## Results without bootstrap:
+## t = 2.6283, df = 106.6, p-value = 0.009847
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  0.1111502 0.7934963
+## sample estimates:
+##    mean in group CASE mean in group CONTROL 
+##             0.5537088             0.1013856
+\end{verbatim}
+
+\section{\texorpdfstring{\textbf{Checking differences between
+groups}}{Checking differences between groups}}\label{checking-differences-between-groups-5}
+
+\subsection{\texorpdfstring{\textbf{Scores/Z-Score}}{Scores/Z-Score}}\label{scoresz-score-5}
+
+\subsubsection{FDT\_COUNTING\_TIME\_Z \#variavel
+avaliada}\label{fdt_counting_time_z-variavel-avaliada}
+
+\textbf{Many Different}
+
+\#iguais ou diferentes
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{hist}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{FDT\_COUNTING\_TIME\_Z, }\AttributeTok{breaks =} \DecValTok{15}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"FDT\_COUNTING\_TIME\_Z"}\NormalTok{, }\AttributeTok{main=}\StringTok{"FDT\_COUNTING\_TIME\_Z"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Parametros_zscore_files/figure-latex/unnamed-chunk-7-1.pdf}
+\caption{Z-Scores Parametros}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{lillie.test}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{FDT\_COUNTING\_TIME\_Z)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Lilliefors (Kolmogorov-Smirnov) normality test
+## 
+## data:  data$FDT_COUNTING_TIME_Z
+## D = 0.12066, p-value = 8.192e-05
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{FDT\_COUNTING\_TIME\_Z)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  data$FDT_COUNTING_TIME_Z
+## W = 0.94978, p-value = 0.0001091
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{boot.t.test}\NormalTok{(FDT\_COUNTING\_TIME\_Z }\SpecialCharTok{\textasciitilde{}}\NormalTok{ GROUP, data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Bootstrap Welch Two Sample t-test
+## 
+## data:  FDT_COUNTING_TIME_Z by GROUP
+## number of bootstrap samples:  9999
+## bootstrap p-value = 0.1492 
+## bootstrap difference of means (SE) = 0.2578241 (0.1607766) 
+## 95 percent bootstrap percentile confidence interval:
+##  -0.0654147  0.5602270
+## 
+## Results without bootstrap:
+## t = 1.5595, df = 89.549, p-value = 0.1224
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.06983843  0.57964736
+## sample estimates:
+##    mean in group CASE mean in group CONTROL 
+##            0.32416311            0.06925864
+\end{verbatim}
+
+\section{\texorpdfstring{\textbf{Checking differences between
+groups}}{Checking differences between groups}}\label{checking-differences-between-groups-6}
+
+\subsection{\texorpdfstring{\textbf{Scores/Z-Score}}{Scores/Z-Score}}\label{scoresz-score-6}
+
+\subsubsection{FDT\_CHOOSING\_TIME\_Z \#variavel
+avaliada}\label{fdt_choosing_time_z-variavel-avaliada}
+
+\textbf{Many Different}
+
+\#iguais ou diferentes
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{hist}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{FDT\_CHOOSING\_TIME\_Z, }\AttributeTok{breaks =} \DecValTok{15}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"FDT\_CHOOSING\_TIME\_Z"}\NormalTok{, }\AttributeTok{main=}\StringTok{"FDT\_CHOOSING\_TIME\_Z"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Parametros_zscore_files/figure-latex/unnamed-chunk-8-1.pdf}
+\caption{Z-Scores Parametros}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{lillie.test}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{FDT\_CHOOSING\_TIME\_Z)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Lilliefors (Kolmogorov-Smirnov) normality test
+## 
+## data:  data$FDT_CHOOSING_TIME_Z
+## D = 0.15679, p-value = 2.497e-08
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{FDT\_CHOOSING\_TIME\_Z)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  data$FDT_CHOOSING_TIME_Z
+## W = 0.85615, p-value = 6.598e-10
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{boot.t.test}\NormalTok{(FDT\_CHOOSING\_TIME\_Z }\SpecialCharTok{\textasciitilde{}}\NormalTok{ GROUP, data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Bootstrap Welch Two Sample t-test
+## 
+## data:  FDT_CHOOSING_TIME_Z by GROUP
+## number of bootstrap samples:  9999
+## bootstrap p-value = 0.009201 
+## bootstrap difference of means (SE) = 0.4065098 (0.1531804) 
+## 95 percent bootstrap percentile confidence interval:
+##  0.1018388 0.7114595
+## 
+## Results without bootstrap:
+## t = 2.619, df = 120.78, p-value = 0.009948
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  0.09934686 0.71471718
+## sample estimates:
+##    mean in group CASE mean in group CONTROL 
+##             0.2466872            -0.1603448
+\end{verbatim}
+
+\section{\texorpdfstring{\textbf{Checking differences between
+groups}}{Checking differences between groups}}\label{checking-differences-between-groups-7}
+
+\subsection{\texorpdfstring{\textbf{Scores/Z-Score}}{Scores/Z-Score}}\label{scoresz-score-7}
+
+\subsubsection{FDT\_CHANGING\_TIME\_Z \#variavel
+avaliada}\label{fdt_changing_time_z-variavel-avaliada}
+
+\textbf{Many Different}
+
+\#iguais ou diferentes
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{hist}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{FDT\_CHANGING\_TIME\_Z, }\AttributeTok{breaks =} \DecValTok{15}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"FDT\_CHANGING\_TIME\_Z"}\NormalTok{, }\AttributeTok{main=}\StringTok{"FDT\_CHANGING\_TIME\_Z"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Parametros_zscore_files/figure-latex/unnamed-chunk-9-1.pdf}
+\caption{Z-Scores Parametros}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{lillie.test}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{FDT\_CHANGING\_TIME\_Z)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Lilliefors (Kolmogorov-Smirnov) normality test
+## 
+## data:  data$FDT_CHANGING_TIME_Z
+## D = 0.12384, p-value = 4.423e-05
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{FDT\_CHANGING\_TIME\_Z)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  data$FDT_CHANGING_TIME_Z
+## W = 0.92001, p-value = 1.045e-06
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{boot.t.test}\NormalTok{(FDT\_CHANGING\_TIME\_Z }\SpecialCharTok{\textasciitilde{}}\NormalTok{ GROUP, data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Bootstrap Welch Two Sample t-test
+## 
+## data:  FDT_CHANGING_TIME_Z by GROUP
+## number of bootstrap samples:  9999
+## bootstrap p-value = 0.0182 
+## bootstrap difference of means (SE) = 0.3926977 (0.1570482) 
+## 95 percent bootstrap percentile confidence interval:
+##  0.0814328 0.6981250
+## 
+## Results without bootstrap:
+## t = 2.4692, df = 108.84, p-value = 0.0151
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  0.07753394 0.70840538
+## sample estimates:
+##    mean in group CASE mean in group CONTROL 
+##             0.2766762            -0.1162934
+\end{verbatim}
+
+\section{\texorpdfstring{\textbf{Checking differences between
+groups}}{Checking differences between groups}}\label{checking-differences-between-groups-8}
+
+\subsection{\texorpdfstring{\textbf{Scores/Z-Score}}{Scores/Z-Score}}\label{scoresz-score-8}
+
+\subsubsection{FDT\_INHIBITION\_Z \#variavel
+avaliada}\label{fdt_inhibition_z-variavel-avaliada}
+
+\textbf{Many Different}
+
+\#iguais ou diferentes
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{hist}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{FDT\_INHIBITION\_Z, }\AttributeTok{breaks =} \DecValTok{15}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"FDT\_INHIBITION\_Z"}\NormalTok{, }\AttributeTok{main=}\StringTok{"FDT\_INHIBITION\_Z"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Parametros_zscore_files/figure-latex/unnamed-chunk-10-1.pdf}
+\caption{Z-Scores Parametros}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{lillie.test}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{FDT\_INHIBITION\_Z)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Lilliefors (Kolmogorov-Smirnov) normality test
+## 
+## data:  data$FDT_INHIBITION_Z
+## D = 0.12641, p-value = 2.658e-05
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{FDT\_INHIBITION\_Z)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  data$FDT_INHIBITION_Z
+## W = 0.9247, p-value = 2.026e-06
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{boot.t.test}\NormalTok{(FDT\_INHIBITION\_Z }\SpecialCharTok{\textasciitilde{}}\NormalTok{ GROUP, data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Bootstrap Welch Two Sample t-test
+## 
+## data:  FDT_INHIBITION_Z by GROUP
+## number of bootstrap samples:  9999
+## bootstrap p-value = 0.1384 
+## bootstrap difference of means (SE) = 0.2473334 (0.1625111) 
+## 95 percent bootstrap percentile confidence interval:
+##  -0.06752096  0.56599333
+## 
+## Results without bootstrap:
+## t = 1.4891, df = 121.57, p-value = 0.139
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.08067477  0.57048432
+## sample estimates:
+##    mean in group CASE mean in group CONTROL 
+##           -0.01630092           -0.26120569
+\end{verbatim}
+
+\section{\texorpdfstring{\textbf{Checking differences between
+groups}}{Checking differences between groups}}\label{checking-differences-between-groups-9}
+
+\subsection{\texorpdfstring{\textbf{Scores/Z-Score}}{Scores/Z-Score}}\label{scoresz-score-9}
+
+\subsubsection{FDT\_FLEXIBILITY\_Z \#variavel
+avaliada}\label{fdt_flexibility_z-variavel-avaliada}
+
+\textbf{Many Different}
+
+\#iguais ou diferentes
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{hist}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{FDT\_FLEXIBILITY\_Z, }\AttributeTok{breaks =} \DecValTok{15}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"FDT\_FLEXIBILITY\_Z"}\NormalTok{, }\AttributeTok{main=}\StringTok{"FDT\_FLEXIBILITY\_Z"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{Parametros_zscore_files/figure-latex/unnamed-chunk-11-1.pdf}
+\caption{Z-Scores Parametros}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{lillie.test}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{FDT\_FLEXIBILITY\_Z)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Lilliefors (Kolmogorov-Smirnov) normality test
+## 
+## data:  data$FDT_FLEXIBILITY_Z
+## D = 0.097127, p-value = 0.004313
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{FDT\_FLEXIBILITY\_Z)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  data$FDT_FLEXIBILITY_Z
+## W = 0.94196, p-value = 2.875e-05
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{boot.t.test}\NormalTok{(FDT\_FLEXIBILITY\_Z }\SpecialCharTok{\textasciitilde{}}\NormalTok{ GROUP, data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Bootstrap Welch Two Sample t-test
+## 
+## data:  FDT_FLEXIBILITY_Z by GROUP
+## number of bootstrap samples:  9999
+## bootstrap p-value = 0.1052 
+## bootstrap difference of means (SE) = 0.2675045 (0.1623413) 
+## 95 percent bootstrap percentile confidence interval:
+##  -0.05327922  0.58147079
+## 
+## Results without bootstrap:
+## t = 1.6387, df = 116.52, p-value = 0.104
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.05620538  0.59513606
+## sample estimates:
+##    mean in group CASE mean in group CONTROL 
+##            0.06173331           -0.20773203
+\end{verbatim}
+
+\end{document}

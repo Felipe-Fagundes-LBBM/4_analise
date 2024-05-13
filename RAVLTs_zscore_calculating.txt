@@ -1,0 +1,329 @@
+```{r}
+
+library(openxlsx)
+library(tibble)
+library(readxl)
+library(dplyr)
+
+
+data <- readxl::read_xlsx ("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO(1).xlsx")
+
+data <- data %>% dplyr::tbl_df() %>% dplyr::glimpse()
+
+
+#######################################
+
+limites_idade <- c(18, 20, 30, 40, 49)
+
+
+data <- data %>%
+  mutate(LIMIT_AGE = 
+           cut(AGE, breaks = limites_idade, labels = 
+                 c("18-20", "21-30", "31-40", "41-49"))) %>% 
+  select(-c(4:27)) %>% 
+  select(ID, AGE, LIMIT_AGE, everything()) %>% 
+  arrange(AGE) 
+  
+data
+
+########################################
+
+
+
+#RAVLT A1
+
+RAVLT_A1_Z <- data %>%
+  mutate(RAVLT_A1_Z = case_when(
+    LIMIT_AGE == "18-20" ~ (RAVLT_A1 - 6.8) / 1.7,
+    LIMIT_AGE == "21-30" ~ (RAVLT_A1 - 6.5) / 1.7,
+    LIMIT_AGE == "31-40" ~ (RAVLT_A1 - 6.1) / 1.6,
+    LIMIT_AGE == "41-49" ~ (RAVLT_A1 - 6) / 1.6,
+
+    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
+  )) %>%
+  select(ID,RAVLT_A1, AGE, LIMIT_AGE, RAVLT_A1_Z) %>% 
+  arrange(ID)
+
+
+RAVLT_A1_Z 
+
+
+
+
+#RAVLT A2
+
+RAVLT_A2_Z <- data %>%
+  mutate(RAVLT_A2_Z = case_when(
+    LIMIT_AGE == "18-20" ~ (RAVLT_A2 - 9.5) / 2.2,
+    LIMIT_AGE == "21-30" ~ (RAVLT_A2 - 8.9) / 2.2,
+    LIMIT_AGE == "31-40" ~ (RAVLT_A2 - 8.7) / 2,
+    LIMIT_AGE == "41-49" ~ (RAVLT_A2 - 8.5) / 2,
+
+    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
+  )) %>%
+  select(ID,RAVLT_A2, RAVLT_A2_Z) %>% 
+  arrange(ID)
+
+
+RAVLT_A2_Z
+
+utils::View(RAVLT_A2_Z)
+
+
+
+
+#RAVLT A3
+
+RAVLT_A3_Z <- data %>%
+  mutate(RAVLT_A3_Z = case_when(
+    LIMIT_AGE == "18-20" ~ (RAVLT_A3 - 11) / 2.2,
+    LIMIT_AGE == "21-30" ~ (RAVLT_A3 - 10.4) / 2.4,
+    LIMIT_AGE == "31-40" ~ (RAVLT_A3 - 10.3) / 2.1,
+    LIMIT_AGE == "41-49" ~ (RAVLT_A3 - 9.8) / 2.5,
+
+    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
+  )) %>%
+  select(ID,RAVLT_A3, RAVLT_A3_Z) %>% 
+  arrange(ID)
+
+
+RAVLT_A3_Z
+
+
+
+#RAVLT A4
+
+RAVLT_A4_Z <- data %>%
+  mutate(RAVLT_A4_Z = case_when(
+    LIMIT_AGE == "18-20" ~ (RAVLT_A4 - 11.8) / 2.4,
+    LIMIT_AGE == "21-30" ~ (RAVLT_A4 - 11.4) / 2.4,
+    LIMIT_AGE == "31-40" ~ (RAVLT_A4 - 11.4) / 2.1,
+    LIMIT_AGE == "41-49" ~ (RAVLT_A4 - 10.7) / 2.7,
+
+    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
+  )) %>%
+  select(ID,RAVLT_A4,RAVLT_A4_Z) %>% 
+  arrange(ID)
+
+
+RAVLT_A4_Z
+
+
+
+
+
+#RAVLT A5
+
+RAVLT_A5_Z <- data %>%
+  mutate(RAVLT_A5_Z = case_when(
+    LIMIT_AGE == "18-20" ~ (RAVLT_A5 - 12.2) / 2.4,
+    LIMIT_AGE == "21-30" ~ (RAVLT_A5 - 12.2) / 2.2,
+    LIMIT_AGE == "31-40" ~ (RAVLT_A5 - 12.2) / 2.2,
+    LIMIT_AGE == "41-49" ~ (RAVLT_A5 - 11.7) / 2.6,
+
+    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
+  )) %>%
+  select(ID,RAVLT_A5, RAVLT_A5_Z) %>% 
+  arrange(ID)
+
+
+RAVLT_A5_Z
+
+
+
+
+#RAVLT  B1
+
+RAVLT_B1_Z <- data %>%
+  mutate(RAVLT_B1_Z = case_when(
+    LIMIT_AGE == "18-20" ~ (RAVLT_B1 - 6.3) / 1.8,
+    LIMIT_AGE == "21-30" ~ (RAVLT_B1 - 5.7) / 1.8,
+    LIMIT_AGE == "31-40" ~ (RAVLT_B1 - 5.3) / 1.6,
+    LIMIT_AGE == "41-49" ~ (RAVLT_B1 - 4.9) / 1.6,
+
+    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
+  )) %>%
+  select(ID,RAVLT_B1, RAVLT_B1_Z) %>% 
+  arrange(ID)
+
+
+RAVLT_B1_Z
+
+
+
+
+
+#RAVLT A6
+
+RAVLT_A6_Z <- data %>%
+  mutate(RAVLT_A6_Z = case_when(
+    LIMIT_AGE == "18-20" ~ (RAVLT_A6 - 11.1) / 2.5,
+    LIMIT_AGE == "21-30" ~ (RAVLT_A6 - 10.9) / 2.6,
+    LIMIT_AGE == "31-40" ~ (RAVLT_A6 - 10.8) / 2.4,
+    LIMIT_AGE == "41-49" ~ (RAVLT_A6 - 9.8) / 2.8,
+
+    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
+  )) %>%
+  select(ID,RAVLT_A6, RAVLT_A6_Z) %>% 
+  arrange(ID)
+
+
+RAVLT_A6_Z
+
+
+
+
+#RAVLT A7
+
+RAVLT_A7_Z <- data %>%
+  mutate(RAVLT_A7_Z = case_when(
+    LIMIT_AGE == "18-20" ~ (RAVLT_A7 - 11) / 2.7,
+    LIMIT_AGE == "21-30" ~ (RAVLT_A7 - 10.7) / 2.7,
+    LIMIT_AGE == "31-40" ~ (RAVLT_A7 - 10.3) / 2.4,
+    LIMIT_AGE == "41-49" ~ (RAVLT_A7 - 9.6) / 2.8,
+
+    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
+  )) %>%
+  select(ID,RAVLT_A7,RAVLT_A7_Z) %>% 
+  arrange(ID)
+
+
+RAVLT_A7_Z
+
+
+
+
+#RAVLT REC
+
+RAVLT_REC_Z <- data %>%
+  mutate(RAVLT_REC_Z = case_when(
+    LIMIT_AGE == "18-20" ~ (RAVLT_REC - 10) / 5.7,
+    LIMIT_AGE == "21-30" ~ (RAVLT_REC - 11.4) / 4.7,
+    LIMIT_AGE == "31-40" ~ (RAVLT_REC - 11.1) / 4.7,
+    LIMIT_AGE == "41-49" ~ (RAVLT_REC - 9.9) / 5.6,
+
+    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
+  )) %>%
+  select(ID,RAVLT_REC,RAVLT_REC_Z) %>% 
+  arrange(ID)
+
+
+RAVLT_REC_Z
+
+
+
+
+
+#RAVLT_TOTALSCORE
+
+
+RAVLT_TOTALSCORE_Z <- data %>%
+  mutate(RAVLT_TOTALSCORE_Z = case_when(
+    LIMIT_AGE == "18-20" ~ (RAVLT_TOTALSCORE - 51.4) / 8.7,
+    LIMIT_AGE == "21-30" ~ (RAVLT_TOTALSCORE - 49.3) / 8.6,
+    LIMIT_AGE == "31-40" ~ (RAVLT_TOTALSCORE - 48.6) / 8,
+    LIMIT_AGE == "41-49" ~ (RAVLT_TOTALSCORE - 46.7) / 9.6,
+
+    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
+  )) %>%
+  select(ID,RAVLT_TOTALSCORE, RAVLT_TOTALSCORE_Z) %>% 
+  arrange(ID)
+
+RAVLT_TOTALSCORE_Z
+
+
+
+#RAVLT_ALT
+
+RAVLT_ALT_Z <- data %>%
+  mutate(RAVLT_ALT_Z = case_when(
+    LIMIT_AGE == "18-20" ~ (RAVLT_ALT - 17.3) / 7.3,
+    LIMIT_AGE == "21-30" ~ (RAVLT_ALT - 16.8) / 6.5,
+    LIMIT_AGE == "31-40" ~ (RAVLT_ALT - 17.9) / 7,
+    LIMIT_AGE == "41-49" ~ (RAVLT_ALT - 16.5) / 7.3,
+
+    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
+  )) %>%
+  select(ID,RAVLT_ALT, RAVLT_ALT_Z) %>% 
+  arrange(ID)
+
+
+
+
+RAVLT_ALT_Z
+
+
+
+#RAVLT_RETENTION
+
+RAVLT_RETENTION_Z <- data %>%
+  mutate(RAVLT_RETENTION_Z = case_when(
+    LIMIT_AGE == "18-20" ~ (RAVLT_RETENTION - 1) / 0.2,
+    LIMIT_AGE == "21-30" ~ (RAVLT_RETENTION - 1) / 0.27,
+    LIMIT_AGE == "31-40" ~ (RAVLT_RETENTION - 0.97) / 0.19,
+    LIMIT_AGE == "41-49" ~ (RAVLT_RETENTION - 1.01) / 0.34,
+
+    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
+  )) %>%
+  select(ID,RAVLT_RETENTION, RAVLT_RETENTION_Z) %>% 
+  arrange(ID)
+
+
+RAVLT_RETENTION_Z
+
+
+
+#RAVLT_PROAT_INTERFERENCE
+
+RAVLT_PROAT_INTERFERENCE_Z <- data %>%
+  mutate(RAVLT_PROAT_INTERFERENCE_Z = case_when(
+    LIMIT_AGE == "18-20" ~ (RAVLT_PROAT_INTERFERENCE - 0.96) / 0.33,
+    LIMIT_AGE == "21-30" ~ (RAVLT_PROAT_INTERFERENCE - 0.92) / 0.37,
+    LIMIT_AGE == "31-40" ~ (RAVLT_PROAT_INTERFERENCE - 0.91) / 0.33,
+    LIMIT_AGE == "41-49" ~ (RAVLT_PROAT_INTERFERENCE - 0.86) / 0.31,
+
+    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
+  )) %>%
+  select(ID,RAVLT_PROAT_INTERFERENCE, RAVLT_PROAT_INTERFERENCE_Z) %>% 
+  arrange(ID)
+
+
+RAVLT_PROAT_INTERFERENCE_Z
+
+
+
+
+#RAVLT_RETRO_INTERFERENCE
+
+RAVLT_RETRO_INTERFERENCE_Z <- data %>%
+  mutate(RAVLT_RETRO_INTERFERENCE_Z = case_when(
+    LIMIT_AGE == "18-20" ~ (RAVLT_RETRO_INTERFERENCE - 0.96) / 0.68,
+    LIMIT_AGE == "21-30" ~ (RAVLT_RETRO_INTERFERENCE - 0.89) / 0.17,
+    LIMIT_AGE == "31-40" ~ (RAVLT_RETRO_INTERFERENCE - 0.94) / 0.74,
+    LIMIT_AGE == "41-49" ~ (RAVLT_RETRO_INTERFERENCE - 0.84) / 0.18,
+
+    TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
+  )) %>%
+  select(ID,RAVLT_RETRO_INTERFERENCE, RAVLT_RETRO_INTERFERENCE_Z) %>% 
+  arrange(ID)
+
+
+RAVLT_RETRO_INTERFERENCE_Z
+
+
+
+
+#BIND COLS E SALVAR
+
+RAVLTs_EscoreZ <- bind_cols(RAVLT_A1_Z, RAVLT_A2_Z, RAVLT_A3_Z, RAVLT_A4_Z, RAVLT_A5_Z,
+                            RAVLT_B1_Z, RAVLT_A6_Z, RAVLT_A7_Z, RAVLT_REC_Z, RAVLT_TOTALSCORE_Z,
+                           RAVLT_RETENTION_Z, RAVLT_PROAT_INTERFERENCE_Z, RAVLT_RETRO_INTERFERENCE_Z ) 
+
+
+
+write.xlsx(RAVLTs_EscoreZ, file = "RAVLTs_EscoreZ.xlsx")
+
+
+
+
+``` 

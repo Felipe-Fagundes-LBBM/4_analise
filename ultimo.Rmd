@@ -128,13 +128,15 @@ ggsave("bxplot_BPAsTOTAL.pdf", plot = plototal, width = 13, height = 10)
 #######################################    BOX PLOT-Test.T FDTs #############################################
 
 
-df <- read_excel("BPAs_FDTs_ RAVLTs_EscoreZ.xlsx", sheet = 2)
+data <- readxl::read_excel("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO.xlsx")
 
-df
+data <- na.omit(data)
+
+data
 
                                       #Filtrando FDTs
 
-p2 <- df %>%  select(GROUP , FDT_READING_TIME ,FDT_COUNTING_TIME, FDT_CHOOSING_TIME, FDT_CHANGING_TIME,
+p2 <- data %>%  select(GROUP , FDT_READING_TIME ,FDT_COUNTING_TIME, FDT_CHOOSING_TIME, FDT_CHANGING_TIME,
                        FDT_INHIBITION, FDT_FLEXIBILITY )
 
 
@@ -181,24 +183,24 @@ plot2 + stat_compare_means(method = "t.test" , label.x = 2)
 
 
 
-df <- read_excel("BPAs_FDTs_ RAVLTs_EscoreZ.xlsx", sheet = 3)
+data <- readxl::read_excel("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO.xlsx")
 
-df
+data <- na.omit(data)
 
-colnames(df)
+data
 
                                       #Filtrando RAVLTs
 
 
-p3 <- df %>%  select(GROUP , RAVLT_A1 ,RAVLT_A2, RAVLT_A3, RAVLT_A4   )
+p3 <- data %>%  select(GROUP , RAVLT_A1 ,RAVLT_A2, RAVLT_A3, RAVLT_A4   )
 
-p4 <- df %>%  select(GROUP , RAVLT_A5, RAVLT_A6, RAVLT_A7)
+p4 <- data %>%  select(GROUP , RAVLT_A5, RAVLT_A6, RAVLT_A7)
 
-p5 <- df %>%  select(GROUP , RAVLT_TOTALSCORE)
+p5 <- data %>%  select(GROUP , RAVLT_TOTALSCORE)
 
-p6 <- df %>%  select(GROUP,RAVLT_B1,RAVLT_REC,RAVLT_RETENTION)
+p6 <- data %>%  select(GROUP,RAVLT_B1,RAVLT_REC,RAVLT_RETENTION)
 
-p7 <- df %>%  select(GROUP,RAVLT_RETENTION,RAVLT_RETRO_INTERFERENCE)
+p7 <- data %>%  select(GROUP,RAVLT_RETENTION,RAVLT_RETRO_INTERFERENCE)
 
 
 
@@ -330,7 +332,7 @@ plot6 <- ggplot(p6_long, aes(x = GROUP, y = Value, fill = GROUP)) +
                                    c(RAVLT_B1 = "RAVLT_B1",
                                      RAVLT_REC = " RAVLT_REC"
                                      ))) +
-  scale_y_continuous(limits = c(0, 20)) +
+  #scale_y_continuous(limits = c(0, 20)) +
   theme(axis.text = element_text(size = 11, color = "black"),
         axis.title = element_text(size = 15, color = "black"),
         panel.background = element_rect(fill = "white"),
@@ -345,7 +347,7 @@ plot6 <- ggplot(p6_long, aes(x = GROUP, y = Value, fill = GROUP)) +
 # Ajuste as escalas de acordo com o mínimo e máximo dos dados
 #plot1 <- plot1 + ylim(min(p1_long$Value), max(p1_long$Value))
 
-plot6 + stat_compare_means(method = "t.test", label.y = 18, label.x = 1.1)
+plot6 + stat_compare_means(method = "t.test", label.y = 15, label.x = 1.1)
 
 
 

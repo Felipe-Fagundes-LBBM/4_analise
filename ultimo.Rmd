@@ -166,19 +166,22 @@ plot2 <- ggplot(p2_long, aes(x = GROUP, y = Value, fill = GROUP)) +
         axis.title = element_text(size = 19, color = "black"),
         panel.background = element_rect(fill = "white"),
         axis.line = element_line(color = "black"),
-        plot.title = element_text(size = 1.5, family = "", face = "bold"),
+        plot.title = element_text(size = 1.5, face = "bold"),
         text = element_text(size = 12, family = ""),
         legend.position = "bottom",
         strip.background = element_blank(),
-        strip.text = element_text(size = 14, family = "", face = "bold"))
+        strip.text = element_text(size = 14, face = "bold"))
 
 
 # Ajuste as escalas de acordo com o mínimo e máximo dos dados
 #plot1 <- plot1 + ylim(min(p1_long$Value), max(p1_long$Value))
 
-plot2 <- plot2 + stat_compare_means(method = "t.test" , label.x = 2)
+plot2 <- plot2 + stat_compare_means(method = "t.test" )
+ 
+?t.test()
 
-dev.off(plot2)
+ggsave(filename = "FDTs_values.pdf", plot = plot2)
+
 
 #######################################    BOX PLOT-Test.T RAVLTs #############################################
 
@@ -300,19 +303,20 @@ plot5 <- ggplot(p5_long, aes(x = GROUP, y = Value, fill = GROUP)) +
         axis.title = element_text(size = 15, color = "black"),
         panel.background = element_rect(fill = "white"),
         axis.line = element_line(color = "black"),
-        plot.title = element_text(size = 14, family = "Tahoma", face = "bold"),
-        text = element_text(size = 12, family = "Tahoma"),
+        plot.title = element_text(size = 14, face = "bold"),
+        text = element_text(size = 12, ),
         legend.position = "bottom",
         strip.background = element_blank(),
-        strip.text = element_text(size = 14, family = "Tahoma", face = "bold"))
+        strip.text = element_text(size = 14, face = "bold"))
 
 
 # Ajuste as escalas de acordo com o mínimo e máximo dos dados
 #plot1 <- plot1 + ylim(min(p1_long$Value), max(p1_long$Value))
 
-plot5 + stat_compare_means(method = "t.test" ,  label.y = 65, label.x =1.7)
+plot5 <- plot5 + stat_compare_means(method = "t.test" ,  label.y = 65, label.x =1.7)
 
 
+ggsave(filename = "RAVLT_total.pdf", plot = plot5)
 
 
 
@@ -979,6 +983,7 @@ write.xlsx(RAVLTs_EscoreZ, file = "RAVLTs_EscoreZ.xlsx")
 
 
 ```
+
 
 ```{r}
 library(tibble)

@@ -2240,7 +2240,7 @@ cores <- c("CASE" = "#1a2887", "CONTROL" = "#799de4")
 
 # Criar o gráfico de linhas
 p <- ggplot(df.melted, aes(x = AGE, y = Pontuação, color = GROUP)) +
-  geom_point(alpha=0.5, position = "jitter") +
+  geom_point(alpha=0.5, position = "jitter", size = 1.5) +
   stat_smooth( method = "loess", span = 0.8, se = F)+
   labs(title = "Gráfico de Linhas RAVLT por Grupo",
        x = "AGE",

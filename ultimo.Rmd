@@ -566,7 +566,7 @@ FDT_READING_TIME_Z <- data %>%
     LIMIT_AGE == "35-50" ~ (FDT_READING_TIME - 23.9) / 6.5,
     TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
   )) %>%
-  select(ID,AGE, GROUP, LIMIT_AGE,FDT_READING_TIME,  FDT_READING_TIME_Z) %>% 
+  select(ID,AGE, EDU_LEVEL,GROUP, LIMIT_AGE,FDT_READING_TIME,  FDT_READING_TIME_Z) %>% 
   arrange(ID)
 
 
@@ -976,8 +976,7 @@ write.xlsx(RAVLTs_EscoreZ, file = "RAVLTs_EscoreZ.xlsx")
 
 
 
-``` 
-
+```
 
 ```{r}
 
@@ -1217,7 +1216,13 @@ pptotal
 
 ######################################  Bubble Plots FDTs Zscore  ###############################
 
-data <- readxl::read_xlsx ("BPAs_FDTs_ RAVLTs_EscoreZ.xlsx", sheet = 2)
+data <- readxl::read_excel("FDT_EscoreZ.xlsx")
+
+data <- na.omit(data)
+
+colnames(data)
+
+data <- data %>% rename(ID = ID...1)
 
 data
 
@@ -1244,7 +1249,7 @@ p9 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,AGE, FDT_FLEXIBILITY , FDT_FLEXIBILI
                                             #  P4
 
 
-coresFDT <- c("#f1948a", "#abebc6")
+coresFDT <- c("#f6a3ab", "#1ab6ac")
 
 
 
@@ -1277,7 +1282,18 @@ p4 <- data %>%
     )
     
 
-pp4 <- ggplotly(p4, tooltip="text") 
+pp4 <- ggplotly(p4, tooltip="text") %>%
+  
+  layout(legend = list(x = 0, y = 1.01,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
 
 
 pp4
@@ -1314,7 +1330,18 @@ p5 <- data %>%
     )
     
 
-pp5 <- ggplotly(p5, tooltip="text") 
+pp5 <- ggplotly(p5, tooltip="text") %>%
+  
+  layout(legend = list(x = 0, y = 1.01,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
 
 
 pp5
@@ -1352,7 +1379,18 @@ p6 <- data %>%
     )
     
 
-pp6 <- ggplotly(p6, tooltip="text") 
+pp6 <- ggplotly(p6, tooltip="text") %>%
+  
+  layout(legend = list(x = 0, y = 1.01,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
 
 
 pp6
@@ -1390,7 +1428,18 @@ p7<- data %>%
     )
     
 
-pp7 <- ggplotly(p7, tooltip="text") 
+pp7 <- ggplotly(p7, tooltip="text") %>%
+  
+  layout(legend = list(x = 0, y = 1.01,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
 
 
 pp7
@@ -1427,7 +1476,18 @@ p8<- data %>%
     legend.text = element_text(size = 5)
     )
 
-pp8 <- ggplotly(p8, tooltip="text") 
+pp8 <- ggplotly(p8, tooltip="text") %>%
+  
+  layout(legend = list(x = 0, y = 1.01,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
 
 
 pp8
@@ -1464,7 +1524,18 @@ p9<- data %>%
     )
     
 
-pp9 <- ggplotly(p9, tooltip="text") 
+pp9 <- ggplotly(p9, tooltip="text") %>%
+  
+  layout(legend = list(x = 0, y = 1.01,
+                     title = " ",
+                     bgcolor = "#ecf0f1",
+                     bordercolor = "white",
+                     borderwidth = 1,
+                     font = list(size = 9, family = "Arial", color = "black"),
+                     orientation = 50,
+                     tracegroupgap = 20,
+                     traceorder = "normal"
+                     ))
 
 
 pp9
@@ -1513,7 +1584,7 @@ p22 <- data %>%  select(ID,EDU_LEVEL ,GROUP ,AGE, RAVLT_RETRO_INTERFERENCE , RAV
                                       # P10
 
 
-coresRAVLT<- c("#123f48", "#20dad9")
+coresRAVLT<- c("#7f1c2b", "#9c9ce9")
 
 
 
@@ -2156,6 +2227,8 @@ df <- read_excel("RAVLTs_EscoreZ.xlsx")
 
 colnames(df)
 
+#1a2887, #799de4
+
 ######################################  Curva de Crescimento  ##########################################
 
 df.RAVLTs <- df %>% select(GROUP,AGE,RAVLT_A1,RAVLT_A2,RAVLT_A3,RAVLT_A4,RAVLT_A5)
@@ -2163,14 +2236,17 @@ df.RAVLTs <- df %>% select(GROUP,AGE,RAVLT_A1,RAVLT_A2,RAVLT_A3,RAVLT_A4,RAVLT_A
 
 df.melted <- melt(df.RAVLTs, id.vars = c("AGE", "GROUP"), variable.name = "Variável", value.name = "Pontuação")
 
+cores <- c("CASE" = "#1a2887", "CONTROL" = "#799de4")
+
 # Criar o gráfico de linhas
 p <- ggplot(df.melted, aes(x = AGE, y = Pontuação, color = GROUP)) +
-  geom_point(alpha=0.3, position = "jitter") +
-  stat_smooth( method = "lm", span = 0.8, se = F)+
+  geom_point(alpha=0.5, position = "jitter") +
+  stat_smooth( method = "loess", span = 0.8, se = F)+
   labs(title = "Gráfico de Linhas RAVLT por Grupo",
        x = "AGE",
        y = "Pontuação RAVLT",
        color = "Grupos") +
+  scale_color_manual(values = cores) +
   facet_wrap(~ Variável) +  # Separação por GROUP (caso e controle)
   theme_minimal()
 
@@ -2179,5 +2255,3 @@ p <- ggplot(df.melted, aes(x = AGE, y = Pontuação, color = GROUP)) +
 p
 
 ```
-
-

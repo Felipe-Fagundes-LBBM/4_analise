@@ -1,6 +1,6 @@
 ---
-title: "4 analise"
-output: revealjs::revealjs_presentation 
+title: "Análise Completa dos Dados Neurocognitivos"
+output: html_notebook
 date: "2024-05-06"
 ---
 

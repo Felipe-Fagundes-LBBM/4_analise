@@ -1,6 +1,6 @@
 ---
 title: "Análise Completa dos Dados Neurocognitivos"
-output: html_notebook
+output: 
 date: "2024-05-06"
 ---
 
@@ -45,7 +45,7 @@ p1_long <- tidyr::pivot_longer(p1, cols = -GROUP, names_to = "Variable", values_
                                     #Gráfico facetado BPA-Conc,Divid,Altern.
 
 plot1 <- ggplot(p1_long, aes(x = GROUP, y = Value, fill = GROUP)) + 
-  
+        
   geom_boxplot(outlier.shape = NA, alpha = 0.5, width = 0.7, coef = 0, lwd = 0.4, color = "black") +
   geom_jitter(aes(color = GROUP), size = 2.5, width = 0.15, alpha = 0.5) +
   
@@ -162,11 +162,11 @@ plot2 <- ggplot(p2_long, aes(x = GROUP, y = Value, fill = GROUP)) +
                                      FDT_INHIBITION =  "Inhibition", 
                                      FDT_FLEXIBILITY = "Flexibility"))) +
   #scale_y_continuous(limits = c(20, 130), breaks = seq(20, 100, by = 20)) +
-  theme(axis.text = element_text(size = 11, color = "black"),
-        axis.title = element_text(size = 15, color = "black"),
+  theme(axis.text = element_text(size = 15, color = "black"),
+        axis.title = element_text(size = 19, color = "black"),
         panel.background = element_rect(fill = "white"),
         axis.line = element_line(color = "black"),
-        plot.title = element_text(size = 14, family = "", face = "bold"),
+        plot.title = element_text(size = 1.5, family = "", face = "bold"),
         text = element_text(size = 12, family = ""),
         legend.position = "bottom",
         strip.background = element_blank(),
@@ -176,8 +176,9 @@ plot2 <- ggplot(p2_long, aes(x = GROUP, y = Value, fill = GROUP)) +
 # Ajuste as escalas de acordo com o mínimo e máximo dos dados
 #plot1 <- plot1 + ylim(min(p1_long$Value), max(p1_long$Value))
 
-plot2 + stat_compare_means(method = "t.test" , label.x = 2)
+plot2 <- plot2 + stat_compare_means(method = "t.test" , label.x = 2)
 
+dev.off(plot2)
 
 #######################################    BOX PLOT-Test.T RAVLTs #############################################
 
@@ -228,15 +229,16 @@ plot3 <- ggplot(p3_long, aes(x = GROUP, y = Value, fill = GROUP)) +
         axis.title = element_text(size = 15, color = "black"),
         panel.background = element_rect(fill = "white"),
         axis.line = element_line(color = "black"),
-        plot.title = element_text(size = 14, family = "Tahoma", face = "bold"),
-        text = element_text(size = 12, family = "Tahoma"),
+        plot.title = element_text(size = 14, face = "bold"),
+        text = element_text(size = 12,),
         legend.position = "bottom",
         strip.background = element_blank(),
-        strip.text = element_text(size = 14, family = "Tahoma", face = "bold"))
+        strip.text = element_text(size = 14, face = "bold"))
 
 
 
 plot3 + stat_compare_means(method = "t.test" , label.y = 18, label.x = 1.1)
+
 
 
 
@@ -263,11 +265,11 @@ plot4 <- ggplot(p4_long, aes(x = GROUP, y = Value, fill = GROUP)) +
         axis.title = element_text(size = 15, color = "black"),
         panel.background = element_rect(fill = "white"),
         axis.line = element_line(color = "black"),
-        plot.title = element_text(size = 14, family = "Tahoma", face = "bold"),
-        text = element_text(size = 12, family = "Tahoma"),
+        plot.title = element_text(size = 14, face = "bold"),
+        text = element_text(size = 12,),
         legend.position = "bottom",
         strip.background = element_blank(),
-        strip.text = element_text(size = 14, family = "Tahoma", face = "bold"))
+        strip.text = element_text(size = 14, face = "bold"))
 
 
 # Ajuste as escalas de acordo com o mínimo e máximo dos dados
@@ -979,7 +981,6 @@ write.xlsx(RAVLTs_EscoreZ, file = "RAVLTs_EscoreZ.xlsx")
 ```
 
 ```{r}
-
 library(tibble)
 library(readxl)
 library(dplyr)
@@ -2211,10 +2212,11 @@ pp22
 
 ```
 
+
+
 ```{r}
 
 #install.packages('reshape2')
-
 library(ggplot2)
 library(dplyr)
 library(readxl)

@@ -122,7 +122,7 @@ plototal <- plototal + stat_compare_means(method = "t.test", label.x = 1.38)
 
 plototal
 
-ggsave("bxplot_BPAsTOTAL.pdf", plot = plototal, width = 13, height = 10)
+#ggsave("bxplot_BPAsTOTAL.pdf", plot = plototal, width = 13, height = 10)
 
 
 #######################################    BOX PLOT-Test.T FDTs #############################################
@@ -178,9 +178,9 @@ plot2 <- ggplot(p2_long, aes(x = GROUP, y = Value, fill = GROUP)) +
 
 plot2 <- plot2 + stat_compare_means(method = "t.test" )
  
-?t.test()
+plot2
 
-ggsave(filename = "FDTs_values.pdf", plot = plot2)
+#ggsave(filename = "FDTs_values.pdf", plot = plot2)
 
 
 #######################################    BOX PLOT-Test.T RAVLTs #############################################
@@ -240,8 +240,11 @@ plot3 <- ggplot(p3_long, aes(x = GROUP, y = Value, fill = GROUP)) +
 
 
 
-plot3 + stat_compare_means(method = "t.test" , label.y = 18, label.x = 1.1)
+plot3 <- plot3 + stat_compare_means(method = "t.test" , label.y = 18, label.x = 1.1)
 
+plot3
+
+#ggsave(filename = "RAVLT_values.pdf", plot = plot3)
 
 
 
@@ -278,8 +281,11 @@ plot4 <- ggplot(p4_long, aes(x = GROUP, y = Value, fill = GROUP)) +
 # Ajuste as escalas de acordo com o mínimo e máximo dos dados
 #plot1 <- plot1 + ylim(min(p1_long$Value), max(p1_long$Value))
 
-plot4 + stat_compare_means(method = "t.test" , label.y = 18, label.x = 1.1)
+plot4 <- plot4 + stat_compare_means(method = "t.test" , label.y = 18, label.x = 1.1)
 
+plot4
+
+#ggsave(filename = "RAVLT_A5_A7.pdf", plot = plot4)
 
 
 
@@ -315,8 +321,9 @@ plot5 <- ggplot(p5_long, aes(x = GROUP, y = Value, fill = GROUP)) +
 
 plot5 <- plot5 + stat_compare_means(method = "t.test" ,  label.y = 65, label.x =1.7)
 
+plot5
 
-ggsave(filename = "RAVLT_total.pdf", plot = plot5)
+#ggsave(filename = "RAVLT_total.pdf", plot = plot5)
 
 
 
@@ -355,7 +362,7 @@ plot6 <- ggplot(p6_long, aes(x = GROUP, y = Value, fill = GROUP)) +
 
 plot6 + stat_compare_means(method = "t.test", label.y = 15, label.x = 1.1)
 
-
+plot6
 
 
      # Reorganizar os dados para o formato 'long' usando a função pivot_longer() do pacote tidyr
@@ -389,6 +396,8 @@ plot7 <- ggplot(p7_long, aes(x = GROUP, y = Value, fill = GROUP)) +
 
 
 plot7 + stat_compare_means(method = "t.test" )
+
+plot7
 
 ```
 
@@ -677,7 +686,7 @@ write.xlsx(FDT_EscoreZ, file = "FDT_EscoreZ.xlsx")
 
 
 
-################################## RAVLTS Z-Score Calculating  #####################################
+################################## RAVLTS Z-Score Calculating #####################################
 
 data <- readxl::read_xlsx ("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO.xlsx")
 

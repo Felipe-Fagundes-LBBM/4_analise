@@ -1,6 +1,6 @@
 ---
 title: "Análise Completa dos Dados Neurocognitivos"
-output: 
+output: html_notebook
 date: "2024-05-06"
 ---
 
@@ -24,7 +24,7 @@ library(ggtext)
 
 getwd()
 
-#list.files()
+list.files()
 
 data <- readxl::read_excel("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO.xlsx")
 
@@ -180,7 +180,7 @@ plot2 <- plot2 + stat_compare_means(method = "t.test" )
  
 plot2
 
-#ggsave(filename = "FDTs_values.pdf", plot = plot2)
+ggsave(filename = "FDTs_values.pdf", plot = plot2)
 
 
 #######################################    BOX PLOT-Test.T RAVLTs #############################################

@@ -1,15 +1,11 @@
 ---
 title: "Dados de Parâmetros Z-Score"
 output: html_notebook
+link-citations: TRUE
 date: "2024-05-09"
 ---
 
-```{r}
-knitr::opts_chunk$set(
-  message=FALSE, 
-  warning=FALSE,
-  fig.cap= "Z-Scores Parametros")
-
+```{r Bibliotecas e Dado BPA_ZScore, message=FALSE, warning=FALSE, echo=FALSE}
 
 #install.packages("nortest") 
 #install.packages("MKinfer")
@@ -28,11 +24,20 @@ data
 ```
 
 # **Checking differences between groups**
-## **Scores/Z-Score** {.tabset .tabset-fade}
-### BPA_CONC_EscoreZ                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes
 
-```{r}
+## **Scores/Z-Score** {.tabset .tabset-fade}
+
+### BPA_CONC_EscoreZ #variavel avaliada
+
+<p style="color:red; background-color:black;">
+
+**Many Different**
+
+</p>
+
+#iguais ou diferentes
+
+```{r message = FALSE,warning = FALSE, fig.align = 'center', echo = FALSE}
 
 ## mann  whitney pq nao?
 
@@ -47,7 +52,7 @@ p <- ggplot(data, aes(x = BPA_CONC_EscoreZ)) +
   
   labs(x = "BPA_CONC_EscoreZ", 
        y = "Density", 
-       title = "BPA CONC Z-escore, Gaussian Density Curve") +
+       title = "BPA CONC Z-Score, Gaussian Density Curve") +
   theme_minimal()
 p
 
@@ -61,12 +66,19 @@ boot.t.test(BPA_CONC_EscoreZ ~ GROUP, data)
 
 ```
 
-
-
 # **Checking differences between groups**
+
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### BPA_DIVID_EscoreZ                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes
+
+### BPA_DIVID_EscoreZ #variavel avaliada
+
+<p style="color:red; background-color:black;">
+
+**Many Different**
+
+</p>
+
+#iguais ou diferentes
 
 ```{r}
 
@@ -95,13 +107,19 @@ boot.t.test(BPA_DIVID_EscoreZ ~ GROUP, data)
 
 ```
 
-
-
-
 # **Checking differences between groups**
+
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### BPA_ALTERN_EscoreZ                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes
+
+### BPA_ALTERN_EscoreZ #variavel avaliada
+
+<p style="color:red; background-color:black;">
+
+**Many Different**
+
+</p>
+
+#iguais ou diferentes
 
 ```{r}
 
@@ -126,14 +144,21 @@ shapiro.test(data$BPA_ALTERN_EscoreZ)
 
 boot.t.test(BPA_ALTERN_EscoreZ ~ GROUP, data)
 
-```         
-
-
+```
 
 # **Checking differences between groups**
+
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### BPA_TOTAL_EscoreZ                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+### BPA_TOTAL_EscoreZ #variavel avaliada
+
+<p style="color:red; background-color:black;">
+
+**Many Different**
+
+</p>
+
+#iguais ou diferentes
 
 ```{r}
 
@@ -166,11 +191,19 @@ boot.t.test(BPA_TOTAL_EscoreZ ~ GROUP, data)
 
 ```
 
-
 # **Checking differences between groups**
+
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### FDT_READING_TIME_Z                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+### FDT_READING_TIME_Z #variavel avaliada
+
+<p style="color:red; background-color:black;">
+
+**Many Different**
+
+</p>
+
+#iguais ou diferentes
 
 ```{r}
 
@@ -206,11 +239,19 @@ boot.t.test(FDT_READING_TIME_Z ~ GROUP, data)
 
 ```
 
-
 # **Checking differences between groups**
+
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### FDT_COUNTING_TIME_Z                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+### FDT_COUNTING_TIME_Z #variavel avaliada
+
+<p style="color:red; background-color:black;">
+
+**Many Different**
+
+</p>
+
+#iguais ou diferentes
 
 ```{r}
 
@@ -225,12 +266,19 @@ boot.t.test(FDT_COUNTING_TIME_Z ~ GROUP, data)
 
 ```
 
-
-
 # **Checking differences between groups**
+
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### FDT_CHOOSING_TIME_Z                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+### FDT_CHOOSING_TIME_Z #variavel avaliada
+
+<p style="color:red; background-color:black;">
+
+**Many Different**
+
+</p>
+
+#iguais ou diferentes
 
 ```{r}
 
@@ -244,11 +292,19 @@ boot.t.test(FDT_CHOOSING_TIME_Z ~ GROUP, data)
 
 ```
 
-
 # **Checking differences between groups**
+
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### FDT_CHANGING_TIME_Z                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+### FDT_CHANGING_TIME_Z #variavel avaliada
+
+<p style="color:red; background-color:black;">
+
+**Many Different**
+
+</p>
+
+#iguais ou diferentes
 
 ```{r}
 
@@ -262,11 +318,19 @@ boot.t.test(FDT_CHANGING_TIME_Z ~ GROUP, data)
 
 ```
 
-
 # **Checking differences between groups**
+
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### FDT_INHIBITION_Z                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+### FDT_INHIBITION_Z #variavel avaliada
+
+<p style="color:red; background-color:black;">
+
+**Many Different**
+
+</p>
+
+#iguais ou diferentes
 
 ```{r}
 
@@ -281,9 +345,18 @@ boot.t.test(FDT_INHIBITION_Z ~ GROUP, data)
 ```
 
 # **Checking differences between groups**
+
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### FDT_FLEXIBILITY_Z                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+### FDT_FLEXIBILITY_Z #variavel avaliada
+
+<p style="color:red; background-color:black;">
+
+**Many Different**
+
+</p>
+
+#iguais ou diferentes
 
 ```{r}
 
@@ -297,11 +370,19 @@ boot.t.test(FDT_FLEXIBILITY_Z ~ GROUP, data)
 
 ```
 
-
 # **Checking differences between groups**
+
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### RAVLT_A1_Z                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+### RAVLT_A1_Z #variavel avaliada
+
+<p style="color:red; background-color:black;">
+
+**Many Different**
+
+</p>
+
+#iguais ou diferentes
 
 ```{r}
 
@@ -339,9 +420,18 @@ boot.t.test(RAVLT_A1_Z ~ GROUP, data)
 ```
 
 # **Checking differences between groups**
+
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### RAVLT_A2_Z                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+### RAVLT_A2_Z #variavel avaliada
+
+<p style="color:red; background-color:black;">
+
+**Many Different**
+
+</p>
+
+#iguais ou diferentes
 
 ```{r}
 
@@ -371,9 +461,18 @@ boot.t.test(RAVLT_A2_Z ~ GROUP, data)
 ```
 
 # **Checking differences between groups**
+
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### RAVLT_A3_Z                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+### RAVLT_A3_Z #variavel avaliada
+
+<p style="color:red; background-color:black;">
+
+**Many Different**
+
+</p>
+
+#iguais ou diferentes
 
 ```{r}
 
@@ -403,9 +502,18 @@ boot.t.test(RAVLT_A3_Z ~ GROUP, data)
 ```
 
 # **Checking differences between groups**
+
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### RAVLT_A4_Z                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+### RAVLT_A4_Z #variavel avaliada
+
+<p style="color:red; background-color:black;">
+
+**Many Different**
+
+</p>
+
+#iguais ou diferentes
 
 ```{r}
 
@@ -435,9 +543,18 @@ boot.t.test(RAVLT_A4_Z ~ GROUP, data)
 ```
 
 # **Checking differences between groups**
+
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### RAVLT_A5_Z                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+### RAVLT_A5_Z #variavel avaliada
+
+<p style="color:red; background-color:black;">
+
+**Many Different**
+
+</p>
+
+#iguais ou diferentes
 
 ```{r}
 
@@ -467,9 +584,18 @@ boot.t.test(RAVLT_A5_Z ~ GROUP, data)
 ```
 
 # **Checking differences between groups**
+
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### RAVLT_B1_Z                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+### RAVLT_B1_Z #variavel avaliada
+
+<p style="color:red; background-color:black;">
+
+**Many Different**
+
+</p>
+
+#iguais ou diferentes
 
 ```{r}
 
@@ -499,9 +625,18 @@ boot.t.test(RAVLT_B1_Z ~ GROUP, data)
 ```
 
 # **Checking differences between groups**
+
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### RAVLT_A6_Z                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+### RAVLT_A6_Z #variavel avaliada
+
+<p style="color:red; background-color:black;">
+
+**Many Different**
+
+</p>
+
+#iguais ou diferentes
 
 ```{r}
 
@@ -531,9 +666,18 @@ boot.t.test(RAVLT_A6_Z ~ GROUP, data)
 ```
 
 # **Checking differences between groups**
+
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### RAVLT_A7_Z                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+### RAVLT_A7_Z #variavel avaliada
+
+<p style="color:red; background-color:black;">
+
+**Many Different**
+
+</p>
+
+#iguais ou diferentes
 
 ```{r}
 
@@ -562,11 +706,19 @@ boot.t.test(RAVLT_A7_Z ~ GROUP, data)
 
 ```
 
-
 # **Checking differences between groups**
+
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### RAVLT_TOTALSCORE_Z                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+### RAVLT_TOTALSCORE_Z #variavel avaliada
+
+<p style="color:red; background-color:black;">
+
+**Many Different**
+
+</p>
+
+#iguais ou diferentes
 
 ```{r}
 
@@ -595,11 +747,19 @@ boot.t.test(RAVLT_TOTALSCORE_Z ~ GROUP, data)
 
 ```
 
-
 # **Checking differences between groups**
+
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### RAVLT_RETENTION_Z                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+### RAVLT_RETENTION_Z #variavel avaliada
+
+<p style="color:red; background-color:black;">
+
+**Many Different**
+
+</p>
+
+#iguais ou diferentes
 
 ```{r}
 
@@ -629,9 +789,18 @@ boot.t.test(RAVLT_RETENTION_Z ~ GROUP, data)
 ```
 
 # **Checking differences between groups**
+
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### RAVLT_PROAT_INTERFERENCE_Z                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+### RAVLT_PROAT_INTERFERENCE_Z #variavel avaliada
+
+<p style="color:red; background-color:black;">
+
+**Many Different**
+
+</p>
+
+#iguais ou diferentes
 
 ```{r}
 
@@ -660,11 +829,19 @@ boot.t.test(RAVLT_PROAT_INTERFERENCE_Z ~ GROUP, data)
 
 ```
 
-
 # **Checking differences between groups**
+
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### RAVLT_RETRO_INTERFERENCE_Z                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+### RAVLT_RETRO_INTERFERENCE_Z #variavel avaliada
+
+<p style="color:red; background-color:black;">
+
+**Many Different**
+
+</p>
+
+#iguais ou diferentes
 
 ```{r}
 
@@ -694,9 +871,18 @@ boot.t.test(RAVLT_RETRO_INTERFERENCE_Z ~ GROUP, data)
 ```
 
 # **Checking differences between groups**
+
 ## **Scores/Z-Score** {.tabset .tabset-fade}
-### RAVLT_REC_Z                                                  #variavel avaliada
-<p style="color:red; background-color:black;">**Many Different**</p>   #iguais ou diferentes   
+
+### RAVLT_REC_Z #variavel avaliada
+
+<p style="color:red; background-color:black;">
+
+**Many Different**
+
+</p>
+
+#iguais ou diferentes
 
 ```{r}
 

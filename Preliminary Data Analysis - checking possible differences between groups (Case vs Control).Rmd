@@ -1,94 +1,131 @@
 ---
-title: "Dados de Parâmetros Z-Score"
+title: "Report of data analysis"
+author: "Rodolpho Cortez, Felipe Fagundes"
+date: "`r Sys.Date()`"
 output: html_notebook
-link-citations: TRUE
-date: "2024-05-09"
 ---
 
-```{r Bibliotecas e Dado BPA_ZScore, message=FALSE, warning=FALSE, echo=FALSE}
+```{=html}
+<style type="text/css">
+.main-container {
+  max-width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+```
+# **Preliminary Data Analysis - checking possible differences between groups (Case vs Control)**
 
-#install.packages("nortest") 
-#install.packages("MKinfer")
+## **Setting data**
+
+```{r, eval=FALSE}
+getwd()
+library(readxl)
+  data_BPA <- readxl::read_xlsx("./BPAs_EscoreZ.xlsx")
+```
+
+Packages `ggplot2`, `ggExtra`, `nortest`, `MKinfer`, `dplyr`, `rstatix`, `Routliers`
+
+```{r, include=FALSE}
+#install.packages("Routliers")
 
 library(ggplot2)
 library(ggExtra)
-library(nortest)             # Carrega o pacote para lilletest
-library(readxl)
+library(nortest)
 library(MKinfer)
-
-getwd()
-
-data <- readxl::read_excel("./BPAs_EscoreZ.xlsx")
- 
-data 
+library(dplyr)
+library(rstatix)
+library(Routliers)
 ```
 
 # **Checking differences between groups**
 
-## **Scores/Z-Score** {.tabset .tabset-fade}
+The sequence of the analysis encompasses the statistical tests and plots to check normality, and the use of the appropriated statistical tests to check differences. All the Z-Scores were calculated considering the normative data for the most adequated population in the sample. All the means and standard deviations are available in the original datasets of the cognitive tests used.
 
-### BPA_CONC_EscoreZ #variavel avaliada
+## **ATTENTION ASSESMENT - BPA measures** {.tabset .tabset-fade}
 
-<p style="color:red; background-color:black;">
+### **Focused/Concentrated Attention** {.tabset .tabset-fade}
 
-**Many Different**
+#### Setting and cleaning data
+```{r, eval=FALSE}
 
-</p>
+getwd()
 
-#iguais ou diferentes
+library(readxl)
 
-```{r message = FALSE,warning = FALSE, fig.align = 'center', echo = FALSE}
+data_BPA <- readxl::read_xlsx("./BPAs_EscoreZ.xlsx")
 
-## mann  whitney pq nao?
+glimpse(data_BPA)
+data_BPA$GROUP <- as.factor(data_BPA$GROUP)
+data_BPA$EDU_LEVEL <- as.factor(data_BPA$EDU_LEVEL)
 
-#hist(data$BPA_CONC_EscoreZ, breaks = 15, xlab = "BPA_CONC_EscoreZ", main="BPA_CONC_EscoreZ")
+hist(data_BPA$BPA_CONC_EscoreZ)
+summary(data_BPA$BPA_CONC_EscoreZ)
+which(data_BPA$BPA_CONC_EscoreZ < -2)
 
-media <- mean(data$BPA_CONC_EscoreZ)
-desvio <- sd(data$BPA_CONC_EscoreZ)
+data_BPA <- data_BPA[-c(26),]
+```
 
-p <- ggplot(data, aes(x = BPA_CONC_EscoreZ)) +
+#### Normality tests
+
+```{r BPA_Conc Normality}
+
+lillie.test(data_BPA$BPA_CONC_EscoreZ)
+shapiro.test(data_BPA$BPA_CONC_EscoreZ)
+
+```
+
+```{r, echo=FALSE}
+
+media <- mean(data_BPA$BPA_CONC_EscoreZ)
+desvio <- sd(data_BPA$BPA_CONC_EscoreZ)
+
+p <- ggplot(data_BPA, aes(x = BPA_CONC_EscoreZ)) +
   geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
   stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
   
   labs(x = "BPA_CONC_EscoreZ", 
        y = "Density", 
-       title = "BPA CONC Z-Score, Gaussian Density Curve") +
+       title = "BPA Conc Z-escore, Gaussian Density Curve") +
   theme_minimal()
 p
-
-lillie.test(data$BPA_CONC_EscoreZ)
-
-shapiro.test(data$BPA_CONC_EscoreZ)
-
-      #     TEST-T MUTIPLAÇÃO POR SIMULAÇÕES  FAORECENDO A TENDENCIA A SE APROXIMAR DE UMA AMOSTRA PARAMETRICA
-          #   NÃO É TAO RIGOROSO!
-boot.t.test(BPA_CONC_EscoreZ ~ GROUP, data)
-
 ```
 
-# **Checking differences between groups**
+#### Bootstraped T-Test / Visualizing Frequencies in each group
 
-## **Scores/Z-Score** {.tabset .tabset-fade}
+```{r BPA_Conc T-test - Bootstraped, echo=FALSE}
+boot.t.test(BPA_CONC_EscoreZ ~ GROUP, data_BPA)
 
-### BPA_DIVID_EscoreZ #variavel avaliada
+par(mfrow=c(1,2))
+hist(data_BPA$BPA_CONC_EscoreZ [data_BPA$GROUP == "CASE"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CASE")
+hist(data_BPA$BPA_CONC_EscoreZ [data_BPA$GROUP == "CONTROL"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CONTROL")
+```
 
-<p style="color:red; background-color:black;">
+### **Split Attention** {.tabset .tabset-fade}
 
-**Many Different**
+#### Setting and cleaning data
+```{r, eval=FALSE}
 
-</p>
+glimpse(data_BPA)
+data_BPA$GROUP <- as.factor(data_BPA$GROUP)
+data_BPA$EDU_LEVEL <- as.factor(data_BPA$EDU_LEVEL)
 
-#iguais ou diferentes
+hist(data_BPA$BPA_DIVID_EscoreZ)
+summary(data_BPA$BPA_DIVID_EscoreZ)
+which(data_BPA$BPA_DIVID_EscoreZ < -2)
+```
 
-```{r}
+#### Normality tests
 
-#hist(data$BPA_DIVID_EscoreZ, breaks = 15, xlab = "BPA_DIVID_EscoreZ", main="BPA_DIVID_EscoreZ")
+```{r BPA_Divid Normality}
+lillie.test(data_BPA$BPA_DIVID_EscoreZ)
+shapiro.test(data_BPA$BPA_DIVID_EscoreZ)
+```
 
-
-media <- mean(data$BPA_DIVID_EscoreZ)
-desvio <- sd(data$BPA_DIVID_EscoreZ)
-
-p <- ggplot(data, aes(x = BPA_DIVID_EscoreZ)) +
+```{r BPA_Divid Histogram, echo=FALSE}
+p <- ggplot(data_BPA, aes(x = BPA_DIVID_EscoreZ)) +
   geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
   stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
   
@@ -97,38 +134,45 @@ p <- ggplot(data, aes(x = BPA_DIVID_EscoreZ)) +
        title = "BPA DIVID Z-escore, Gaussian Density Curve") +
   theme_minimal()
 p
-
-
-lillie.test(data$BPA_DIVID_EscoreZ)
-
-shapiro.test(data$BPA_DIVID_EscoreZ)
-
-boot.t.test(BPA_DIVID_EscoreZ ~ GROUP, data)
-
 ```
 
-# **Checking differences between groups**
+#### Bootstraped T-Test / Visualizing Frequencies in each group
 
-## **Scores/Z-Score** {.tabset .tabset-fade}
+```{r BPA_Divid T-test, echo=FALSE}
+boot.t.test(BPA_DIVID_EscoreZ ~ GROUP, data_BPA)
+par(mfrow=c(1,2))
+hist(data_BPA$BPA_DIVID_EscoreZ [data_BPA$GROUP == "CASE"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CASE")
+hist(data_BPA$BPA_DIVID_EscoreZ [data_BPA$GROUP == "CONTROL"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CONTROL")
+```
 
-### BPA_ALTERN_EscoreZ #variavel avaliada
+### **Alternate Attention** {.tabset .tabset-fade}
 
-<p style="color:red; background-color:black;">
+#### Setting and cleaning data
+```{r, eval=FALSE}
 
-**Many Different**
+glimpse(data_BPA)
+data_BPA$GROUP <- as.factor(data_BPA$GROUP)
+data_BPA$EDU_LEVEL <- as.factor(data_BPA$EDU_LEVEL)
 
-</p>
+hist(data_BPA$BPA_ALTERN_EscoreZ)
+summary(data_BPA$BPA_ALTERN_EscoreZ)
+which(data_BPA$BPA_ALTERN_EscoreZ < -2)
+```
 
-#iguais ou diferentes
+#### Normality tests
 
-```{r}
+```{r BPA_Altern Normality, echo=FALSE}
+lillie.test(data_BPA$BPA_ALTERN_EscoreZ)
+shapiro.test(data_BPA$BPA_ALTERN_EscoreZ)
+```
 
-#hist(data$BPA_ALTERN_EscoreZ, breaks = 15, xlab = "BPA_ALTERN_EscoreZ", main="BPA_DIVID_EscoreZ")
+```{r, echo=FALSE}
+media <- mean(data_BPA$BPA_ALTERN_EscoreZ)
+desvio <- sd(data_BPA$BPA_ALTERN_EscoreZ)
 
-media <- mean(data$BPA_ALTERN_EscoreZ)
-desvio <- sd(data$BPA_ALTERN_EscoreZ)
-
-p <- ggplot(data, aes(x = BPA_ALTERN_EscoreZ)) +
+p <- ggplot(data_BPA, aes(x = BPA_ALTERN_EscoreZ)) +
   geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
   stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
   
@@ -137,776 +181,666 @@ p <- ggplot(data, aes(x = BPA_ALTERN_EscoreZ)) +
        title = "BPA ALTERN Z-escore, Gaussian Density Curve") +
   theme_minimal()
 p
-
-lillie.test(data$BPA_ALTERN_EscoreZ)
-
-shapiro.test(data$BPA_ALTERN_EscoreZ)
-
-boot.t.test(BPA_ALTERN_EscoreZ ~ GROUP, data)
-
 ```
 
-# **Checking differences between groups**
+#### Mann-Whitney (Wilcoxon rank-sum test) / Visualizing Frequencies in each group
 
-## **Scores/Z-Score** {.tabset .tabset-fade}
+```{r BPA_Altern Wilcoxon Test, echo=FALSE}
+wilcox.test(BPA_ALTERN_EscoreZ ~ GROUP, data_BPA, conf.int = TRUE)
 
-### BPA_TOTAL_EscoreZ #variavel avaliada
+data_BPA %>% group_by(GROUP) %>%
+  get_summary_stats(BPA_ALTERN_EscoreZ, type = "median_iqr")
 
-<p style="color:red; background-color:black;">
-
-**Many Different**
-
-</p>
-
-#iguais ou diferentes
-
-```{r}
-
-# Trying to calculate the confidence interval
-
-limite_inferior <- media - 1.96 * desvio / sqrt(length(data$BPA_TOTAL_EscoreZ))
-limite_superior <- media + 1.96 * desvio / sqrt(length(data$BPA_TOTAL_EscoreZ))
-
-################################################################################
-
-media <- mean(data$BPA_TOTAL_EscoreZ)
-desvio <- sd(data$BPA_TOTAL_EscoreZ)
-
-p <- ggplot(data, aes(x = BPA_TOTAL_EscoreZ)) +
-  geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
-  stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
-  
-  labs(x = "BPA_TOTAL_EscoreZ", 
-       y = "Density", 
-       title = "BPA Total Z-escore, Gaussian Density Curve") +
-  theme_minimal()
-p
-
-
-lillie.test(data$BPA_TOTAL_EscoreZ)
-
-shapiro.test(data$BPA_TOTAL_EscoreZ)
-          
-boot.t.test(BPA_TOTAL_EscoreZ ~ GROUP, data)
-
+par(mfrow=c(1,2))
+hist(data_BPA$BPA_ALTERN_EscoreZ [data_BPA$GROUP == "CASE"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CASE")
+hist(data_BPA$BPA_ALTERN_EscoreZ [data_BPA$GROUP == "CONTROL"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CONTROL")
 ```
 
-# **Checking differences between groups**
-
-## **Scores/Z-Score** {.tabset .tabset-fade}
-
-### FDT_READING_TIME_Z #variavel avaliada
-
-<p style="color:red; background-color:black;">
-
-**Many Different**
-
-</p>
-
-#iguais ou diferentes
+## **EXECUTIVE FUNCTION ASSESMENT - FDT measures** {.tabset .tabset-fade}
 
 ```{r}
+data_FDT <- readxl::read_xlsx("./FDT_EscoreZ.xlsx")
+```
 
-###########################  FDT Norm ###################################
+### **Reading Time** {.tabset .tabset-fade}
 
-data <- readxl::read_excel("./FDT_EscoreZ.xlsx")
+#### Setting and cleaning data
+```{r, eval=FALSE}
 
-data <- na.omit(data)
 
+glimpse(data_FDT)
+data_FDT$GROUP <- as.factor(data_FDT$GROUP)
+data_FDT$EDU_LEVEL <- as.factor(data_FDT$EDU_LEVEL)
 
-media <- mean(data$FDT_READING_TIME_Z)
-desvio <- sd(data$FDT_READING_TIME_Z)
+hist(data_FDT$FDT_READING_TIME_Z)
+summary(data_FDT$FDT_READING_TIME_Z)
+which(data_FDT$FDT_READING_TIME_Z < -2)
+which(data_FDT$FDT_READING_TIME_Z > 2)
 
-p <- ggplot(data, aes(x = FDT_READING_TIME_Z)) +
+data_FDT <- data_FDT[-c(2 ,  5 , 23 , 25 , 70 , 99 ,102, 104, 114, 120), ]
+```
+
+#### Normality Tests
+
+```{r FDT Reading Normality, echo=FALSE}
+lillie.test(data_FDT$FDT_READING_TIME_Z)
+shapiro.test(data_FDT$FDT_READING_TIME_Z)
+
+media <- mean(data_FDT$FDT_READING_TIME_Z)
+desvio <- sd(data_FDT$FDT_READING_TIME_Z)
+
+p <- ggplot(data_FDT, aes(x = FDT_READING_TIME_Z)) +
   geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
   stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
   
   labs(x = "FDT_READING_TIME_Z", 
        y = "Density", 
-       title = "BPA Total Z-escore, Gaussian Density Curve") +
+       title = "FDT Reading Z-escore, Gaussian Density Curve") +
   theme_minimal()
 p
-
-
-
-#hist(data$FDT_READING_TIME_Z, breaks = 15, xlab = "FDT_READING_TIME_Z", main="FDT_READING_TIME_Z")
-
-lillie.test(data$FDT_READING_TIME_Z)
-
-shapiro.test(data$FDT_READING_TIME_Z)
-          
-boot.t.test(FDT_READING_TIME_Z ~ GROUP, data)
-
 ```
 
-# **Checking differences between groups**
+#### Mann-Whitney (Wilcoxon rank-sum test) / Visualizing Frequencies in each group
 
-## **Scores/Z-Score** {.tabset .tabset-fade}
+```{r FDT Reading Wilcoxon Test, echo=FALSE}
+wilcox.test(FDT_READING_TIME_Z ~ GROUP, data_FDT, conf.int = TRUE)
 
-### FDT_COUNTING_TIME_Z #variavel avaliada
+data_FDT %>% group_by(GROUP) %>%
+  get_summary_stats(FDT_READING_TIME_Z, type = "median_iqr")
 
-<p style="color:red; background-color:black;">
+par(mfrow=c(1,2))
+hist(data_FDT$FDT_READING_TIME_Z [data_FDT$GROUP == "CASE"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CASE")
+hist(data_FDT$FDT_READING_TIME_Z [data_FDT$GROUP == "CONTROL"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CONTROL")
+```
+#### Bootstraped T-Test / Visualizing Frequencies in each group
 
-**Many Different**
+```{r FDT_READING_TIME_Z T-test, echo=FALSE}
+boot.t.test(FDT_READING_TIME_Z ~ GROUP, data_FDT)
+par(mfrow=c(1,2))
+hist(data_FDT$FDT_READING_TIME_Z [data_FDT$GROUP == "CASE"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CASE")
+hist(data_FDT$FDT_READING_TIME_Z [data_FDT$GROUP == "CONTROL"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CONTROL")
 
-</p>
-
-#iguais ou diferentes
-
-```{r}
-
-
-hist(data$FDT_COUNTING_TIME_Z, breaks = 15, xlab = "FDT_COUNTING_TIME_Z", main="FDT_COUNTING_TIME_Z")
-
-lillie.test(data$FDT_COUNTING_TIME_Z)
-
-shapiro.test(data$FDT_COUNTING_TIME_Z)
-          
-boot.t.test(FDT_COUNTING_TIME_Z ~ GROUP, data)
-
+mean(data_FDT$FDT_READING_TIME [data_FDT$GROUP == "CASE"])
+mean(data_FDT$FDT_READING_TIME [data_FDT$GROUP == "CONTROL"])
 ```
 
-# **Checking differences between groups**
 
-## **Scores/Z-Score** {.tabset .tabset-fade}
+### **Counting Time** {.tabset .tabset-fade}
 
-### FDT_CHOOSING_TIME_Z #variavel avaliada
+#### Setting and cleaning data
+```{r, eval=FALSE}
+data_FDT <- readxl::read_xlsx("./FDT_EscoreZ.xlsx")
 
-<p style="color:red; background-color:black;">
+glimpse(data_FDT)
+data_FDT$GROUP <- as.factor(data_FDT$GROUP)
+data_FDT$EDU_LEVEL <- as.factor(data_FDT$EDU_LEVEL)
 
-**Many Different**
+hist(data_FDT$FDT_COUNTING_TIME_Z)
+summary(data_FDT$FDT_COUNTING_TIME_Z)
+which(data_FDT$FDT_COUNTING_TIME_Z < -2)
+which(data_FDT$FDT_COUNTING_TIME_Z > 2)
 
-</p>
-
-#iguais ou diferentes
-
-```{r}
-
-hist(data$FDT_CHOOSING_TIME_Z, breaks = 15, xlab = "FDT_CHOOSING_TIME_Z", main="FDT_CHOOSING_TIME_Z")
-
-lillie.test(data$FDT_CHOOSING_TIME_Z)
-
-shapiro.test(data$FDT_CHOOSING_TIME_Z)
-          
-boot.t.test(FDT_CHOOSING_TIME_Z ~ GROUP, data)
-
+data_FDT <- data_FDT[-c(14, 24, 25, 70, 116,120), ]
 ```
 
-# **Checking differences between groups**
+#### Normality Tests
 
-## **Scores/Z-Score** {.tabset .tabset-fade}
+```{r FDT Counting Normality, echo=FALSE}
+lillie.test(data_FDT$FDT_COUNTING_TIME_Z)
+shapiro.test(data_FDT$FDT_COUNTING_TIME_Z)
 
-### FDT_CHANGING_TIME_Z #variavel avaliada
+media <- mean(data_FDT$FDT_COUNTING_TIME_Z)
+desvio <- sd(data_FDT$FDT_COUNTING_TIME_Z)
 
-<p style="color:red; background-color:black;">
-
-**Many Different**
-
-</p>
-
-#iguais ou diferentes
-
-```{r}
-
-hist(data$FDT_CHANGING_TIME_Z, breaks = 15, xlab = "FDT_CHANGING_TIME_Z", main="FDT_CHANGING_TIME_Z")
-
-lillie.test(data$FDT_CHANGING_TIME_Z)
-
-shapiro.test(data$FDT_CHANGING_TIME_Z)
-          
-boot.t.test(FDT_CHANGING_TIME_Z ~ GROUP, data)
-
+p <- ggplot(data_FDT, aes(x = FDT_COUNTING_TIME_Z)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
+  stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
+  
+  labs(x = "FDT_COUNTING_TIME_Z", 
+       y = "Density", 
+       title = "FDT Counting Z-escore, Gaussian Density Curve") +
+  theme_minimal()
+p
 ```
 
-# **Checking differences between groups**
+#### Mann-Whitney (Wilcoxon rank-sum test) / Visualizing Frequencies in each group
 
-## **Scores/Z-Score** {.tabset .tabset-fade}
+```{r FDT Counting Wilcoxon Test, echo=FALSE}
+wilcox.test(FDT_COUNTING_TIME_Z ~ GROUP, data_FDT, conf.int = TRUE)
 
-### FDT_INHIBITION_Z #variavel avaliada
+data_FDT %>% group_by(GROUP) %>%
+  get_summary_stats(FDT_COUNTING_TIME_Z, type = "median_iqr")
 
-<p style="color:red; background-color:black;">
-
-**Many Different**
-
-</p>
-
-#iguais ou diferentes
-
-```{r}
-
-hist(data$FDT_INHIBITION_Z, breaks = 15, xlab = "FDT_INHIBITION_Z", main="FDT_INHIBITION_Z")
-
-lillie.test(data$FDT_INHIBITION_Z)
-
-shapiro.test(data$FDT_INHIBITION_Z)
-          
-boot.t.test(FDT_INHIBITION_Z ~ GROUP, data)
-
+par(mfrow=c(1,2))
+hist(data_FDT$FDT_COUNTING_TIME_Z [data_FDT$GROUP == "CASE"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CASE")
+hist(data_FDT$FDT_COUNTING_TIME_Z [data_FDT$GROUP == "CONTROL"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CONTROL")
 ```
 
-# **Checking differences between groups**
+### **Choosing Time** {.tabset .tabset-fade}
 
-## **Scores/Z-Score** {.tabset .tabset-fade}
+#### Setting and cleaning data
+```{r, eval=FALSE}
+data_FDT <- readxl::read_xlsx("./FDT_EscoreZ.xlsx")
 
-### FDT_FLEXIBILITY_Z #variavel avaliada
+glimpse(data_FDT)
+data_FDT$GROUP <- as.factor(data_FDT$GROUP)
+data_FDT$EDU_LEVEL <- as.factor(data_FDT$EDU_LEVEL)
 
-<p style="color:red; background-color:black;">
+hist(data_FDT$FDT_CHOOSING_TIME_Z)
+summary(data_FDT$FDT_CHOOSING_TIME_Z)
+which(data_FDT$FDT_CHOOSING_TIME_Z < -2)
+which(data_FDT$FDT_CHOOSING_TIME_Z > 2)
 
-**Many Different**
-
-</p>
-
-#iguais ou diferentes
-
-```{r}
-
-hist(data$FDT_FLEXIBILITY_Z, breaks = 15, xlab = "FDT_FLEXIBILITY_Z", main="FDT_FLEXIBILITY_Z")
-
-lillie.test(data$FDT_FLEXIBILITY_Z)
-
-shapiro.test(data$FDT_FLEXIBILITY_Z)
-          
-boot.t.test(FDT_FLEXIBILITY_Z ~ GROUP, data)
-
+data_FDT <- data_FDT[-c(12,  20,  23,  24,  25,  28,  70, 116), ]
 ```
 
-# **Checking differences between groups**
+#### Normality Tests
 
-## **Scores/Z-Score** {.tabset .tabset-fade}
+```{r FDT Choosing Normality, echo=FALSE}
+lillie.test(data_FDT$FDT_CHOOSING_TIME_Z)
+shapiro.test(data_FDT$FDT_CHOOSING_TIME_Z)
 
-### RAVLT_A1_Z #variavel avaliada
+media <- mean(data_FDT$FDT_CHOOSING_TIME_Z)
+desvio <- sd(data_FDT$FDT_CHOOSING_TIME_Z)
 
-<p style="color:red; background-color:black;">
+p <- ggplot(data_FDT, aes(x = FDT_CHOOSING_TIME_Z)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
+  stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
+  
+  labs(x = "FDT_CHOOSING_TIME_Z", 
+       y = "Density", 
+       title = "FDT Choosing Z-escore, Gaussian Density Curve") +
+  theme_minimal()
+p
+```
 
-**Many Different**
+#### Mann-Whitney (Wilcoxon rank-sum test) / Visualizing Frequencies in each group
 
-</p>
+```{r FDT Choosing Wilcoxon Test, echo=FALSE}
+wilcox.test(FDT_CHOOSING_TIME_Z ~ GROUP, data_FDT, conf.int = TRUE)
 
-#iguais ou diferentes
+
+data_FDT %>% group_by(GROUP) %>%
+  get_summary_stats(FDT_CHOOSING_TIME_Z, type = "median_iqr")
+
+par(mfrow=c(1,2))
+hist(data_FDT$FDT_CHOOSING_TIME_Z [data_FDT$GROUP == "CASE"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CASE")
+hist(data_FDT$FDT_CHOOSING_TIME_Z [data_FDT$GROUP == "CONTROL"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CONTROL")
+```
+
+### **Changing Time** {.tabset .tabset-fade}
+
+#### Setting and cleaning data
+```{r, eval=FALSE}
+data_FDT <- readxl::read_xlsx("./FDT_EscoreZ.xlsx")
+
+glimpse(data_FDT)
+data_FDT$GROUP <- as.factor(data_FDT$GROUP)
+data_FDT$EDU_LEVEL <- as.factor(data_FDT$EDU_LEVEL)
+
+hist(data_FDT$FDT_CHANGING_TIME_Z)
+summary(data_FDT$FDT_CHANGING_TIME_Z)
+which(data_FDT$FDT_CHANGING_TIME_Z < -2)
+which(data_FDT$FDT_CHANGING_TIME_Z > 2)
+
+
+data_FDT <- data_FDT[-c(5, 23, 24, 25, 28, 109, 116), ]
+```
+
+#### Normality Tests
+
+```{r FDT Changing Normality, echo=FALSE}
+lillie.test(data_FDT$FDT_CHANGING_TIME_Z)
+shapiro.test(data_FDT$FDT_CHANGING_TIME_Z)
+
+media <- mean(data_FDT$FDT_CHANGING_TIME_Z)
+desvio <- sd(data_FDT$FDT_CHANGING_TIME_Z)
+
+p <- ggplot(data_FDT, aes(x = FDT_CHANGING_TIME_Z)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
+  stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
+  
+  labs(x = "FDT_CHOOSING_TIME_Z", 
+       y = "Density", 
+       title = "FDT Changing Z-escore, Gaussian Density Curve") +
+  theme_minimal()
+p
+```
+
+#### Mann-Whitney (Wilcoxon rank-sum test) / Visualizing Frequencies in each group
+
+```{r FDT Changing Wilcoxon Test, echo=FALSE}
+wilcox.test(FDT_CHANGING_TIME_Z ~ GROUP, data_FDT, conf.int = TRUE)
+
+data_FDT %>% group_by(GROUP) %>%
+  get_summary_stats(FDT_CHANGING_TIME_Z, type = "median_iqr")
+
+par(mfrow=c(1,2))
+hist(data_FDT$FDT_CHANGING_TIME_Z [data_FDT$GROUP == "CASE"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CASE")
+hist(data_FDT$FDT_CHANGING_TIME_Z [data_FDT$GROUP == "CONTROL"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CONTROL")
+```
+
+### **Inhibition** {.tabset .tabset-fade}
+
+#### Setting and cleaning data
+```{r, eval=FALSE}
+data_FDT <- readxl::read_xlsx("./FDT_EscoreZ.xlsx")
+
+glimpse(data_FDT)
+data_FDT$GROUP <- as.factor(data_FDT$GROUP)
+data_FDT$EDU_LEVEL <- as.factor(data_FDT$EDU_LEVEL)
+
+hist(data_FDT$FDT_INHIBITION_Z)
+summary(data_FDT$FDT_INHIBITION_Z)
+which(data_FDT$FDT_INHIBITION_Z < -2)
+which(data_FDT$FDT_INHIBITION_Z > 2)
+
+
+data_FDT <- data_FDT[-c(10,  12,  20,  24,  28,  82, 116), ]
+```
+
+#### Normality Tests
+
+```{r FDT Inhibition Normality, echo=FALSE}
+lillie.test(data_FDT$FDT_INHIBITION_Z)
+shapiro.test(data_FDT$FDT_INHIBITION_Z)
+
+media <- mean(data_FDT$FDT_INHIBITION_Z)
+desvio <- sd(data_FDT$FDT_INHIBITION_Z)
+
+p <- ggplot(data_FDT, aes(x = FDT_INHIBITION_Z)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
+  stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
+  
+  labs(x = "FDT_INHIBITION_Z", 
+       y = "Density", 
+       title = "FDT Inhibition Z-escore, Gaussian Density Curve") +
+  theme_minimal()
+p
+```
+
+#### Mann-Whitney (Wilcoxon rank-sum test) / Visualizing Frequencies in each group
+
+```{r FDT Inhibition Wilcoxon Test, echo=FALSE}
+wilcox.test(FDT_INHIBITION_Z ~ GROUP, data_FDT, conf.int = TRUE)
+
+data_FDT %>% group_by(GROUP) %>%
+  get_summary_stats(FDT_INHIBITION_Z, type = "median_iqr")
+
+par(mfrow=c(1,2))
+hist(data_FDT$FDT_INHIBITION_Z [data_FDT$GROUP == "CASE"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CASE")
+hist(data_FDT$FDT_INHIBITION_Z [data_FDT$GROUP == "CONTROL"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CONTROL")
+```
+
+### **Flexibility** {.tabset .tabset-fade}
+
+#### Setting and cleaning data
+```{r, eval=FALSE}
+data_FDT <- readxl::read_xlsx("./FDT_EscoreZ.xlsx")
+
+glimpse(data_FDT)
+data_FDT$GROUP <- as.factor(data_FDT$GROUP)
+data_FDT$EDU_LEVEL <- as.factor(data_FDT$EDU_LEVEL)
+
+hist(data_FDT$FDT_FLEXIBILITY_Z)
+summary(data_FDT$FDT_FLEXIBILITY_Z)
+which(data_FDT$FDT_FLEXIBILITY_Z < -2)
+which(data_FDT$FDT_FLEXIBILITY_Z > 2)
+
+data_FDT <- data_FDT[-c(5, 10,  24,  28,  69, 109, 116), ]
+```
+
+#### Normality Tests
+
+```{r FDT Flexibility Normality, echo=FALSE}
+lillie.test(data_FDT$FDT_FLEXIBILITY_Z)
+shapiro.test(data_FDT$FDT_FLEXIBILITY_Z)
+
+media <- mean(data_FDT$FDT_FLEXIBILITY_Z)
+desvio <- sd(data_FDT$FDT_FLEXIBILITY_Z)
+
+p <- ggplot(data_FDT, aes(x = FDT_FLEXIBILITY_Z)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
+  stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
+  
+  labs(x = "FDT_FLEXIBILITY_Z", 
+       y = "Density", 
+       title = "FDT Flexibility Z-escore, Gaussian Density Curve") +
+  theme_minimal()
+p
+```
+
+#### Mann-Whitney (Wilcoxon rank-sum test) / Visualizing Frequencies in each group
+
+```{r FDT Flexibility Wilcoxon Test, echo=FALSE}
+wilcox.test(FDT_FLEXIBILITY_Z ~ GROUP, data_FDT, conf.int = TRUE)
+
+data_FDT %>% group_by(GROUP) %>%
+  get_summary_stats(FDT_FLEXIBILITY_Z, type = "median_iqr")
+
+par(mfrow=c(1,2))
+hist(data_FDT$FDT_FLEXIBILITY_Z [data_FDT$GROUP == "CASE"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CASE")
+hist(data_FDT$FDT_FLEXIBILITY_Z [data_FDT$GROUP == "CONTROL"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CONTROL")
+```
+#### Bootstraped T-Test / Visualizing Frequencies in each group
+
+```{r FDT_FLEXIBILITY_Z T-test, echo=FALSE}
+boot.t.test(FDT_FLEXIBILITY_Z ~ GROUP, data_FDT)
+par(mfrow=c(1,2))
+hist(data_FDT$FDT_FLEXIBILITY_Z [data_FDT$GROUP == "CASE"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CASE")
+hist(data_FDT$FDT_FLEXIBILITY_Z [data_FDT$GROUP == "CONTROL"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CONTROL")
+
+mean(data_FDT$FDT_FLEXIBILITY [data_FDT$GROUP == "CASE"])
+mean(data_FDT$FDT_FLEXIBILITY [data_FDT$GROUP == "CONTROL"])
+```
+
+
+## **MEMORY ASSESMENT - RAVLT measures** {.tabset .tabset-fade}
 
 ```{r}
+data_RAVLT <- readxl::read_xlsx("./RAVLTs_EscoreZ.xlsx")
+```
 
-###########################  RAVLTs Norm ###################################
+### **Short-term memory - First try** {.tabset .tabset-fade}
 
-data <- readxl::read_excel("./RAVLTs_EscoreZ.xlsx")
+#### Setting and cleaning data
+```{r, eval=FALSE}
+data_RAVLT <- readxl::read_xlsx("./RAVLTs_EscoreZ.xlsx")
 
-data <- na.omit(data)
+glimpse(data_RAVLT)
+data_RAVLT$GROUP <- as.factor(data_RAVLT$GROUP)
+data_RAVLT$EDU_LEVEL <- as.factor(data_RAVLT$EDU_LEVEL)
 
-colnames(data)
+hist(data_RAVLT$RAVLT_A1_Z)
+summary(data_RAVLT$RAVLT_A1_Z)
+which(data_RAVLT$RAVLT_A1_Z < -2)
+which(data_RAVLT$RAVLT_A1_Z > 2)
 
-media <- mean(data$RAVLT_A1_Z)
-desvio <- sd(data$RAVLT_A1_Z)
+data_RAVLT <- data_RAVLT[-c(3, 10, 14, 89), ]
+```
 
-p <- ggplot(data, aes(x = RAVLT_A1_Z)) +
+#### Normality Tests
+
+```{r RAVLT Short-term A1, echo=FALSE}
+lillie.test(data_RAVLT$RAVLT_A1_Z)
+shapiro.test(data_RAVLT$RAVLT_A1_Z)
+
+media <- mean(data_RAVLT$RAVLT_A1_Z)
+desvio <- sd(data_RAVLT$RAVLT_A1_Z)
+
+p <- ggplot(data_RAVLT, aes(x = RAVLT_A1_Z)) +
   geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
   stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
   
   labs(x = "RAVLT_A1_Z", 
        y = "Density", 
-       title = "RAVLT A1 Z-escore, Gaussian Density Curve") +
+       title = "RAVLT Short-term memory A1 Z-escore, Gaussian Density Curve") +
   theme_minimal()
 p
+```
+#### Mann-Whitney (Wilcoxon rank-sum test) / Visualizing Frequencies in each group
 
+```{r RAVLT_A1_Z Wilcoxon Test, echo=FALSE}
+wilcox.test(RAVLT_A1_Z ~ GROUP, data_RAVLT, conf.int = TRUE)
 
+data_RAVLT %>% group_by(GROUP) %>%
+  get_summary_stats(RAVLT_A1_Z, type = "median_iqr")
 
-#hist(data$FDT_READING_TIME_Z, breaks = 15, xlab = "FDT_READING_TIME_Z", main="FDT_READING_TIME_Z")
-
-lillie.test(data$RAVLT_A1_Z)
-
-shapiro.test(data$RAVLT_A1_Z)
-          
-boot.t.test(RAVLT_A1_Z ~ GROUP, data)
-
+par(mfrow=c(1,2))
+hist(data_RAVLT$RAVLT_A1_Z [data_RAVLT$GROUP == "CASE"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CASE")
+hist(data_RAVLT$RAVLT_A1_Z [data_RAVLT$GROUP == "CONTROL"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CONTROL")
 ```
 
-# **Checking differences between groups**
+#### Bootstraped T-Test / Visualizing Frequencies in each group
 
-## **Scores/Z-Score** {.tabset .tabset-fade}
+```{r RAVLT Short-term A1 T-test - Bootstraped, echo=FALSE}
+boot.t.test(RAVLT_A1_Z ~ GROUP, data_RAVLT)
 
-### RAVLT_A2_Z #variavel avaliada
-
-<p style="color:red; background-color:black;">
-
-**Many Different**
-
-</p>
-
-#iguais ou diferentes
-
-```{r}
-
-media <- mean(data$RAVLT_A2_Z)
-desvio <- sd(data$RAVLT_A2_Z)
-
-p <- ggplot(data, aes(x = RAVLT_A2_Z)) +
-  geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
-  stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
-  
-  labs(x = "RAVLT_A2_Z", 
-       y = "Density", 
-       title = "RAVLT A2 Z-escore, Gaussian Density Curve") +
-  theme_minimal()
-p
-
-
-
-#hist(data$FDT_READING_TIME_Z, breaks = 15, xlab = "FDT_READING_TIME_Z", main="FDT_READING_TIME_Z")
-
-lillie.test(data$RAVLT_A2_Z)
-
-shapiro.test(data$RAVLT_A2_Z)
-          
-boot.t.test(RAVLT_A2_Z ~ GROUP, data)
-
+par(mfrow=c(1,2))
+hist(data_RAVLT$RAVLT_A1_Z [data_RAVLT$GROUP == "CASE"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CASE")
+hist(data_RAVLT$RAVLT_A1_Z [data_RAVLT$GROUP == "CONTROL"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CONTROL")
 ```
 
-# **Checking differences between groups**
+### **Short-term memory - Fifth try** {.tabset .tabset-fade}
 
-## **Scores/Z-Score** {.tabset .tabset-fade}
+#### Setting and cleaning data
+```{r, eval=FALSE}
+data_RAVLT <- readxl::read_xlsx("./RAVLTs_EscoreZ.xlsx")
 
-### RAVLT_A3_Z #variavel avaliada
+glimpse(data_RAVLT)
+data_RAVLT$GROUP <- as.factor(data_RAVLT$GROUP)
+data_RAVLT$EDU_LEVEL <- as.factor(data_RAVLT$EDU_LEVEL)
 
-<p style="color:red; background-color:black;">
+hist(data_RAVLT$RAVLT_A5_Z)
+summary(data_RAVLT$RAVLT_A5_Z)
+which(data_RAVLT$RAVLT_A5_Z < -2)
+which(data_RAVLT$RAVLT_A5_Z > 2)
 
-**Many Different**
-
-</p>
-
-#iguais ou diferentes
-
-```{r}
-
-media <- mean(data$RAVLT_A3_Z)
-desvio <- sd(data$RAVLT_A3_Z)
-
-p <- ggplot(data, aes(x = RAVLT_A3_Z)) +
-  geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
-  stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
-  
-  labs(x = "RAVLT_A3_Z", 
-       y = "Density", 
-       title = "RAVLT A3 Z-escore, Gaussian Density Curve") +
-  theme_minimal()
-p
-
-
-
-#hist(data$FDT_READING_TIME_Z, breaks = 15, xlab = "FDT_READING_TIME_Z", main="FDT_READING_TIME_Z")
-
-lillie.test(data$RAVLT_A3_Z)
-
-shapiro.test(data$RAVLT_A3_Z)
-          
-boot.t.test(RAVLT_A3_Z ~ GROUP, data)
-
+data_RAVLT <- data_RAVLT[-c(10, 12, 63, 84, 102, 103), ]
 ```
 
-# **Checking differences between groups**
+#### Normality Tests
 
-## **Scores/Z-Score** {.tabset .tabset-fade}
+```{r RAVLT Short-term A5, echo=FALSE}
+lillie.test(data_RAVLT$RAVLT_A5_Z)
+shapiro.test(data_RAVLT$RAVLT_A5_Z)
 
-### RAVLT_A4_Z #variavel avaliada
+media <- mean(data_RAVLT$RAVLT_A5_Z)
+desvio <- sd(data_RAVLT$RAVLT_A5_Z)
 
-<p style="color:red; background-color:black;">
-
-**Many Different**
-
-</p>
-
-#iguais ou diferentes
-
-```{r}
-
-media <- mean(data$RAVLT_A4_Z)
-desvio <- sd(data$RAVLT_A4_Z)
-
-p <- ggplot(data, aes(x = RAVLT_A4_Z)) +
-  geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
-  stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
-  
-  labs(x = "RAVLT_A4_Z", 
-       y = "Density", 
-       title = "RAVLT A4 Z-escore, Gaussian Density Curve") +
-  theme_minimal()
-p
-
-
-
-#hist(data$FDT_READING_TIME_Z, breaks = 15, xlab = "FDT_READING_TIME_Z", main="FDT_READING_TIME_Z")
-
-lillie.test(data$RAVLT_A4_Z)
-
-shapiro.test(data$RAVLT_A4_Z)
-          
-boot.t.test(RAVLT_A4_Z ~ GROUP, data)
-
-```
-
-# **Checking differences between groups**
-
-## **Scores/Z-Score** {.tabset .tabset-fade}
-
-### RAVLT_A5_Z #variavel avaliada
-
-<p style="color:red; background-color:black;">
-
-**Many Different**
-
-</p>
-
-#iguais ou diferentes
-
-```{r}
-
-media <- mean(data$RAVLT_A5_Z)
-desvio <- sd(data$RAVLT_A5_Z)
-
-p <- ggplot(data, aes(x = RAVLT_A5_Z)) +
+p <- ggplot(data_RAVLT, aes(x = RAVLT_A5_Z)) +
   geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
   stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
   
   labs(x = "RAVLT_A5_Z", 
        y = "Density", 
-       title = "RAVLT A5 Z-escore, Gaussian Density Curve") +
+       title = "RAVLT Short-term memory A5 Z-escore, Gaussian Density Curve") +
   theme_minimal()
 p
-
-
-
-#hist(data$FDT_READING_TIME_Z, breaks = 15, xlab = "FDT_READING_TIME_Z", main="FDT_READING_TIME_Z")
-
-lillie.test(data$RAVLT_A5_Z)
-
-shapiro.test(data$RAVLT_A5_Z)
-          
-boot.t.test(RAVLT_A5_Z ~ GROUP, data)
-
 ```
 
-# **Checking differences between groups**
+#### Mann-Whitney (Wilcoxon rank-sum test) / Visualizing Frequencies in each group
 
-## **Scores/Z-Score** {.tabset .tabset-fade}
+```{r RAVLT Short-term A5 Wilcoxon Test, echo=FALSE}
+wilcox.test(RAVLT_A5_Z ~ GROUP, data_RAVLT, conf.int = TRUE)
 
-### RAVLT_B1_Z #variavel avaliada
+data_RAVLT %>% group_by(GROUP) %>%
+  get_summary_stats(RAVLT_A5_Z, type = "median_iqr")
 
-<p style="color:red; background-color:black;">
-
-**Many Different**
-
-</p>
-
-#iguais ou diferentes
-
-```{r}
-
-media <- mean(data$RAVLT_B1_Z)
-desvio <- sd(data$RAVLT_B1_Z)
-
-p <- ggplot(data, aes(x = RAVLT_B1_Z)) +
-  geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
-  stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
-  
-  labs(x = "RAVLT_B1_Z", 
-       y = "Density", 
-       title = "RAVLT B1 Z-escore, Gaussian Density Curve") +
-  theme_minimal()
-p
-
-
-
-#hist(data$FDT_READING_TIME_Z, breaks = 15, xlab = "FDT_READING_TIME_Z", main="FDT_READING_TIME_Z")
-
-lillie.test(data$RAVLT_B1_Z)
-
-shapiro.test(data$RAVLT_B1_Z)
-          
-boot.t.test(RAVLT_B1_Z ~ GROUP, data)
-
+par(mfrow=c(1,2))
+hist(data_RAVLT$RAVLT_A5_Z [data_RAVLT$GROUP == "CASE"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CASE")
+hist(data_RAVLT$RAVLT_A5_Z [data_RAVLT$GROUP == "CONTROL"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CONTROL")
 ```
 
-# **Checking differences between groups**
+### **Long-term memory - Evocation** {.tabset .tabset-fade}
 
-## **Scores/Z-Score** {.tabset .tabset-fade}
+#### Setting and cleaning data
+```{r, eval=FALSE}
+data_RAVLT <- readxl::read_xlsx("./RAVLTs_EscoreZ.xlsx")
 
-### RAVLT_A6_Z #variavel avaliada
+glimpse(data_RAVLT)
+data_RAVLT$GROUP <- as.factor(data_RAVLT$GROUP)
+data_RAVLT$EDU_LEVEL <- as.factor(data_RAVLT$EDU_LEVEL)
 
-<p style="color:red; background-color:black;">
+hist(data_RAVLT$RAVLT_A7_Z)
+summary(data_RAVLT$RAVLT_A7_Z)
+which(data_RAVLT$RAVLT_A7_Z < -2)
+which(data_RAVLT$RAVLT_A7_Z > 2)
 
-**Many Different**
-
-</p>
-
-#iguais ou diferentes
-
-```{r}
-
-media <- mean(data$RAVLT_A6_Z)
-desvio <- sd(data$RAVLT_A6_Z)
-
-p <- ggplot(data, aes(x = RAVLT_A6_Z)) +
-  geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
-  stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
-  
-  labs(x = "RAVLT_A6_Z", 
-       y = "Density", 
-       title = "RAVLT A6 Z-escore, Gaussian Density Curve") +
-  theme_minimal()
-p
-
-
-
-#hist(data$FDT_READING_TIME_Z, breaks = 15, xlab = "FDT_READING_TIME_Z", main="FDT_READING_TIME_Z")
-
-lillie.test(data$RAVLT_A6_Z)
-
-shapiro.test(data$RAVLT_A6_Z)
-          
-boot.t.test(RAVLT_A6_Z ~ GROUP, data)
-
+data_RAVLT <- data_RAVLT[-c(3, 12, 23, 29, 57, 71, 73, 84), ]
 ```
 
-# **Checking differences between groups**
+#### Normality Tests
 
-## **Scores/Z-Score** {.tabset .tabset-fade}
+```{r RAVLT Long-term Evocation, echo=FALSE}
+lillie.test(data_RAVLT$RAVLT_A7_Z)
+shapiro.test(data_RAVLT$RAVLT_A7_Z)
 
-### RAVLT_A7_Z #variavel avaliada
+media <- mean(data_RAVLT$RAVLT_A7_Z)
+desvio <- sd(data_RAVLT$RAVLT_A7_Z)
 
-<p style="color:red; background-color:black;">
-
-**Many Different**
-
-</p>
-
-#iguais ou diferentes
-
-```{r}
-
-media <- mean(data$RAVLT_A7_Z)
-desvio <- sd(data$RAVLT_A7_Z)
-
-p <- ggplot(data, aes(x = RAVLT_A7_Z)) +
+p <- ggplot(data_RAVLT, aes(x = RAVLT_A7_Z)) +
   geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
   stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
   
   labs(x = "RAVLT_A7_Z", 
        y = "Density", 
-       title = "RAVLT A7 Z-escore, Gaussian Density Curve") +
+       title = "RAVLT Short-term memory A7 Z-escore, Gaussian Density Curve") +
   theme_minimal()
 p
-
-
-
-#hist(data$FDT_READING_TIME_Z, breaks = 15, xlab = "FDT_READING_TIME_Z", main="FDT_READING_TIME_Z")
-
-lillie.test(data$RAVLT_A7_Z)
-
-shapiro.test(data$RAVLT_A7_Z)
-          
-boot.t.test(RAVLT_A7_Z ~ GROUP, data)
-
 ```
 
-# **Checking differences between groups**
+#### Bootstraped T-Test / Visualizing Frequencies in each group
 
-## **Scores/Z-Score** {.tabset .tabset-fade}
+```{r RAVLT Long-term RAVLT_A7_Z T-test - Bootstraped, echo=FALSE}
+boot.t.test(RAVLT_A7_Z ~ GROUP, data_RAVLT)
 
-### RAVLT_TOTALSCORE_Z #variavel avaliada
+par(mfrow=c(1,2))
+hist(data_RAVLT$RAVLT_A7_Z [data_RAVLT$GROUP == "CASE"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CASE")
+hist(data_RAVLT$RAVLT_A7_Z [data_RAVLT$GROUP == "CONTROL"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CONTROL")
+```
 
-<p style="color:red; background-color:black;">
+### **Long-term memory - Recognition** {.tabset .tabset-fade}
 
-**Many Different**
+#### Setting and cleaning data
+```{r, eval=FALSE}
+data_RAVLT <- readxl::read_xlsx("./RAVLTs_EscoreZ.xlsx")
 
-</p>
 
-#iguais ou diferentes
+glimpse(data_RAVLT)
+data_RAVLT$GROUP <- as.factor(data_RAVLT$GROUP)
+data_RAVLT$EDU_LEVEL <- as.factor(data_RAVLT$EDU_LEVEL)
 
-```{r}
+hist(data_RAVLT$RAVLT_REC_Z)
+summary(data_RAVLT$RAVLT_REC_Z)
+which(data_RAVLT$RAVLT_REC_Z < -2)
+which(data_RAVLT$RAVLT_REC_Z > 2)
 
-media <- mean(data$RAVLT_TOTALSCORE_Z)
-desvio <- sd(data$RAVLT_TOTALSCORE_Z)
+data_RAVLT <- data_RAVLT[-c(105), ]
+```
 
-p <- ggplot(data, aes(x = RAVLT_TOTALSCORE_Z)) +
+#### Normality Tests
+
+```{r RAVLT Long-term Recognition, echo=FALSE}
+lillie.test(data_RAVLT$RAVLT_REC_Z)
+shapiro.test(data_RAVLT$RAVLT_REC_Z)
+
+media <- mean(data_RAVLT$RAVLT_REC_Z)
+desvio <- sd(data_RAVLT$RAVLT_REC_Z)
+
+p <- ggplot(data_RAVLT, aes(x = RAVLT_REC_Z)) +
   geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
   stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
   
-  labs(x = "RAVLT_TOTALSCORE_Z", 
+  labs(x = "RAVLT_Rec_Z", 
        y = "Density", 
-       title = "RAVLT TOTAL Z-escore, Gaussian Density Curve") +
+       title = "RAVLT Long-term memory Rec Z-escore, Gaussian Density Curve") +
   theme_minimal()
 p
-
-
-
-#hist(data$FDT_READING_TIME_Z, breaks = 15, xlab = "FDT_READING_TIME_Z", main="FDT_READING_TIME_Z")
-
-lillie.test(data$RAVLT_TOTALSCORE_Z)
-
-shapiro.test(data$RAVLT_TOTALSCORE_Z)
-          
-boot.t.test(RAVLT_TOTALSCORE_Z ~ GROUP, data)
-
 ```
 
-# **Checking differences between groups**
+#### Mann-Whitney (Wilcoxon rank-sum test) / Visualizing Frequencies in each group
 
-## **Scores/Z-Score** {.tabset .tabset-fade}
+```{r RAVLT Long-term Recognition Wilcoxon Test, echo=FALSE}
+wilcox.test(RAVLT_REC_Z ~ GROUP, data_RAVLT, conf.int = TRUE)
 
-### RAVLT_RETENTION_Z #variavel avaliada
+data_RAVLT %>% group_by(GROUP) %>%
+  get_summary_stats(RAVLT_REC_Z, type = "median_iqr")
 
-<p style="color:red; background-color:black;">
+par(mfrow=c(1,2))
+hist(data_RAVLT$RAVLT_REC_Z [data_RAVLT$GROUP == "CASE"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CASE")
+hist(data_RAVLT$RAVLT_REC_Z [data_RAVLT$GROUP == "CONTROL"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CONTROL")
+```
 
-**Many Different**
+### **Retention - From the last of short-term to the evocation** {.tabset .tabset-fade}
 
-</p>
+#### Setting and cleaning data
+```{r, eval=FALSE}
+data_RAVLT <- readxl::read_xlsx("./RAVLTs_EscoreZ.xlsx")
 
-#iguais ou diferentes
 
-```{r}
+glimpse(data_RAVLT)
+data_RAVLT$GROUP <- as.factor(data_RAVLT$GROUP)
+data_RAVLT$EDU_LEVEL <- as.factor(data_RAVLT$EDU_LEVEL)
 
-media <- mean(data$RAVLT_RETENTION_Z)
-desvio <- sd(data$RAVLT_RETENTION_Z)
+hist(data_RAVLT$RAVLT_RETENTION_Z)
+summary(data_RAVLT$RAVLT_RETENTION_Z)
+which(data_RAVLT$RAVLT_RETENTION_Z < -2)
+which(data_RAVLT$RAVLT_RETENTION_Z > 2)
 
-p <- ggplot(data, aes(x = RAVLT_RETENTION_Z)) +
+data_RAVLT <- data_RAVLT[-c(23, 106, 117), ]
+```
+
+#### Normality Tests
+
+```{r RAVLT Retention, echo=FALSE}
+lillie.test(data_RAVLT$RAVLT_RETENTION_Z)
+shapiro.test(data_RAVLT$RAVLT_RETENTION_Z)
+
+media <- mean(data_RAVLT$RAVLT_RETENTION_Z)
+desvio <- sd(data_RAVLT$RAVLT_RETENTION_Z)
+
+p <- ggplot(data_RAVLT, aes(x = RAVLT_RETENTION_Z)) +
   geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
   stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
   
-  labs(x = "RAVLT_RETENTION_Z", 
+  labs(x = "RAVLT_Retention_Z", 
        y = "Density", 
        title = "RAVLT RETENTION Z-escore, Gaussian Density Curve") +
   theme_minimal()
 p
-
-
-
-#hist(data$FDT_READING_TIME_Z, breaks = 15, xlab = "FDT_READING_TIME_Z", main="FDT_READING_TIME_Z")
-
-lillie.test(data$RAVLT_RETENTION_Z)
-
-shapiro.test(data$RAVLT_RETENTION_Z)
-          
-boot.t.test(RAVLT_RETENTION_Z ~ GROUP, data)
-
 ```
 
-# **Checking differences between groups**
+#### Mann-Whitney (Wilcoxon rank-sum test) / Visualizing Frequencies in each group
 
-## **Scores/Z-Score** {.tabset .tabset-fade}
+```{r RAVLT Retention Wilcoxon Test, echo=FALSE}
+wilcox.test(RAVLT_RETENTION_Z ~ GROUP, data_RAVLT, conf.int = TRUE)
 
-### RAVLT_PROAT_INTERFERENCE_Z #variavel avaliada
+data_RAVLT %>% group_by(GROUP) %>%
+  get_summary_stats(RAVLT_RETENTION_Z, type = "median_iqr")
 
-<p style="color:red; background-color:black;">
-
-**Many Different**
-
-</p>
-
-#iguais ou diferentes
-
-```{r}
-
-media <- mean(data$RAVLT_PROAT_INTERFERENCE_Z)
-desvio <- sd(data$RAVLT_PROAT_INTERFERENCE_Z)
-
-p <- ggplot(data, aes(x = RAVLT_PROAT_INTERFERENCE_Z)) +
-  geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
-  stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
-  
-  labs(x = "RAVLT_PROAT_INTERFERENCE_Z", 
-       y = "Density", 
-       title = "RAVLT PROAT Z-escore, Gaussian Density Curve") +
-  theme_minimal()
-p
-
-
-
-#hist(data$FDT_READING_TIME_Z, breaks = 15, xlab = "FDT_READING_TIME_Z", main="FDT_READING_TIME_Z")
-
-lillie.test(data$RAVLT_PROAT_INTERFERENCE_Z)
-
-shapiro.test(data$RAVLT_PROAT_INTERFERENCE_Z)
-          
-boot.t.test(RAVLT_PROAT_INTERFERENCE_Z ~ GROUP, data)
-
+par(mfrow=c(1,2))
+hist(data_RAVLT$RAVLT_RETENTION_Z [data_RAVLT$GROUP == "CASE"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CASE")
+hist(data_RAVLT$RAVLT_RETENTION_Z [data_RAVLT$GROUP == "CONTROL"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CONTROL")
 ```
+#### Bootstraped T-Test / Visualizing Frequencies in each group
 
-# **Checking differences between groups**
+```{r RAVLT Long-term Retention T-test - Bootstraped, echo=FALSE}
+boot.t.test(RAVLT_RETENTION_Z ~ GROUP, data_RAVLT)
 
-## **Scores/Z-Score** {.tabset .tabset-fade}
-
-### RAVLT_RETRO_INTERFERENCE_Z #variavel avaliada
-
-<p style="color:red; background-color:black;">
-
-**Many Different**
-
-</p>
-
-#iguais ou diferentes
-
-```{r}
-
-media <- mean(data$RAVLT_RETRO_INTERFERENCE_Z)
-desvio <- sd(data$RAVLT_RETRO_INTERFERENCE_Z)
-
-p <- ggplot(data, aes(x = RAVLT_RETRO_INTERFERENCE_Z)) +
-  geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
-  stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
-  
-  labs(x = "RAVLT_RETRO_INTERFERENCE_Z", 
-       y = "Density", 
-       title = "RAVLT RETRO Z-escore, Gaussian Density Curve") +
-  theme_minimal()
-p
-
-
-
-#hist(data$FDT_READING_TIME_Z, breaks = 15, xlab = "FDT_READING_TIME_Z", main="FDT_READING_TIME_Z")
-
-lillie.test(data$RAVLT_RETRO_INTERFERENCE_Z)
-
-shapiro.test(data$RAVLT_RETRO_INTERFERENCE_Z)
-          
-boot.t.test(RAVLT_RETRO_INTERFERENCE_Z ~ GROUP, data)
-
-```
-
-# **Checking differences between groups**
-
-## **Scores/Z-Score** {.tabset .tabset-fade}
-
-### RAVLT_REC_Z #variavel avaliada
-
-<p style="color:red; background-color:black;">
-
-**Many Different**
-
-</p>
-
-#iguais ou diferentes
-
-```{r}
-
-media <- mean(data$RAVLT_REC_Z)
-desvio <- sd(data$RAVLT_REC_Z)
-
-p <- ggplot(data, aes(x = RAVLT_REC_Z)) +
-  geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black") +
-  stat_function(fun = dnorm, args = list(mean = media, sd = desvio), color = "tomato", size = 1.5) +
-  
-  labs(x = "RAVLT_REC_Z", 
-       y = "Density", 
-       title = "RAVLT REC Z-escore, Gaussian Density Curve") +
-  theme_minimal()
-p
-
-
-
-#hist(data$FDT_READING_TIME_Z, breaks = 15, xlab = "FDT_READING_TIME_Z", main="FDT_READING_TIME_Z")
-
-lillie.test(data$RAVLT_REC_Z)
-
-shapiro.test(data$RAVLT_REC_Z)
-          
-boot.t.test(RAVLT_REC_Z ~ GROUP, data)
-
+par(mfrow=c(1,2))
+hist(data_RAVLT$RAVLT_RETENTION_Z [data_RAVLT$GROUP == "CASE"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CASE")
+hist(data_RAVLT$RAVLT_RETENTION_Z [data_RAVLT$GROUP == "CONTROL"], xlim = c(-5, 5),
+     ylab = "Frequency", xlab = "Z Score", main = "Group - CONTROL")
 ```

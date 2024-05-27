@@ -1,0 +1,43 @@
+```{r}
+
+getwd()
+library(readxl)
+  data_BPA <- readxl::read_xlsx("./BPAs_EscoreZ.xlsx")
+  
+
+```
+
+
+```{r}
+
+datamat_numeric_case <- data_BPA %>%  filter(GROUP=="CASE") %>% select(-ID...1,-GROUP,-EDU_LEVEL,-LIMIT_AGE,-ID...8,
+                                        -ID...11,-ID...14)
+
+```
+
+
+```{r}
+datamat_case_norm <- datamat_numeric_case %>% select(-c(1,2,4,6,8))
+
+scaling_case <- (datamat_numeric_case)
+```
+
+
+```{r}
+center_case <- datamat_case_norm %>% colMeans()
+matrix_case <- cov(scaling_case) 
+```
+
+
+```{r}
+cor_matrix <- cor(datamat_case_norm)
+
+mahal_case <- mahalanobis( scaling_case, center_case, matrix_case)
+```
+
+
+```{r}
+
+```
+
+

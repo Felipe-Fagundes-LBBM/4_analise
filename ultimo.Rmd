@@ -995,7 +995,7 @@ write.xlsx(RAVLTs_EscoreZ, file = "RAVLTs_EscoreZ.xlsx")
 ```
 
 
-```{r}
+```{r Bubble Plots}
 library(tibble)
 library(readxl)
 library(dplyr)
@@ -1010,7 +1010,7 @@ library(hrbrthemes)
 
 getwd()
 
-######################################  Bubble Plots BPAs Zscore  ###############################
+######################################   BPAs Zscore  ###############################
 
 data <- readxl::read_xlsx ("BPAs_EscoreZ.xlsx", sheet = 1)
 
@@ -1230,7 +1230,7 @@ pptotal <- ggplotly(ptotal, tooltip="text") %>%
 
 pptotal
 
-######################################  Bubble Plots FDTs Zscore  ###############################
+######################################    FDTs Zscore  ###############################
 
 data <- readxl::read_excel("FDT_EscoreZ.xlsx")
 
@@ -1555,7 +1555,7 @@ pp9 <- ggplotly(p9, tooltip="text") %>%
 
 
 pp9
-######################################  Bubble Plots RAVLTs Zscore  ###############################
+######################################    RAVLTs Zscore  ###############################
 
 
 data <- readxl::read_xlsx ("RAVLTs_EscoreZ.xlsx")
@@ -2229,7 +2229,7 @@ pp22
 
 
 
-```{r}
+```{r Curva de Crescimento}
 
 #install.packages('reshape2')
 library(ggplot2)
@@ -2246,7 +2246,7 @@ colnames(df)
 
 #1a2887, #799de4
 
-######################################  Curva de Crescimento  ##########################################
+###################################### Regressão Linear   ##########################################
 
 df.RAVLTs <- df %>% select(GROUP,AGE,RAVLT_A1,RAVLT_A2,RAVLT_A3,RAVLT_A4,RAVLT_A5)
 

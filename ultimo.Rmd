@@ -2291,6 +2291,7 @@ data.ravlt <- data.ravlt %>%
     faixa_etaria = case_when(
       AGE >= 18 & AGE <= 20 ~ "18-20",
       AGE >= 21 & AGE <= 30 ~ "21-30",
+      AGE >= 21 & AGE <= 30 ~ "21-30",
       AGE >= 31 & AGE <= 40 ~ "31-40",
       AGE >= 41 & AGE <= 50 ~ "41-50",
       TRUE ~ NA_character_
@@ -2338,7 +2339,7 @@ medias_ravlt <- data.ravlt %>%
 p <- ggplot(medias_ravlt, aes(x = faixa_etaria, y = media, group = interaction(GROUP, RAVLT), color = RAVLT)) +
   geom_line(aes(linetype = GROUP), size = 1) +  # Diferencia os grupos por tipo de linha
   geom_point(size = 2) +
-  #geom_ribbon(aes(ymin = media - sd, ymax = media + sd, fill = RAVLT), alpha = 0.2) +
+  geom_errorbar(aes(ymin = media - sd, ymax = media + sd, fill = RAVLT), alpha = 0.2) +
   scale_color_manual(values = c("#01204E", "#028391", "#FF0000", "#FFA27F", "#E59BE9")) +  # Paleta de cores gradiente para RAVLT
   scale_linetype_manual(values = c("solid", "dashed")) +  # Tipos de linha para os grupos
   labs(title = "Médias dos Valores RAVLT por Grupo e Faixa Etária",
@@ -2353,11 +2354,12 @@ p
 
 # Criar o gráfico de linha com sombra para desvio padrão e facet_wrap
 p <- ggplot(medias_ravlt, aes(x = faixa_etaria, y = media, group = GROUP, color = GROUP)) +
-  geom_ribbon(aes(ymin = media - sd, ymax = media + sd, fill = GROUP), alpha = 0.2) +
+  geom_errorbar(aes(ymin = media - sd, ymax = media + sd, fill = GROUP), alpha = 0.6) +
   geom_line(aes(linetype = GROUP), size = 1) +  # Diferencia os grupos por tipo de linha
   geom_point(size = 2) +
   facet_wrap(~ RAVLT, scales = "free_y") +  # Faceta por variável RAVLT
   scale_linetype_manual(values = c("solid", "dashed")) +  # Tipos de linha para os grupos
+  scale_y_continuous(limits = c(0, 15)) +  # Ajustar a escala do eixo y
   labs(title = "Médias dos Valores RAVLT por Grupo e Faixa Etária",
        x = "Faixa Etária",
        y = "Média dos Valores RAVLT",
@@ -2368,5 +2370,86 @@ p <- ggplot(medias_ravlt, aes(x = faixa_etaria, y = media, group = GROUP, color 
 
 
 p
+
 ```
+
+```{r}
+# comparando de 5 em 5 
+
+data.ravlt <- read_excel("RAVLTs_EscoreZ.xlsx")
+
+data.ravlt <- data.ravlt %>%  select("AGE","GROUP","RAVLT_A1","RAVLT_A2", "RAVLT_A3","RAVLT_A4", "RAVLT_A5")
+ 
+
+data.ravlt <- data.ravlt %>%
+  mutate(
+    faixa_etaria = case_when(
+      AGE >= 18 & AGE <= 20 ~ "18-20",
+      AGE >= 21 & AGE <= 25 ~ "21-25",
+      AGE >= 26 & AGE <= 30 ~ "26-30",
+      AGE >= 31 & AGE <= 35 ~ "31-35",
+      AGE >= 36 & AGE <= 40 ~ "36-40",
+      AGE >= 41 & AGE <= 45 ~ "41-45",
+      AGE >= 46 & AGE <= 50 ~ "46-50"
+    )
+  )
+
+#medias_ravlt <- data.ravlt %>%
+#  group_by(GROUP, faixa_etaria) %>%
+#  summarise(
+#    media_RAVLT_A1 = mean(RAVLT_A1, na.rm = TRUE),
+#    media_RAVLT_A2 = mean(RAVLT_A2, na.rm = TRUE),
+#    media_RAVLT_A3 = mean(RAVLT_A3, na.rm = TRUE),
+#    media_RAVLT_A4 = mean(RAVLT_A4, na.rm = TRUE),
+#    media_RAVLT_A5 = mean(RAVLT_A5, na.rm = TRUE)
+#  ) %>%
+#  ungroup()
+
+#medias_ravlt
+
+medias_ravlt <- data.ravlt %>%
+  group_by(GROUP, faixa_etaria) %>%
+  summarise(
+    media_RAVLT_A1 = mean(RAVLT_A1, na.rm = TRUE),
+    media_RAVLT_A2 = mean(RAVLT_A2, na.rm = TRUE),
+    media_RAVLT_A3 = mean(RAVLT_A3, na.rm = TRUE),
+    media_RAVLT_A4 = mean(RAVLT_A4, na.rm = TRUE),
+    media_RAVLT_A5 = mean(RAVLT_A5, na.rm = TRUE),
+    sd_RAVLT_A1 = sd(RAVLT_A1, na.rm = TRUE),
+    sd_RAVLT_A2 = sd(RAVLT_A2, na.rm = TRUE),
+    sd_RAVLT_A3 = sd(RAVLT_A3, na.rm = TRUE),
+    sd_RAVLT_A4 = sd(RAVLT_A4, na.rm = TRUE),
+    sd_RAVLT_A5 = sd(RAVLT_A5, na.rm = TRUE)
+  ) %>%
+  ungroup() %>%
+  pivot_longer(cols = starts_with("media_"), names_to = "RAVLT", values_to = "media") %>%
+  pivot_longer(cols = starts_with("sd_"), names_to = "sd_name", values_to = "sd") %>%
+  mutate(RAVLT = gsub("media_", "", RAVLT),
+         sd_name = gsub("sd_", "", sd_name)) %>%
+  filter(RAVLT == sd_name) %>%
+  select(-sd_name)
+
+
+
+# Criar o gráfico de linha com sombra para desvio padrão e facet_wrap
+p <- ggplot(medias_ravlt, aes(x = faixa_etaria, y = media, group = GROUP, color = GROUP)) +
+  geom_errorbar(aes(ymin = media - sd, ymax = media + sd, fill = GROUP), alpha = 0.6) +
+  geom_line(aes(linetype = GROUP), size = 1) +  # Diferencia os grupos por tipo de linha
+  geom_point(size = 2) +
+  facet_wrap(~ RAVLT, scales = "free_y") +  # Faceta por variável RAVLT
+  scale_linetype_manual(values = c("solid", "dashed")) +  # Tipos de linha para os grupos
+  scale_y_continuous(limits = c(0, 15)) +  # Ajustar a escala do eixo y
+  labs(title = "Médias dos Valores RAVLT por Grupo e Faixa Etária",
+       x = "Faixa Etária",
+       y = "Média dos Valores RAVLT",
+       color = "Grupo",
+       fill = "Grupo",
+       linetype = "Grupo") +
+  theme_minimal()
+
+p
+
+
+```
+
 

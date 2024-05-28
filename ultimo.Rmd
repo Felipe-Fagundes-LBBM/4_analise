@@ -184,7 +184,7 @@ plot2
 ggsave(filename = "FDTs_values.pdf", plot = plot2)
 
 
-#######################################    Test.T RAVLTs #############################################
+#######################################     Test.T RAVLTs #############################################
 
 
 
@@ -402,7 +402,7 @@ plot7
 
 ```
 
-```{r}
+```{r Calculating}
 
 library(tibble)
 library(readxl)
@@ -434,7 +434,7 @@ data <- readxl::read_xlsx ("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO.xlsx")
 data <- na.omit(data)
 
  
-################################## BPA Z-Score Calculating  #####################################
+################################## BPA Z-Score   #####################################
 
 
 
@@ -551,7 +551,7 @@ write.xlsx(BPAs_EscoreZ, file = "BPAs_EscoreZ.xlsx")
 
 
 
-################################## FDT Z-Score Calculating  #####################################
+################################## FDT Z-Score   #####################################
 
 
 data <- readxl::read_xlsx ("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO.xlsx")
@@ -687,7 +687,7 @@ write.xlsx(FDT_EscoreZ, file = "FDT_EscoreZ.xlsx")
 
 
 
-################################## RAVLTS Z-Score Calculating #####################################
+################################## RAVLTS Z-Score  #####################################
 
 data <- readxl::read_xlsx ("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO.xlsx")
 

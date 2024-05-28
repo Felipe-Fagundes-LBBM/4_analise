@@ -1,10 +1,11 @@
 ---
 title: "Análise Completa dos Dados Neurocognitivos"
+author: "Rodolpho Cortez, Felipe Fagundes"
 output: html_notebook
 date: "2024-05-06"
 ---
 
-```{r}
+```{r Box-plots }
 
 knitr::opts_chunk$set(
   message=FALSE, 
@@ -32,7 +33,7 @@ data <- na.omit(data)
 
 data
 
-#######################################    BOX PLOT-Test.T BPAs #############################################
+#######################################    Test.T BPAs #############################################
 
 p1 <- data %>%  select(GROUP , BPA_CONC_POINTS,BPA_DIVID_POINTS, BPA_ALTERN_POINTS )
 
@@ -125,7 +126,7 @@ plototal
 #ggsave("bxplot_BPAsTOTAL.pdf", plot = plototal, width = 13, height = 10)
 
 
-#######################################    BOX PLOT-Test.T FDTs #############################################
+#######################################    Test.T FDTs #############################################
 
 
 data <- readxl::read_excel("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO.xlsx")
@@ -183,7 +184,7 @@ plot2
 ggsave(filename = "FDTs_values.pdf", plot = plot2)
 
 
-#######################################    BOX PLOT-Test.T RAVLTs #############################################
+#######################################    Test.T RAVLTs #############################################
 
 
 
@@ -534,7 +535,7 @@ BPA_TOTAL_EscoreZ <- data %>%
     LIMIT_AGE == "31-40" ~ (BPA_TOTAL - 239.04) / 62.77,
     LIMIT_AGE == "41-50" ~ (BPA_TOTAL - 214.65) / 64.33,
     TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
-  )) %>%
+  )) %>%-
   select(ID,BPA_TOTAL, BPA_TOTAL_EscoreZ) %>% 
   arrange(ID)
 

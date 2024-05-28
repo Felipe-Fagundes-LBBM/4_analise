@@ -2350,5 +2350,23 @@ p <- ggplot(medias_ravlt, aes(x = faixa_etaria, y = media, group = interaction(G
 
 p
 
+
+# Criar o gráfico de linha com sombra para desvio padrão e facet_wrap
+p <- ggplot(medias_ravlt, aes(x = faixa_etaria, y = media, group = GROUP, color = GROUP)) +
+  geom_ribbon(aes(ymin = media - sd, ymax = media + sd, fill = GROUP), alpha = 0.2) +
+  geom_line(aes(linetype = GROUP), size = 1) +  # Diferencia os grupos por tipo de linha
+  geom_point(size = 2) +
+  facet_wrap(~ RAVLT, scales = "free_y") +  # Faceta por variável RAVLT
+  scale_linetype_manual(values = c("solid", "dashed")) +  # Tipos de linha para os grupos
+  labs(title = "Médias dos Valores RAVLT por Grupo e Faixa Etária",
+       x = "Faixa Etária",
+       y = "Média dos Valores RAVLT",
+       color = "Grupo",
+       fill = "Grupo",
+       linetype = "Grupo") +
+  theme_minimal()
+
+
+p
 ```
 

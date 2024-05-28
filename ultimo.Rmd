@@ -2338,7 +2338,7 @@ medias_ravlt <- data.ravlt %>%
 p <- ggplot(medias_ravlt, aes(x = faixa_etaria, y = media, group = interaction(GROUP, RAVLT), color = RAVLT)) +
   geom_line(aes(linetype = GROUP), size = 1) +  # Diferencia os grupos por tipo de linha
   geom_point(size = 2) +
-  #geom_errorbar(aes(ymin = media - sd, ymax = media + sd), width = 0.2) +
+  #geom_ribbon(aes(ymin = media - sd, ymax = media + sd, fill = RAVLT), alpha = 0.2) +
   scale_color_manual(values = c("#01204E", "#028391", "#FF0000", "#FFA27F", "#E59BE9")) +  # Paleta de cores gradiente para RAVLT
   scale_linetype_manual(values = c("solid", "dashed")) +  # Tipos de linha para os grupos
   labs(title = "Médias dos Valores RAVLT por Grupo e Faixa Etária",

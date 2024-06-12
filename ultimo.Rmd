@@ -4,6 +4,15 @@ author: "Rodolpho Cortez, Felipe Fagundes"
 output: html_notebook
 date: "2024-05-06"
 ---
+```{=html}
+<style type="text/css">
+.main-container {
+  max-width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+```
 
 ```{r Box-plots }
 
@@ -2276,6 +2285,9 @@ p <- ggplot(df.melted, aes(x = AGE, y = Pontuação, color = GROUP)) +
 p
 
 shapiro.test(df.RAVLTs$RAVLT_A5)
+
+
+ggsave(filename = "REGRESSAO-RAVLTs.pdf", plot = p, width = 14, height = 10)
 
 ```
 ```{r Line Plot}

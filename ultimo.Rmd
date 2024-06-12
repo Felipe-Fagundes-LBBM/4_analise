@@ -27,7 +27,7 @@ getwd()
 
 list.files()
 
-data <- readxl::read_excel("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO.xlsx")
+data <- readxl::read_excel("Cópia de DADOS_BRUTOS_COVID_LONGA_SEQUENCIAMENTO.xlsx")
 
 data <- na.omit(data)
 
@@ -123,13 +123,13 @@ plototal <- plototal + stat_compare_means(method = "t.test", label.x = 1.38)
 
 plototal
 
-#ggsave("bxplot_BPAsTOTAL.pdf", plot = plototal, width = 13, height = 10)
+ggsave("bxplot_BPAsTOTAL.pdf", plot = plototal, width = 13, height = 10)
 
 
 #######################################    Test.T FDTs #############################################
 
 
-data <- readxl::read_excel("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO.xlsx")
+data <- readxl::read_excel("Cópia de DADOS_BRUTOS_COVID_LONGA_SEQUENCIAMENTO.xlsx")
 
 data <- na.omit(data)
 
@@ -188,7 +188,7 @@ ggsave(filename = "FDTs_values.pdf", plot = plot2)
 
 
 
-data <- readxl::read_excel("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO.xlsx")
+data <- readxl::read_excel("Cópia de DADOS_BRUTOS_COVID_LONGA_SEQUENCIAMENTO.xlsx")
 
 data <- na.omit(data)
 
@@ -245,7 +245,7 @@ plot3 <- plot3 + stat_compare_means(method = "t.test" , label.y = 18, label.x = 
 
 plot3
 
-#ggsave(filename = "RAVLT_values.pdf", plot = plot3)
+ggsave(filename = "RAVLT_values.pdf", plot = plot3)
 
 
 
@@ -286,7 +286,7 @@ plot4 <- plot4 + stat_compare_means(method = "t.test" , label.y = 18, label.x = 
 
 plot4
 
-#ggsave(filename = "RAVLT_A5_A7.pdf", plot = plot4)
+ggsave(filename = "RAVLT_A5_A7.pdf", plot = plot4)
 
 
 
@@ -324,7 +324,7 @@ plot5 <- plot5 + stat_compare_means(method = "t.test" ,  label.y = 65, label.x =
 
 plot5
 
-#ggsave(filename = "RAVLT_total.pdf", plot = plot5)
+ggsave(filename = "RAVLT_total.pdf", plot = plot5)
 
 
 
@@ -351,11 +351,11 @@ plot6 <- ggplot(p6_long, aes(x = GROUP, y = Value, fill = GROUP)) +
         axis.title = element_text(size = 15, color = "black"),
         panel.background = element_rect(fill = "white"),
         axis.line = element_line(color = "black"),
-        plot.title = element_text(size = 14, family = "Tahoma", face = "bold"),
-        text = element_text(size = 12, family = "Tahoma"),
+        plot.title = element_text(size = 14,  face = "bold"),
+        text = element_text(size = 12),
         legend.position = "bottom",
         strip.background = element_blank(),
-        strip.text = element_text(size = 14, family = "Tahoma", face = "bold"))
+        strip.text = element_text(size = 14, face = "bold"))
 
 
 # Ajuste as escalas de acordo com o mínimo e máximo dos dados
@@ -364,6 +364,8 @@ plot6 <- ggplot(p6_long, aes(x = GROUP, y = Value, fill = GROUP)) +
 plot6 + stat_compare_means(method = "t.test", label.y = 15, label.x = 1.1)
 
 plot6
+
+ggsave(filename = "RAVLT_B1-RAVLT_REC.pdf", plot = plot6)
 
 
      # Reorganizar os dados para o formato 'long' usando a função pivot_longer() do pacote tidyr
@@ -389,16 +391,19 @@ plot7 <- ggplot(p7_long, aes(x = GROUP, y = Value, fill = GROUP)) +
         axis.title = element_text(size = 15, color = "black"),
         panel.background = element_rect(fill = "white"),
         axis.line = element_line(color = "black"),
-        plot.title = element_text(size = 14, family = "Tahoma", face = "bold"),
-        text = element_text(size = 12, family = "Tahoma"),
+        plot.title = element_text(size = 14, face = "bold"),
+        text = element_text(size = 12),
         legend.position = "bottom",
         strip.background = element_blank(),
-        strip.text = element_text(size = 14, family = "Tahoma", face = "bold"))
+        strip.text = element_text(size = 14, face = "bold"))
 
 
 plot7 + stat_compare_means(method = "t.test" )
 
 plot7
+
+ggsave(filename = "RAVLT_RETENTION-RAVLT_RETRO_INTERFERENCE.pdf", plot = plot7)
+
 
 ```
 
@@ -429,7 +434,7 @@ library(openxlsx)
 getwd()
 
 
-data <- readxl::read_xlsx ("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO.xlsx")
+data <- readxl::read_xlsx ("Cópia de DADOS_BRUTOS_COVID_LONGA_SEQUENCIAMENTO.xlsx")
 
 data <- na.omit(data)
 
@@ -441,26 +446,26 @@ data <- na.omit(data)
                                 # 1º Try
                   # TENTATIVA DE CRIAÇÃO DE FUNÇÃO
 
-cbind(data)
-
-calcular_z_score <- function(x, media, desvio_padrao) {
-  if (x >= 21 & x <= 30) {
-    z_score <- (x - media) / desvio_padrao
-    return(z_score)
-  }
-}
+#cbind(data)
+#
+#calcular_z_score <- function(x, media, desvio_padrao) {
+#  if (x >= 21 & x <= 30) {
+#    z_score <- (x - media) / desvio_padrao
+#    return(z_score)
+#  }
+#}
 
 
                                 # 2º Try
 
-# Definir os valores constantes de média e desvio padrão para cada faixa etária
-constantes <- tribble(
-  ~LIMIT_AGE, ~media_constante, ~desvio_padrao_constante,
-  "18-20", 85.79, 22.53,
-  "21-30", 87.08, 21.50,
-  "31-40", 85.48, 22.56,
-  "41-49", 80.72, 22.85
-)
+## Definir os valores constantes de média e desvio padrão para cada faixa etária
+#constantes <- tribble(
+#  ~LIMIT_AGE, ~media_constante, ~desvio_padrao_constante,
+#  "18-20", 85.79, 22.53,
+#  "21-30", 87.08, 21.50,
+#  "31-40", 85.48, 22.56,
+#  "41-49", 80.72, 22.85
+#)
 
                                 # 3º Try
   # COMEÇAR DAQUI ----->  DETERMINANDO LIMITES A SEREM APLICADOS
@@ -535,9 +540,10 @@ BPA_TOTAL_EscoreZ <- data %>%
     LIMIT_AGE == "31-40" ~ (BPA_TOTAL - 239.04) / 62.77,
     LIMIT_AGE == "41-50" ~ (BPA_TOTAL - 214.65) / 64.33,
     TRUE ~ NA_real_  # Caso padrão para outras faixas etárias
-  )) %>%-
-  select(ID,BPA_TOTAL, BPA_TOTAL_EscoreZ) %>% 
-  arrange(ID)
+  )) %>% 
+  select(ID, BPA_TOTAL, BPA_TOTAL_EscoreZ) %>% 
+  arrange(data$ID)
+  
 
 BPA_TOTAL_EscoreZ
 
@@ -554,7 +560,7 @@ write.xlsx(BPAs_EscoreZ, file = "BPAs_EscoreZ.xlsx")
 ################################## FDT Z-Score   #####################################
 
 
-data <- readxl::read_xlsx ("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO.xlsx")
+data <- readxl::read_xlsx ("Cópia de DADOS_BRUTOS_COVID_LONGA_SEQUENCIAMENTO.xlsx")
 
 data <- na.omit(data)
 
@@ -689,7 +695,7 @@ write.xlsx(FDT_EscoreZ, file = "FDT_EscoreZ.xlsx")
 
 ################################## RAVLTS Z-Score  #####################################
 
-data <- readxl::read_xlsx ("DADOS_BRUTOS_COVID_LONGA_PREENCHENDO.xlsx")
+data <- readxl::read_xlsx ("Cópia de DADOS_BRUTOS_COVID_LONGA_SEQUENCIAMENTO.xlsx")
 
 data <- na.omit(data)
 
@@ -2371,6 +2377,9 @@ p <- ggplot(medias_ravlt, aes(x = faixa_etaria, y = media, group = GROUP, color 
 
 p
 
+
+ggsave(filename = "RAVLTs-A1-A5.pdf", plot = p)
+
 ```
 
 ```{r}
@@ -2448,6 +2457,9 @@ p <- ggplot(medias_ravlt, aes(x = faixa_etaria, y = media, group = GROUP, color 
   theme_minimal()
 
 p
+
+ggsave(filename = "RAVLTs-regresssao-subdividida.pdf", plot = p , width = 14, height = 10)
+
 
 
 ```

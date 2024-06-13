@@ -192,6 +192,11 @@ data <- readxl::read_excel("FDT_EscoreZ.xlsx")
 data <- na.omit(data)
 
 data
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+group1 <- "CONTROL"
+group2 <- "CASE"
 ```
 
 
@@ -445,3 +450,529 @@ ggsave("FDT Flexibility Time.pdf", width = 7, height = 6, units = "in")
 ggsave("FDT Flexibility Time.jpeg", width = 7, height = 6,units="in")
 
 ```
+
+
+```{r}
+data <- readxl::read_excel("RAVLTs_EscoreZ.xlsx")
+
+data <- na.omit(data)
+
+data
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+group1 <- "CONTROL"
+group2 <- "CASE"
+```
+
+
+```{r}
+
+RAVLT_Z <- data %>% 
+  select(GROUP,AGE,RAVLT_A1_Z)
+
+names(RAVLT_Z)
+
+mean_z1 <- mean(RAVLT_Z$RAVLT_A1_Z[RAVLT_Z$GROUP == group1])
+sd_z1 <- sd(RAVLT_Z$RAVLT_A1_Z[RAVLT_Z$GROUP == group1])
+
+mean_z2 <- mean(RAVLT_Z$RAVLT_A1_Z[RAVLT_Z$GROUP == group2])
+sd_z2 <- sd(RAVLT_Z$RAVLT_A1_Z[RAVLT_Z$GROUP == group2])
+
+cohens_d_result <- cohen.d(RAVLT_A1_Z ~ GROUP, data = RAVLT_Z)
+
+p2 <- ggplot(RAVLT_Z, aes(x = GROUP, y = RAVLT_A1_Z, fill = GROUP)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.6) +
+  geom_jitter(aes(color = GROUP), size = 3, width = 0.15, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2, color = "black") +
+  scale_color_manual(values = c("#0072B2", "tomato")) +
+  scale_fill_manual(values = c("#0072B2", "tomato")) +
+  labs(x = "Group", y = "Z-Score", title = "Effect Size of RAVLT A1") +
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_A1_Z), 
+           label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_A1_Z), 
+           label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
+
+p2
+
+ggsave("RAVLT A1.pdf", width = 7, height = 6, units = "in")
+ggsave("RAVLT A1.jpeg", width = 7, height = 6,units="in")
+
+```
+
+```{r}
+
+RAVLT_Z <- data %>% 
+  select(GROUP,AGE,RAVLT_A2_Z)
+
+names(RAVLT_Z)
+
+mean_z1 <- mean(RAVLT_Z$RAVLT_A2_Z[RAVLT_Z$GROUP == group1])
+sd_z1 <- sd(RAVLT_Z$RAVLT_A2_Z[RAVLT_Z$GROUP == group1])
+
+mean_z2 <- mean(RAVLT_Z$RAVLT_A2_Z[RAVLT_Z$GROUP == group2])
+sd_z2 <- sd(RAVLT_Z$RAVLT_A2_Z[RAVLT_Z$GROUP == group2])
+
+cohens_d_result <- cohen.d(RAVLT_A2_Z ~ GROUP, data = RAVLT_Z)
+
+p2 <- ggplot(RAVLT_Z, aes(x = GROUP, y = RAVLT_A2_Z, fill = GROUP)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.6) +
+  geom_jitter(aes(color = GROUP), size = 3, width = 0.15, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2, color = "black") +
+  scale_color_manual(values = c("#0072B2", "tomato")) +
+  scale_fill_manual(values = c("#0072B2", "tomato")) +
+  labs(x = "Group", y = "Z-Score", title = "Effect Size of RAVLT A2") +
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_A2_Z), 
+           label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_A2_Z), 
+           label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
+
+p2
+
+ggsave("RAVLT A2.pdf", width = 7, height = 6, units = "in")
+ggsave("RAVLT A2.jpeg", width = 7, height = 6,units="in")
+
+```
+
+```{r}
+
+RAVLT_Z <- data %>% 
+  select(GROUP,AGE,RAVLT_A3_Z)
+
+names(RAVLT_Z)
+
+mean_z1 <- mean(RAVLT_Z$RAVLT_A3_Z[RAVLT_Z$GROUP == group1])
+sd_z1 <- sd(RAVLT_Z$RAVLT_A3_Z[RAVLT_Z$GROUP == group1])
+
+mean_z2 <- mean(RAVLT_Z$RAVLT_A3_Z[RAVLT_Z$GROUP == group2])
+sd_z2 <- sd(RAVLT_Z$RAVLT_A3_Z[RAVLT_Z$GROUP == group2])
+
+cohens_d_result <- cohen.d(RAVLT_A3_Z ~ GROUP, data = RAVLT_Z)
+
+p2 <- ggplot(RAVLT_Z, aes(x = GROUP, y = RAVLT_A3_Z, fill = GROUP)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.6) +
+  geom_jitter(aes(color = GROUP), size = 3, width = 0.15, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2, color = "black") +
+  scale_color_manual(values = c("#0072B2", "tomato")) +
+  scale_fill_manual(values = c("#0072B2", "tomato")) +
+  labs(x = "Group", y = "Z-Score", title = "Effect Size of RAVLT A3") +
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_A3_Z), 
+           label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_A3_Z), 
+           label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
+
+p2
+
+ggsave("RAVLT A3.pdf", width = 7, height = 6, units = "in")
+ggsave("RAVLT A3.jpeg", width = 7, height = 6,units="in")
+
+```
+
+```{r}
+
+RAVLT_Z <- data %>% 
+  select(GROUP,AGE,RAVLT_A4_Z)
+
+names(RAVLT_Z)
+
+mean_z1 <- mean(RAVLT_Z$RAVLT_A4_Z[RAVLT_Z$GROUP == group1])
+sd_z1 <- sd(RAVLT_Z$RAVLT_A4_Z[RAVLT_Z$GROUP == group1])
+
+mean_z2 <- mean(RAVLT_Z$RAVLT_A4_Z[RAVLT_Z$GROUP == group2])
+sd_z2 <- sd(RAVLT_Z$RAVLT_A4_Z[RAVLT_Z$GROUP == group2])
+
+cohens_d_result <- cohen.d(RAVLT_A4_Z ~ GROUP, data = RAVLT_Z)
+
+p2 <- ggplot(RAVLT_Z, aes(x = GROUP, y = RAVLT_A4_Z, fill = GROUP)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.6) +
+  geom_jitter(aes(color = GROUP), size = 3, width = 0.15, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2, color = "black") +
+  scale_color_manual(values = c("#0072B2", "tomato")) +
+  scale_fill_manual(values = c("#0072B2", "tomato")) +
+  labs(x = "Group", y = "Z-Score", title = "Effect Size of RAVLT A4") +
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_A4_Z), 
+           label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_A4_Z), 
+           label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
+
+p2
+
+ggsave("RAVLT A4.pdf", width = 7, height = 6, units = "in")
+ggsave("RAVLT A4.jpeg", width = 7, height = 6,units="in")
+
+```
+
+```{r}
+
+RAVLT_Z <- data %>% 
+  select(GROUP,AGE,RAVLT_A5_Z)
+
+names(RAVLT_Z)
+
+mean_z1 <- mean(RAVLT_Z$RAVLT_A5_Z[RAVLT_Z$GROUP == group1])
+sd_z1 <- sd(RAVLT_Z$RAVLT_A5_Z[RAVLT_Z$GROUP == group1])
+
+mean_z2 <- mean(RAVLT_Z$RAVLT_A5_Z[RAVLT_Z$GROUP == group2])
+sd_z2 <- sd(RAVLT_Z$RAVLT_A5_Z[RAVLT_Z$GROUP == group2])
+
+cohens_d_result <- cohen.d(RAVLT_A5_Z ~ GROUP, data = RAVLT_Z)
+
+p2 <- ggplot(RAVLT_Z, aes(x = GROUP, y = RAVLT_A5_Z, fill = GROUP)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.6) +
+  geom_jitter(aes(color = GROUP), size = 3, width = 0.15, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2, color = "black") +
+  scale_color_manual(values = c("#0072B2", "tomato")) +
+  scale_fill_manual(values = c("#0072B2", "tomato")) +
+  labs(x = "Group", y = "Z-Score", title = "Effect Size of RAVLT A5") +
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_A5_Z), 
+           label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_A5_Z), 
+           label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
+
+p2
+
+ggsave("RAVLT A5.pdf", width = 7, height = 6, units = "in")
+ggsave("RAVLT A5.jpeg", width = 7, height = 6,units="in")
+
+```
+
+```{r}
+
+RAVLT_Z <- data %>% 
+  select(GROUP,AGE,RAVLT_B1_Z)
+
+names(RAVLT_Z)
+
+mean_z1 <- mean(RAVLT_Z$RAVLT_B1_Z[RAVLT_Z$GROUP == group1])
+sd_z1 <- sd(RAVLT_Z$RAVLT_B1_Z[RAVLT_Z$GROUP == group1])
+
+mean_z2 <- mean(RAVLT_Z$RAVLT_B1_Z[RAVLT_Z$GROUP == group2])
+sd_z2 <- sd(RAVLT_Z$RAVLT_B1_Z[RAVLT_Z$GROUP == group2])
+
+cohens_d_result <- cohen.d(RAVLT_B1_Z ~ GROUP, data = RAVLT_Z)
+
+p2 <- ggplot(RAVLT_Z, aes(x = GROUP, y = RAVLT_B1_Z, fill = GROUP)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.6) +
+  geom_jitter(aes(color = GROUP), size = 3, width = 0.15, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2, color = "black") +
+  scale_color_manual(values = c("#0072B2", "tomato")) +
+  scale_fill_manual(values = c("#0072B2", "tomato")) +
+  labs(x = "Group", y = "Z-Score", title = "Effect Size of RAVLT B1") +
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_B1_Z), 
+           label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_B1_Z), 
+           label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
+
+p2
+
+ggsave("RAVLT B1.pdf", width = 7, height = 6, units = "in")
+ggsave("RAVLT B1.pdf", width = 7, height = 6,units="in")
+
+```
+
+```{r}
+
+RAVLT_Z <- data %>% 
+  select(GROUP,AGE,RAVLT_A6_Z)
+
+names(RAVLT_Z)
+
+mean_z1 <- mean(RAVLT_Z$RAVLT_A6_Z[RAVLT_Z$GROUP == group1])
+sd_z1 <- sd(RAVLT_Z$RAVLT_A6_Z[RAVLT_Z$GROUP == group1])
+
+mean_z2 <- mean(RAVLT_Z$RAVLT_A6_Z[RAVLT_Z$GROUP == group2])
+sd_z2 <- sd(RAVLT_Z$RAVLT_A6_Z[RAVLT_Z$GROUP == group2])
+
+cohens_d_result <- cohen.d(RAVLT_A6_Z ~ GROUP, data = RAVLT_Z)
+
+p2 <- ggplot(RAVLT_Z, aes(x = GROUP, y = RAVLT_A6_Z, fill = GROUP)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.6) +
+  geom_jitter(aes(color = GROUP), size = 3, width = 0.15, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2, color = "black") +
+  scale_color_manual(values = c("#0072B2", "tomato")) +
+  scale_fill_manual(values = c("#0072B2", "tomato")) +
+  labs(x = "Group", y = "Z-Score", title = "Effect Size of RAVLT A6") +
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_A6_Z), 
+           label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_A6_Z), 
+           label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
+
+p2
+
+ggsave("RAVLT A6.pdf", width = 7, height = 6, units = "in")
+ggsave("RAVLT A6.pdf", width = 7, height = 6,units="in")
+
+```
+
+```{r}
+
+RAVLT_Z <- data %>% 
+  select(GROUP,AGE,RAVLT_A7_Z)
+
+names(RAVLT_Z)
+
+mean_z1 <- mean(RAVLT_Z$RAVLT_A7_Z[RAVLT_Z$GROUP == group1])
+sd_z1 <- sd(RAVLT_Z$RAVLT_A7_Z[RAVLT_Z$GROUP == group1])
+
+mean_z2 <- mean(RAVLT_Z$RAVLT_A7_Z[RAVLT_Z$GROUP == group2])
+sd_z2 <- sd(RAVLT_Z$RAVLT_A7_Z[RAVLT_Z$GROUP == group2])
+
+cohens_d_result <- cohen.d(RAVLT_A7_Z ~ GROUP, data = RAVLT_Z)
+
+p2 <- ggplot(RAVLT_Z, aes(x = GROUP, y = RAVLT_A7_Z, fill = GROUP)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.6) +
+  geom_jitter(aes(color = GROUP), size = 3, width = 0.15, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2, color = "black") +
+  scale_color_manual(values = c("#0072B2", "tomato")) +
+  scale_fill_manual(values = c("#0072B2", "tomato")) +
+  labs(x = "Group", y = "Z-Score", title = "Effect Size of RAVLT A7") +
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_A7_Z), 
+           label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_A7_Z), 
+           label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
+
+p2
+
+ggsave("RAVLT A7.pdf", width = 7, height = 6, units = "in")
+ggsave("RAVLT A7.pdf", width = 7, height = 6,units="in")
+
+```
+
+```{r}
+
+RAVLT_Z <- data %>% 
+  select(GROUP,AGE,RAVLT_REC_Z)
+
+names(RAVLT_Z)
+
+mean_z1 <- mean(RAVLT_Z$RAVLT_REC_Z[RAVLT_Z$GROUP == group1])
+sd_z1 <- sd(RAVLT_Z$RAVLT_REC_Z[RAVLT_Z$GROUP == group1])
+
+mean_z2 <- mean(RAVLT_Z$RAVLT_REC_Z[RAVLT_Z$GROUP == group2])
+sd_z2 <- sd(RAVLT_Z$RAVLT_REC_Z[RAVLT_Z$GROUP == group2])
+
+cohens_d_result <- cohen.d(RAVLT_REC_Z ~ GROUP, data = RAVLT_Z)
+
+p2 <- ggplot(RAVLT_Z, aes(x = GROUP, y = RAVLT_REC_Z, fill = GROUP)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.6) +
+  geom_jitter(aes(color = GROUP), size = 3, width = 0.15, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2, color = "black") +
+  scale_color_manual(values = c("#0072B2", "tomato")) +
+  scale_fill_manual(values = c("#0072B2", "tomato")) +
+  labs(x = "Group", y = "Z-Score", title = "Effect Size of RAVLT Recognition") +
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_REC_Z), 
+           label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_REC_Z), 
+           label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
+
+p2
+
+ggsave("RAVLT Recognition.pdf", width = 7, height = 6, units = "in")
+ggsave("RAVLT Recognition.pdf", width = 7, height = 6,units="in")
+
+```
+
+```{r}
+
+RAVLT_Z <- data %>% 
+  select(GROUP,AGE,RAVLT_TOTALSCORE_Z)
+
+names(RAVLT_Z)
+
+mean_z1 <- mean(RAVLT_Z$RAVLT_TOTALSCORE_Z[RAVLT_Z$GROUP == group1])
+sd_z1 <- sd(RAVLT_Z$RAVLT_TOTALSCORE_Z[RAVLT_Z$GROUP == group1])
+
+mean_z2 <- mean(RAVLT_Z$RAVLT_TOTALSCORE_Z[RAVLT_Z$GROUP == group2])
+sd_z2 <- sd(RAVLT_Z$RAVLT_TOTALSCORE_Z[RAVLT_Z$GROUP == group2])
+
+cohens_d_result <- cohen.d(RAVLT_TOTALSCORE_Z ~ GROUP, data = RAVLT_Z)
+
+p2 <- ggplot(RAVLT_Z, aes(x = GROUP, y = RAVLT_TOTALSCORE_Z, fill = GROUP)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.6) +
+  geom_jitter(aes(color = GROUP), size = 3, width = 0.15, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2, color = "black") +
+  scale_color_manual(values = c("#0072B2", "tomato")) +
+  scale_fill_manual(values = c("#0072B2", "tomato")) +
+  labs(x = "Group", y = "Z-Score", title = "Effect Size of RAVLT Total Score") +
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_TOTALSCORE_Z), 
+           label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_TOTALSCORE_Z), 
+           label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
+
+p2
+
+ggsave("RAVLT Total Score.pdf", width = 7, height = 6, units = "in")
+ggsave("RAVLT Total Score.pdf", width = 7, height = 6,units="in")
+
+```
+
+```{r}
+
+RAVLT_Z <- data %>% 
+  select(GROUP,AGE,RAVLT_RETENTION_Z)
+
+names(RAVLT_Z)
+
+mean_z1 <- mean(RAVLT_Z$RAVLT_RETENTION_Z[RAVLT_Z$GROUP == group1])
+sd_z1 <- sd(RAVLT_Z$RAVLT_RETENTION_Z[RAVLT_Z$GROUP == group1])
+
+mean_z2 <- mean(RAVLT_Z$RAVLT_RETENTION_Z[RAVLT_Z$GROUP == group2])
+sd_z2 <- sd(RAVLT_Z$RAVLT_RETENTION_Z[RAVLT_Z$GROUP == group2])
+
+cohens_d_result <- cohen.d(RAVLT_RETENTION_Z ~ GROUP, data = RAVLT_Z)
+
+p2 <- ggplot(RAVLT_Z, aes(x = GROUP, y = RAVLT_RETENTION_Z, fill = GROUP)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.6) +
+  geom_jitter(aes(color = GROUP), size = 3, width = 0.15, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2, color = "black") +
+  scale_color_manual(values = c("#0072B2", "tomato")) +
+  scale_fill_manual(values = c("#0072B2", "tomato")) +
+  labs(x = "Group", y = "Z-Score", title = "Effect Size of RAVLT Retention") +
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_RETENTION_Z), 
+           label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_RETENTION_Z), 
+           label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
+
+p2
+
+ggsave("RAVLT Retention.pdf", width = 7, height = 6, units = "in")
+ggsave("RAVLT Retention.pdf", width = 7, height = 6,units="in")
+
+```
+
+
+```{r}
+
+RAVLT_Z <- data %>% 
+  select(GROUP,AGE,RAVLT_PROAT_INTERFERENCE_Z)
+
+names(RAVLT_Z)
+
+mean_z1 <- mean(RAVLT_Z$RAVLT_PROAT_INTERFERENCE_Z[RAVLT_Z$GROUP == group1])
+sd_z1 <- sd(RAVLT_Z$RAVLT_PROAT_INTERFERENCE_Z[RAVLT_Z$GROUP == group1])
+
+mean_z2 <- mean(RAVLT_Z$RAVLT_PROAT_INTERFERENCE_Z[RAVLT_Z$GROUP == group2])
+sd_z2 <- sd(RAVLT_Z$RAVLT_PROAT_INTERFERENCE_Z[RAVLT_Z$GROUP == group2])
+
+cohens_d_result <- cohen.d(RAVLT_PROAT_INTERFERENCE_Z ~ GROUP, data = RAVLT_Z)
+
+p2 <- ggplot(RAVLT_Z, aes(x = GROUP, y = RAVLT_PROAT_INTERFERENCE_Z, fill = GROUP)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.6) +
+  geom_jitter(aes(color = GROUP), size = 3, width = 0.15, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2, color = "black") +
+  scale_color_manual(values = c("#0072B2", "tomato")) +
+  scale_fill_manual(values = c("#0072B2", "tomato")) +
+  labs(x = "Group", y = "Z-Score", title = "Effect Size of RAVLT Interference") +
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_PROAT_INTERFERENCE_Z), 
+           label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
+  annotate("text", x = 1.5, y = max(RAVLT_Z$RAVLT_PROAT_INTERFERENCE_Z), 
+           label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
+
+p2
+
+ggsave("RAVLT Interference.pdf", width = 7, height = 6, units = "in")
+ggsave("RAVLT Interference.pdf", width = 7, height = 6,units="in")
+
+```
+
+
+
+
+
+

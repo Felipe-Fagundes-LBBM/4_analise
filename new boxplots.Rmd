@@ -1,0 +1,1008 @@
+---
+title: "Box-plots-new"
+output: html_notebook
+---
+```{r}
+getwd()
+
+#install.packages("ggpubr")
+
+library(ggpubr)
+library(tidyverse)
+
+data <- readxl::read_excel("Cópia de DADOS_BRUTOS_COVID_LONGA_SEQUENCIAMENTO.xlsx")
+
+data <- na.omit(data)
+
+data
+
+```
+
+```{r}
+
+BPA_CONC <- data %>% 
+  select(GROUP, BPA_CONC_POINTS, BPA_DIVID_POINTS, BPA_ALTERN_POINTS)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(BPA_CONC_POINTS ~ GROUP, data = BPA_CONC, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(BPA_CONC, aes(x = GROUP, y = BPA_CONC_POINTS, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("BPA Sustained Attention") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(BPA_CONC$BPA_CONC_POINTS) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave("BPA Concentration.pdf", width = 7, height = 6, units = "in")
+ggsave("BPA Concentration.jpeg", width = 7, height = 6,units="in")
+```
+
+```{r}
+
+BPA_DIVID <- data %>% 
+  select(GROUP, BPA_CONC_POINTS, BPA_DIVID_POINTS, BPA_ALTERN_POINTS)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(BPA_DIVID_POINTS ~ GROUP, data = BPA_DIVID, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(BPA_DIVID, aes(x = GROUP, y = BPA_DIVID_POINTS, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("BPA Divided Attention") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(BPA_DIVID$BPA_DIVID_POINTS) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave("BPA Divided Attention.pdf", width = 7, height = 6, units = "in")
+ggsave("BPA Divided Attention.jpeg", width = 7, height = 6,units="in")
+```
+
+
+```{r}
+BPA_ALTERN <- data %>% 
+  select(GROUP, BPA_CONC_POINTS, BPA_DIVID_POINTS, BPA_ALTERN_POINTS)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(BPA_ALTERN_POINTS ~ GROUP, data = BPA_ALTERN, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(BPA_ALTERN, aes(x = GROUP, y = BPA_ALTERN_POINTS, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("BPA Alternating Attention") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(BPA_ALTERN$BPA_ALTERN_POINTS) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave("BPA Alternating Attention.pdf", width = 7, height = 6, units = "in")
+ggsave("BPA Alternating Attention.jpeg", width = 7, height = 6,units="in")
+```
+```{r}
+bpa_total <- data %>% 
+  select(GROUP, BPA_CONC_POINTS, BPA_DIVID_POINTS, BPA_ALTERN_POINTS, BPA_TOTAL)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(BPA_TOTAL ~ GROUP, data = bpa_total, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(bpa_total, aes(x = GROUP, y = BPA_TOTAL, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("BPA Total Points") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(BPA_TOTAL$) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave("BPA Alternating Attention.pdf", width = 7, height = 6, units = "in")
+ggsave("BPA Alternating Attention.jpeg", width = 7, height = 6,units="in")
+```
+```{r}
+
+FDT <- data %>% 
+  select(GROUP,FDT_READING_TIME,FDT_COUNTING_TIME, FDT_CHOOSING_TIME,FDT_CHANGING_TIME,FDT_INHIBITION,FDT_FLEXIBILITY)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(FDT_READING_TIME ~ GROUP, data = FDT, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(FDT, aes(x = GROUP, y = FDT_READING_TIME, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("FDT Reading Time ") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(FDT$FDT_READING_TIME) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave("FDT Reading Time.pdf", width = 7, height = 6, units = "in")
+ggsave("FDT Reading Time.jpeg", width = 7, height = 6,units="in")
+
+```
+
+```{r}
+
+
+FDT <- data %>% 
+  select(GROUP,FDT_READING_TIME,FDT_COUNTING_TIME, FDT_CHOOSING_TIME,FDT_CHANGING_TIME,FDT_INHIBITION,FDT_FLEXIBILITY)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(FDT_COUNTING_TIME ~ GROUP, data = FDT, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(FDT, aes(x = GROUP, y = FDT_COUNTING_TIME, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("FDT Counting Time ") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(FDT$FDT_COUNTING_TIME) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave("FDT Counting Time.pdf", width = 7, height = 6, units = "in")
+ggsave("FDT Counting Time.jpeg", width = 7, height = 6,units="in")
+
+```
+```{r}
+FDT <- data %>% 
+  select(GROUP,FDT_READING_TIME,FDT_COUNTING_TIME, FDT_CHOOSING_TIME,FDT_CHANGING_TIME,FDT_INHIBITION,FDT_FLEXIBILITY)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(FDT_CHOOSING_TIME ~ GROUP, data = FDT, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(FDT, aes(x = GROUP, y = FDT_CHOOSING_TIME, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("FDT Choosing Time ") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(FDT$FDT_CHOOSING_TIME) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave("FDT Choosing Time.pdf", width = 7, height = 6, units = "in")
+ggsave("FDT Choosing Time.jpeg", width = 7, height = 6,units="in")
+```
+
+```{r}
+FDT <- data %>% 
+  select(GROUP,FDT_READING_TIME,FDT_COUNTING_TIME, FDT_CHOOSING_TIME,FDT_CHANGING_TIME,FDT_INHIBITION,FDT_FLEXIBILITY)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(FDT_CHANGING_TIME ~ GROUP, data = FDT, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(FDT, aes(x = GROUP, y = FDT_CHANGING_TIME, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("FDT Changing Time ") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(FDT$FDT_CHANGING_TIME) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave("FDT Changing Time.pdf", width = 7, height = 6, units = "in")
+ggsave("FDT Changing Time.jpeg", width = 7, height = 6,units="in")
+```
+
+```{r}
+FDT <- data %>% 
+  select(GROUP,FDT_READING_TIME,FDT_COUNTING_TIME, FDT_CHOOSING_TIME,FDT_CHANGING_TIME,FDT_INHIBITION,FDT_FLEXIBILITY)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(FDT_INHIBITION ~ GROUP, data = FDT, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(FDT, aes(x = GROUP, y = FDT_INHIBITION, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("FDT Inhibition ") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(FDT$FDT_INHIBITION) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave("FDT Inhibition.pdf", width = 7, height = 6, units = "in")
+ggsave("FDT Inhibition.jpeg", width = 7, height = 6,units="in")
+```
+
+```{r}
+FDT <- data %>% 
+  select(GROUP,FDT_READING_TIME,FDT_COUNTING_TIME, FDT_CHOOSING_TIME,FDT_CHANGING_TIME,FDT_INHIBITION,FDT_FLEXIBILITY)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(FDT_FLEXIBILITY ~ GROUP, data = FDT, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(FDT, aes(x = GROUP, y = FDT_FLEXIBILITY, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("FDT Flexibility ") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(FDT$FDT_FLEXIBILITY) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave("FDT Flexibility.pdf", width = 7, height = 6, units = "in")
+ggsave("FDT Flexibility.jpeg", width = 7, height = 6,units="in")
+```
+
+```{r}
+RAVLT <- data %>% 
+  select(GROUP,RAVLT_A1, RAVLT_A2,RAVLT_A3,RAVLT_A4,RAVLT_A5,RAVLT_B1,RAVLT_A6,RAVLT_A7,RAVLT_REC,RAVLT_TOTALSCORE,RAVLT_ALT,RAVLT_RETENTION,RAVLT_PROAT_INTERFERENCE,RAVLT_RETRO_INTERFERENCE)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(RAVLT_A1 ~ GROUP, data = RAVLT, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(RAVLT, aes(x = GROUP, y = RAVLT_A1, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("RAVLT A1 ") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(RAVLT$RAVLT_A1) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave(" RAVLT A1.pdf", width = 7, height = 6, units = "in")
+ggsave(" RAVLT A1.jpeg", width = 7, height = 6,units="in")
+```
+
+```{r}
+RAVLT <- data %>% 
+  select(GROUP,RAVLT_A1, RAVLT_A2,RAVLT_A3,RAVLT_A4,RAVLT_A5,RAVLT_B1,RAVLT_A6,RAVLT_A7,RAVLT_REC,RAVLT_TOTALSCORE,RAVLT_ALT,RAVLT_RETENTION,RAVLT_PROAT_INTERFERENCE,RAVLT_RETRO_INTERFERENCE)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(RAVLT_A2 ~ GROUP, data = RAVLT, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(RAVLT, aes(x = GROUP, y = RAVLT_A2, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("RAVLT A2 ") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(RAVLT$RAVLT_A2) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave(" RAVLT A2.pdf", width = 7, height = 6, units = "in")
+ggsave(" RAVLT A2.jpeg", width = 7, height = 6,units="in")
+```
+
+```{r}
+RAVLT <- data %>% 
+  select(GROUP,RAVLT_A1, RAVLT_A2,RAVLT_A3,RAVLT_A4,RAVLT_A5,RAVLT_B1,RAVLT_A6,RAVLT_A7,RAVLT_REC,RAVLT_TOTALSCORE,RAVLT_ALT,RAVLT_RETENTION,RAVLT_PROAT_INTERFERENCE,RAVLT_RETRO_INTERFERENCE)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(RAVLT_A3 ~ GROUP, data = RAVLT, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(RAVLT, aes(x = GROUP, y = RAVLT_A3, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("RAVLT A3 ") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(RAVLT$RAVLT_A3) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave(" RAVLT A3.pdf", width = 7, height = 6, units = "in")
+ggsave(" RAVLT A3.jpeg", width = 7, height = 6,units="in")
+```
+
+```{r}
+RAVLT <- data %>% 
+  select(GROUP,RAVLT_A1, RAVLT_A2,RAVLT_A3,RAVLT_A4,RAVLT_A5,RAVLT_B1,RAVLT_A6,RAVLT_A7,RAVLT_REC,RAVLT_TOTALSCORE,RAVLT_ALT,RAVLT_RETENTION,RAVLT_PROAT_INTERFERENCE,RAVLT_RETRO_INTERFERENCE)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(RAVLT_A4 ~ GROUP, data = RAVLT, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(RAVLT, aes(x = GROUP, y = RAVLT_A4, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("RAVLT A4 ") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(RAVLT$RAVLT_A4) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave(" RAVLT A4.pdf", width = 7, height = 6, units = "in")
+ggsave(" RAVLT A4.jpeg", width = 7, height = 6,units="in")
+```
+
+```{r}
+RAVLT <- data %>% 
+  select(GROUP,RAVLT_A1, RAVLT_A2,RAVLT_A3,RAVLT_A4,RAVLT_A5,RAVLT_B1,RAVLT_A6,RAVLT_A7,RAVLT_REC,RAVLT_TOTALSCORE,RAVLT_ALT,RAVLT_RETENTION,RAVLT_PROAT_INTERFERENCE,RAVLT_RETRO_INTERFERENCE)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(RAVLT_A5 ~ GROUP, data = RAVLT, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(RAVLT, aes(x = GROUP, y = RAVLT_A5, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("RAVLT A5 ") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(RAVLT$RAVLT_A5) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave(" RAVLT A5.pdf", width = 7, height = 6, units = "in")
+ggsave(" RAVLT A5.jpeg", width = 7, height = 6,units="in")
+```
+
+```{r}
+RAVLT <- data %>% 
+  select(GROUP,RAVLT_A1, RAVLT_A2,RAVLT_A3,RAVLT_A4,RAVLT_A5,RAVLT_B1,RAVLT_A6,RAVLT_A7,RAVLT_REC,RAVLT_TOTALSCORE,RAVLT_ALT,RAVLT_RETENTION,RAVLT_PROAT_INTERFERENCE,RAVLT_RETRO_INTERFERENCE)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(RAVLT_B1 ~ GROUP, data = RAVLT, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(RAVLT, aes(x = GROUP, y = RAVLT_B1, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("RAVLT B1 ") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(RAVLT$RAVLT_B1) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave(" RAVLT B1.pdf", width = 7, height = 6, units = "in")
+ggsave(" RAVLT B1.jpeg", width = 7, height = 6,units="in")
+```
+
+```{r}
+RAVLT <- data %>% 
+  select(GROUP,RAVLT_A1, RAVLT_A2,RAVLT_A3,RAVLT_A4,RAVLT_A5,RAVLT_B1,RAVLT_A6,RAVLT_A7,RAVLT_REC,RAVLT_TOTALSCORE,RAVLT_ALT,RAVLT_RETENTION,RAVLT_PROAT_INTERFERENCE,RAVLT_RETRO_INTERFERENCE)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(RAVLT_A6 ~ GROUP, data = RAVLT, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(RAVLT, aes(x = GROUP, y = RAVLT_A6, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("RAVLT A6 ") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(RAVLT$RAVLT_A6) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave(" RAVLT A6.pdf", width = 7, height = 6, units = "in")
+ggsave(" RAVLT A6.jpeg", width = 7, height = 6,units="in")
+```
+
+```{r}
+RAVLT <- data %>% 
+  select(GROUP,RAVLT_A1, RAVLT_A2,RAVLT_A3,RAVLT_A4,RAVLT_A5,RAVLT_B1,RAVLT_A6,RAVLT_A7,RAVLT_REC,RAVLT_TOTALSCORE,RAVLT_ALT,RAVLT_RETENTION,RAVLT_PROAT_INTERFERENCE,RAVLT_RETRO_INTERFERENCE)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(RAVLT_A7 ~ GROUP, data = RAVLT, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(RAVLT, aes(x = GROUP, y = RAVLT_A7, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("RAVLT A7 ") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(RAVLT$RAVLT_A7) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave(" RAVLT A7.pdf", width = 7, height = 6, units = "in")
+ggsave(" RAVLT A7.jpeg", width = 7, height = 6,units="in")
+```
+
+```{r}
+RAVLT <- data %>% 
+  select(GROUP,RAVLT_A1, RAVLT_A2,RAVLT_A3,RAVLT_A4,RAVLT_A5,RAVLT_B1,RAVLT_A6,RAVLT_A7,RAVLT_REC,RAVLT_TOTALSCORE,RAVLT_ALT,RAVLT_RETENTION,RAVLT_PROAT_INTERFERENCE,RAVLT_RETRO_INTERFERENCE)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(RAVLT_REC ~ GROUP, data = RAVLT, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(RAVLT, aes(x = GROUP, y = RAVLT_REC, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("RAVLT Recognition ") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(RAVLT$RAVLT_REC) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave(" RAVLT Recognition.pdf", width = 7, height = 6, units = "in")
+ggsave(" RAVLT Recognition.jpeg", width = 7, height = 6,units="in")
+```
+
+```{r}
+RAVLT <- data %>% 
+  select(GROUP,RAVLT_A1, RAVLT_A2,RAVLT_A3,RAVLT_A4,RAVLT_A5,RAVLT_B1,RAVLT_A6,RAVLT_A7,RAVLT_REC,RAVLT_TOTALSCORE,RAVLT_ALT,RAVLT_RETENTION,RAVLT_PROAT_INTERFERENCE,RAVLT_RETRO_INTERFERENCE)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(RAVLT_TOTALSCORE ~ GROUP, data = RAVLT, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(RAVLT, aes(x = GROUP, y = RAVLT_TOTALSCORE, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("RAVLT Total Score ") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(RAVLT$RAVLT_TOTALSCORE) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave(" RAVLT Total Score.pdf", width = 7, height = 6, units = "in")
+ggsave(" RAVLT Total Score.jpeg", width = 7, height = 6,units="in")
+```
+
+```{r}
+RAVLT <- data %>% 
+  select(GROUP,RAVLT_A1, RAVLT_A2,RAVLT_A3,RAVLT_A4,RAVLT_A5,RAVLT_B1,RAVLT_A6,RAVLT_A7,RAVLT_REC,RAVLT_TOTALSCORE,RAVLT_ALT,RAVLT_RETENTION,RAVLT_PROAT_INTERFERENCE,RAVLT_RETRO_INTERFERENCE)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(RAVLT_ALT ~ GROUP, data = RAVLT, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(RAVLT, aes(x = GROUP, y = RAVLT_ALT, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("RAVLT Alternation ") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(RAVLT$RAVLT_ALT) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave(" RAVLT Alternation.pdf", width = 7, height = 6, units = "in")
+ggsave(" RAVLT Alternation.jpeg", width = 7, height = 6,units="in")
+```
+
+```{r}
+RAVLT <- data %>% 
+  select(GROUP,RAVLT_A1, RAVLT_A2,RAVLT_A3,RAVLT_A4,RAVLT_A5,RAVLT_B1,RAVLT_A6,RAVLT_A7,RAVLT_REC,RAVLT_TOTALSCORE,RAVLT_ALT,RAVLT_RETENTION,RAVLT_PROAT_INTERFERENCE,RAVLT_RETRO_INTERFERENCE)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(RAVLT_RETENTION ~ GROUP, data = RAVLT, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(RAVLT, aes(x = GROUP, y = RAVLT_RETENTION, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("RAVLT Retention ") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(RAVLT$RAVLT_RETENTION) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave(" RAVLT Retention.pdf", width = 7, height = 6, units = "in")
+ggsave(" RAVLT Retention.jpeg", width = 7, height = 6,units="in")
+```
+
+```{r}
+RAVLT <- data %>% 
+  select(GROUP,RAVLT_A1, RAVLT_A2,RAVLT_A3,RAVLT_A4,RAVLT_A5,RAVLT_B1,RAVLT_A6,RAVLT_A7,RAVLT_REC,RAVLT_TOTALSCORE,RAVLT_ALT,RAVLT_RETENTION,RAVLT_PROAT_INTERFERENCE,RAVLT_RETRO_INTERFERENCE)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(RAVLT_PROAT_INTERFERENCE ~ GROUP, data = RAVLT, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(RAVLT, aes(x = GROUP, y = RAVLT_PROAT_INTERFERENCE, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("RAVLT Proative Interference ") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(RAVLT$RAVLT_PROAT_INTERFERENCE) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave(" RAVLT Proative Interference.pdf", width = 7, height = 6, units = "in")
+ggsave(" RAVLT Proative Interference.jpeg", width = 7, height = 6,units="in")
+```
+
+```{r}
+RAVLT <- data %>% 
+  select(GROUP,RAVLT_A1, RAVLT_A2,RAVLT_A3,RAVLT_A4,RAVLT_A5,RAVLT_B1,RAVLT_A6,RAVLT_A7,RAVLT_REC,RAVLT_TOTALSCORE,RAVLT_ALT,RAVLT_RETENTION,RAVLT_PROAT_INTERFERENCE,RAVLT_RETRO_INTERFERENCE)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+# Perform t-test for later reference
+res_test <- compare_means(RAVLT_RETRO_INTERFERENCE ~ GROUP, data = RAVLT, method = "t.test",  size = 8)
+
+# Create the plot
+p1 <- ggplot(RAVLT, aes(x = GROUP, y = RAVLT_RETRO_INTERFERENCE, fill = GROUP)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.3, width = 0.7, lwd = 0.4) + 
+  geom_jitter(aes(color = GROUP), size = 4.5, width = 0.15, alpha = 0.7) +
+  
+  # Enhanced color scheme
+  scale_color_manual(values = c("#0072B2", "tomato")) +   
+  scale_fill_manual(values = c("#0072B2", "tomato")) +  
+  
+  # Improved labels and title
+  ylab("Total points") +
+  ggtitle("RAVLT Retroative Interference ") +
+  
+  # Customized theme with better readability
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  
+  # Add p-value from the t-test
+  annotate("text", x = 1.5, y = max(RAVLT$RAVLT_RETRO_INTERFERENCE) * 1.05, 
+           label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
+# Show the plot
+p1
+
+ggsave(" RAVLT Retroative Interference.pdf", width = 7, height = 6, units = "in")
+ggsave(" RAVLT Retroative Interference.jpeg", width = 7, height = 6,units="in")
+```

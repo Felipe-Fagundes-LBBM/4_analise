@@ -7,6 +7,7 @@ output: html_notebook
 
 library(dplyr)
 library(effsize)
+library(ggplot2)
 
 data <- readxl::read_excel("BPAs_EscoreZ.xlsx")
 
@@ -226,7 +227,7 @@ p2 <- ggplot(FDT_Z, aes(x = GROUP, y = FDT_READING_TIME_Z, fill = GROUP)) +
     axis.title.x = element_blank()) +
   annotate("text", x = 1.5, y = max(FDT_Z$FDT_READING_TIME_Z), 
            label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
-  annotate("text", x = 1.5, y = max(BPA_TOTAL_Z$FDT_READING_TIME_Z), 
+  annotate("text", x = 1.5, y = max(FDT_Z$FDT_READING_TIME_Z), 
            label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
 p2
 
@@ -267,11 +268,180 @@ p2 <- ggplot(FDT_Z, aes(x = GROUP, y = FDT_COUNTING_TIME_Z, fill = GROUP)) +
     axis.title.x = element_blank()) +
   annotate("text", x = 1.5, y = max(FDT_Z$FDT_COUNTING_TIME_Z), 
            label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
-  annotate("text", x = 1.5, y = max(BPA_TOTAL_Z$FDT_COUNTING_TIME_Z), 
+  annotate("text", x = 1.5, y = max(FDT_Z$FDT_COUNTING_TIME_Z), 
            label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
+
 p2
 
 ggsave("FDT Counting Time.pdf", width = 7, height = 6, units = "in")
 ggsave("FDT Counting Time.jpeg", width = 7, height = 6,units="in")
+
+```
+
+```{r}
+
+FDT_Z <- data %>% 
+  select(GROUP,AGE,FDT_CHOOSING_TIME_Z)
+
+names(FDT_Z)
+
+mean_z1 <- mean(FDT_Z$FDT_CHOOSING_TIME_Z[FDT_Z$GROUP == group1])
+sd_z1 <- sd(FDT_Z$FDT_CHOOSING_TIME_Z[FDT_Z$GROUP == group1])
+
+mean_z2 <- mean(FDT_Z$FDT_CHOOSING_TIME_Z[FDT_Z$GROUP == group2])
+sd_z2 <- sd(FDT_Z$FDT_CHOOSING_TIME_Z[FDT_Z$GROUP == group2])
+
+cohens_d_result <- cohen.d(FDT_CHOOSING_TIME_Z ~ GROUP, data = FDT_Z)
+
+p2 <- ggplot(FDT_Z, aes(x = GROUP, y = FDT_CHOOSING_TIME_Z, fill = GROUP)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.6) +
+  geom_jitter(aes(color = GROUP), size = 3, width = 0.15, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2, color = "black") +
+  scale_color_manual(values = c("#0072B2", "tomato")) +
+  scale_fill_manual(values = c("#0072B2", "tomato")) +
+  labs(x = "Group", y = "Z-Score", title = "Effect Size of FDT Choosing Time ") +
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  annotate("text", x = 1.5, y = max(FDT_Z$FDT_CHOOSING_TIME_Z), 
+           label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
+  annotate("text", x = 1.5, y = max(FDT_Z$FDT_CHOOSING_TIME_Z), 
+           label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
+
+p2
+
+ggsave("FDT Choosing Time.pdf", width = 7, height = 6, units = "in")
+ggsave("FDT Choosing Time.jpeg", width = 7, height = 6,units="in")
+
+```
+
+```{r}
+
+FDT_Z <- data %>% 
+  select(GROUP,AGE,FDT_CHANGING_TIME_Z)
+
+names(FDT_Z)
+
+mean_z1 <- mean(FDT_Z$FDT_CHANGING_TIME_Z[FDT_Z$GROUP == group1])
+sd_z1 <- sd(FDT_Z$FDT_CHANGING_TIME_Z[FDT_Z$GROUP == group1])
+
+mean_z2 <- mean(FDT_Z$FDT_CHANGING_TIME_Z[FDT_Z$GROUP == group2])
+sd_z2 <- sd(FDT_Z$FDT_CHANGING_TIME_Z[FDT_Z$GROUP == group2])
+
+cohens_d_result <- cohen.d(FDT_CHANGING_TIME_Z ~ GROUP, data = FDT_Z)
+
+p2 <- ggplot(FDT_Z, aes(x = GROUP, y = FDT_CHANGING_TIME_Z, fill = GROUP)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.6) +
+  geom_jitter(aes(color = GROUP), size = 3, width = 0.15, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2, color = "black") +
+  scale_color_manual(values = c("#0072B2", "tomato")) +
+  scale_fill_manual(values = c("#0072B2", "tomato")) +
+  labs(x = "Group", y = "Z-Score", title = "Effect Size of FDT Changing Time ") +
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  annotate("text", x = 1.5, y = max(FDT_Z$FDT_CHANGING_TIME_Z), 
+           label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
+  annotate("text", x = 1.5, y = max(FDT_Z$FDT_CHANGING_TIME_Z), 
+           label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
+
+p2
+
+ggsave("FDT Changing Time.pdf", width = 7, height = 6, units = "in")
+ggsave("FDT Changing Time.jpeg", width = 7, height = 6,units="in")
+
+```
+
+```{r}
+
+FDT_Z <- data %>% 
+  select(GROUP,AGE,FDT_INHIBITION_Z)
+
+names(FDT_Z)
+
+mean_z1 <- mean(FDT_Z$FDT_INHIBITION_Z[FDT_Z$GROUP == group1])
+sd_z1 <- sd(FDT_Z$FDT_INHIBITION_Z[FDT_Z$GROUP == group1])
+
+mean_z2 <- mean(FDT_Z$FDT_INHIBITION_Z[FDT_Z$GROUP == group2])
+sd_z2 <- sd(FDT_Z$FDT_INHIBITION_Z[FDT_Z$GROUP == group2])
+
+cohens_d_result <- cohen.d(FDT_INHIBITION_Z ~ GROUP, data = FDT_Z)
+
+p2 <- ggplot(FDT_Z, aes(x = GROUP, y = FDT_INHIBITION_Z, fill = GROUP)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.6) +
+  geom_jitter(aes(color = GROUP), size = 3, width = 0.15, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2, color = "black") +
+  scale_color_manual(values = c("#0072B2", "tomato")) +
+  scale_fill_manual(values = c("#0072B2", "tomato")) +
+  labs(x = "Group", y = "Z-Score", title = "Effect Size of FDT Inhibition ") +
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  annotate("text", x = 1.5, y = max(FDT_Z$FDT_INHIBITION_Z), 
+           label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
+  annotate("text", x = 1.5, y = max(FDT_Z$FDT_INHIBITION_Z), 
+           label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
+
+p2
+
+ggsave("FDT Inhibition Time.pdf", width = 7, height = 6, units = "in")
+ggsave("FDT Inhibition Time.jpeg", width = 7, height = 6,units="in")
+
+```
+
+```{r}
+
+FDT_Z <- data %>% 
+  select(GROUP,AGE,FDT_FLEXIBILITY_Z)
+
+names(FDT_Z)
+
+mean_z1 <- mean(FDT_Z$FDT_FLEXIBILITY_Z[FDT_Z$GROUP == group1])
+sd_z1 <- sd(FDT_Z$FDT_FLEXIBILITY_Z[FDT_Z$GROUP == group1])
+
+mean_z2 <- mean(FDT_Z$FDT_FLEXIBILITY_Z[FDT_Z$GROUP == group2])
+sd_z2 <- sd(FDT_Z$FDT_FLEXIBILITY_Z[FDT_Z$GROUP == group2])
+
+cohens_d_result <- cohen.d(FDT_FLEXIBILITY_Z ~ GROUP, data = FDT_Z)
+
+p2 <- ggplot(FDT_Z, aes(x = GROUP, y = FDT_FLEXIBILITY_Z, fill = GROUP)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.6) +
+  geom_jitter(aes(color = GROUP), size = 3, width = 0.15, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2, color = "black") +
+  scale_color_manual(values = c("#0072B2", "tomato")) +
+  scale_fill_manual(values = c("#0072B2", "tomato")) +
+  labs(x = "Group", y = "Z-Score", title = "Effect Size of FDT Flexibility  ") +
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  annotate("text", x = 1.5, y = max(FDT_Z$FDT_FLEXIBILITY_Z), 
+           label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
+  annotate("text", x = 1.5, y = max(FDT_Z$FDT_FLEXIBILITY_Z), 
+           label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
+
+p2
+
+ggsave("FDT Flexibility Time.pdf", width = 7, height = 6, units = "in")
+ggsave("FDT Flexibility Time.jpeg", width = 7, height = 6,units="in")
 
 ```

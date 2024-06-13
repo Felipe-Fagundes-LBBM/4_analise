@@ -1,0 +1,277 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+#install.packages("effsize")
+
+library(dplyr)
+library(effsize)
+
+data <- readxl::read_excel("BPAs_EscoreZ.xlsx")
+
+data <- na.omit(data)
+
+data
+
+names(data)
+
+data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+group1 <- "CONTROL"
+group2 <- "CASE"
+
+```
+
+```{r}
+
+BPA_CONC_Z <- data %>% 
+  select(GROUP,AGE,BPA_CONC_EscoreZ)
+
+names(BPA_CONC_Z)
+
+mean_z1 <- mean(BPA_CONC_Z$BPA_CONC_EscoreZ[BPA_CONC_Z$GROUP == group1])
+sd_z1 <- sd(BPA_CONC_Z$BPA_CONC_EscoreZ[BPA_CONC_Z$GROUP == group1])
+
+mean_z2 <- mean(BPA_CONC_Z$BPA_CONC_EscoreZ[BPA_CONC_Z$GROUP == group2])
+sd_z2 <- sd(BPA_CONC_Z$BPA_CONC_EscoreZ[BPA_CONC_Z$GROUP == group2])
+
+cohens_d_result <- cohen.d(BPA_CONC_EscoreZ ~ GROUP, data = BPA_CONC_Z)
+
+p2 <- ggplot(BPA_CONC_Z, aes(x = GROUP, y = BPA_CONC_EscoreZ, fill = GROUP)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.6) +
+  geom_jitter(aes(color = GROUP), size = 3, width = 0.15, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2, color = "black") +
+  scale_color_manual(values = c("#0072B2", "tomato")) +
+  scale_fill_manual(values = c("#0072B2", "tomato")) +
+  labs(x = "Group", y = "Z-Score", title = "Effect Size of BPA Sustained Attention ") +
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  annotate("text", x = 1.5, y = max(BPA_CONC_Z$BPA_CONC_EscoreZ), 
+           label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
+  annotate("text", x = 1.5, y = max(BPA_CONC_Z$BPA_CONC_EscoreZ), 
+           label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
+p2
+
+ggsave("BPA Concentration.pdf", width = 7, height = 6, units = "in")
+ggsave("BPA Concentration.jpeg", width = 7, height = 6,units="in")
+```
+
+```{r}
+
+BPA_DIVID_Z <- data %>% 
+  select(GROUP,AGE,BPA_DIVID_EscoreZ)
+
+names(BPA_DIVID_Z)
+
+mean_z1 <- mean(BPA_DIVID_Z$BPA_DIVID_EscoreZ[BPA_DIVID_Z$GROUP == group1])
+sd_z1 <- sd(BPA_DIVID_Z$BPA_DIVID_EscoreZ[BPA_DIVID_Z$GROUP == group1])
+
+mean_z2 <- mean(BPA_DIVID_Z$BPA_DIVID_EscoreZ[BPA_DIVID_Z$GROUP == group2])
+sd_z2 <- sd(BPA_DIVID_Z$BPA_DIVID_EscoreZ[BPA_DIVID_Z$GROUP == group2])
+
+cohens_d_result <- cohen.d(BPA_DIVID_EscoreZ ~ GROUP, data = BPA_DIVID_Z)
+
+p2 <- ggplot(BPA_DIVID_Z, aes(x = GROUP, y = BPA_DIVID_EscoreZ, fill = GROUP)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.6) +
+  geom_jitter(aes(color = GROUP), size = 3, width = 0.15, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2, color = "black") +
+  scale_color_manual(values = c("#0072B2", "tomato")) +
+  scale_fill_manual(values = c("#0072B2", "tomato")) +
+  labs(x = "Group", y = "Z-Score", title = "Effect Size of BPA Divided Attention ") +
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  annotate("text", x = 1.5, y = max(BPA_DIVID_Z$BPA_DIVID_EscoreZ), 
+           label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
+  annotate("text", x = 1.5, y = max(BPA_DIVID_Z$BPA_DIVID_EscoreZ), 
+           label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
+p2
+
+ggsave("BPA Divided Attention.pdf", width = 7, height = 6, units = "in")
+ggsave("BPA Divided Attention.jpeg", width = 7, height = 6,units="in")
+```
+```{r}
+
+BPA_ALTERN_Z <- data %>% 
+  select(GROUP,AGE,BPA_ALTERN_EscoreZ)
+
+names(BPA_ALTERN_Z)
+
+mean_z1 <- mean(BPA_ALTERN_Z$BPA_ALTERN_EscoreZ[BPA_ALTERN_Z$GROUP == group1])
+sd_z1 <- sd(BPA_ALTERN_Z$BPA_ALTERN_EscoreZ[BPA_ALTERN_Z$GROUP == group1])
+
+mean_z2 <- mean(BPA_ALTERN_Z$BPA_ALTERN_EscoreZ[BPA_ALTERN_Z$GROUP == group2])
+sd_z2 <- sd(BPA_ALTERN_Z$BPA_ALTERN_EscoreZ[BPA_ALTERN_Z$GROUP == group2])
+
+cohens_d_result <- cohen.d(BPA_ALTERN_EscoreZ ~ GROUP, data = BPA_ALTERN_Z)
+
+p2 <- ggplot(BPA_ALTERN_Z, aes(x = GROUP, y = BPA_ALTERN_EscoreZ, fill = GROUP)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.6) +
+  geom_jitter(aes(color = GROUP), size = 3, width = 0.15, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2, color = "black") +
+  scale_color_manual(values = c("#0072B2", "tomato")) +
+  scale_fill_manual(values = c("#0072B2", "tomato")) +
+  labs(x = "Group", y = "Z-Score", title = "Effect Size of BPA Alternating Attention ") +
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  annotate("text", x = 1.5, y = max(BPA_ALTERN_Z$BPA_ALTERN_EscoreZ), 
+           label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
+  annotate("text", x = 1.5, y = max(BPA_ALTERN_Z$BPA_ALTERN_EscoreZ), 
+           label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
+p2
+
+ggsave("BPA Alternating Attention.pdf", width = 7, height = 6, units = "in")
+ggsave("BPA Alternating Attention.jpeg", width = 7, height = 6,units="in")
+
+```
+
+```{r}
+
+BPA_TOTAL_Z <- data %>% 
+  select(GROUP,AGE,BPA_TOTAL_EscoreZ)
+
+names(BPA_TOTAL_Z)
+
+mean_z1 <- mean(BPA_TOTAL_Z$BPA_TOTAL_EscoreZ[BPA_TOTAL_Z$GROUP == group1])
+sd_z1 <- sd(BPA_TOTAL_Z$BPA_TOTAL_EscoreZ[BPA_TOTAL_Z$GROUP == group1])
+
+mean_z2 <- mean(BPA_TOTAL_Z$BPA_TOTAL_EscoreZ[BPA_TOTAL_Z$GROUP == group2])
+sd_z2 <- sd(BPA_TOTAL_Z$BPA_TOTAL_EscoreZ[BPA_TOTAL_Z$GROUP == group2])
+
+cohens_d_result <- cohen.d(BPA_TOTAL_EscoreZ ~ GROUP, data = BPA_TOTAL_Z)
+
+p2 <- ggplot(BPA_TOTAL_Z, aes(x = GROUP, y = BPA_TOTAL_EscoreZ, fill = GROUP)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.6) +
+  geom_jitter(aes(color = GROUP), size = 3, width = 0.15, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2, color = "black") +
+  scale_color_manual(values = c("#0072B2", "tomato")) +
+  scale_fill_manual(values = c("#0072B2", "tomato")) +
+  labs(x = "Group", y = "Z-Score", title = "Effect Size of BPA Total Score ") +
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  annotate("text", x = 1.5, y = max(BPA_TOTAL_Z$BPA_TOTAL_EscoreZ), 
+           label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
+  annotate("text", x = 1.5, y = max(BPA_TOTAL_Z$BPA_TOTAL_EscoreZ), 
+           label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
+p2
+
+ggsave("BPA Total Score.pdf", width = 7, height = 6, units = "in")
+ggsave("BPA Total Score.jpeg", width = 7, height = 6,units="in")
+
+```
+
+
+```{r}
+data <- readxl::read_excel("FDT_EscoreZ.xlsx")
+
+data <- na.omit(data)
+
+data
+```
+
+
+```{r}
+
+FDT_Z <- data %>% 
+  select(GROUP,AGE,FDT_READING_TIME_Z)
+
+names(FDT_Z)
+
+mean_z1 <- mean(FDT_Z$FDT_READING_TIME_Z[FDT_Z$GROUP == group1])
+sd_z1 <- sd(FDT_Z$FDT_READING_TIME_Z[FDT_Z$GROUP == group1])
+
+mean_z2 <- mean(FDT_Z$FDT_READING_TIME_Z[FDT_Z$GROUP == group2])
+sd_z2 <- sd(FDT_Z$FDT_READING_TIME_Z[FDT_Z$GROUP == group2])
+
+cohens_d_result <- cohen.d(FDT_READING_TIME_Z ~ GROUP, data = FDT_Z)
+
+p2 <- ggplot(FDT_Z, aes(x = GROUP, y = FDT_READING_TIME_Z, fill = GROUP)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.6) +
+  geom_jitter(aes(color = GROUP), size = 3, width = 0.15, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2, color = "black") +
+  scale_color_manual(values = c("#0072B2", "tomato")) +
+  scale_fill_manual(values = c("#0072B2", "tomato")) +
+  labs(x = "Group", y = "Z-Score", title = "Effect Size of FDT Reanding Time ") +
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  annotate("text", x = 1.5, y = max(FDT_Z$FDT_READING_TIME_Z), 
+           label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
+  annotate("text", x = 1.5, y = max(BPA_TOTAL_Z$FDT_READING_TIME_Z), 
+           label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
+p2
+
+ggsave("FDT Reanding Time.pdf", width = 7, height = 6, units = "in")
+ggsave("FDT Reanding Time.jpeg", width = 7, height = 6,units="in")
+
+```
+
+```{r}
+
+FDT_Z <- data %>% 
+  select(GROUP,AGE,FDT_COUNTING_TIME_Z)
+
+names(FDT_Z)
+
+mean_z1 <- mean(FDT_Z$FDT_COUNTING_TIME_Z[FDT_Z$GROUP == group1])
+sd_z1 <- sd(FDT_Z$FDT_COUNTING_TIME_Z[FDT_Z$GROUP == group1])
+
+mean_z2 <- mean(FDT_Z$FDT_COUNTING_TIME_Z[FDT_Z$GROUP == group2])
+sd_z2 <- sd(FDT_Z$FDT_COUNTING_TIME_Z[FDT_Z$GROUP == group2])
+
+cohens_d_result <- cohen.d(FDT_COUNTING_TIME_Z ~ GROUP, data = FDT_Z)
+
+p2 <- ggplot(FDT_Z, aes(x = GROUP, y = FDT_COUNTING_TIME_Z, fill = GROUP)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA, width = 0.6) +
+  geom_jitter(aes(color = GROUP), size = 3, width = 0.15, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "black") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2, color = "black") +
+  scale_color_manual(values = c("#0072B2", "tomato")) +
+  scale_fill_manual(values = c("#0072B2", "tomato")) +
+  labs(x = "Group", y = "Z-Score", title = "Effect Size of FDT Counting Time ") +
+  theme_classic() +   
+  theme(
+    axis.text = element_text(size = 18, color = "black"),
+    axis.title = element_text(size = 20, color = "black"),
+    plot.title = element_text(size = 22, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.title.x = element_blank()) +
+  annotate("text", x = 1.5, y = max(FDT_Z$FDT_COUNTING_TIME_Z), 
+           label = paste0("Mean Difference = ", round(mean_z2 - mean_z1, 2)), vjust = 3) +
+  annotate("text", x = 1.5, y = max(BPA_TOTAL_Z$FDT_COUNTING_TIME_Z), 
+           label = paste0("Cohen's d = ", round(cohens_d_result$estimate, 2)),vjust=0.7)
+p2
+
+ggsave("FDT Counting Time.pdf", width = 7, height = 6, units = "in")
+ggsave("FDT Counting Time.jpeg", width = 7, height = 6,units="in")
+
+```

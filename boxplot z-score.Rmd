@@ -2,7 +2,7 @@
 title: "R Notebook"
 output: html_notebook
 ---
-```{r}
+```{r reading BPA}
 #install.packages("effsize")
 
 library(dplyr)
@@ -186,7 +186,7 @@ ggsave("BPA Total Score.jpeg", width = 7, height = 6,units="in")
 ```
 
 
-```{r}
+```{r reading FDT}
 data <- readxl::read_excel("FDT_EscoreZ.xlsx")
 
 data <- na.omit(data)
@@ -452,7 +452,7 @@ ggsave("FDT Flexibility Time.jpeg", width = 7, height = 6,units="in")
 ```
 
 
-```{r}
+```{r reading RAVLT}
 data <- readxl::read_excel("RAVLTs_EscoreZ.xlsx")
 
 data <- na.omit(data)
@@ -714,7 +714,7 @@ p2 <- ggplot(RAVLT_Z, aes(x = GROUP, y = RAVLT_B1_Z, fill = GROUP)) +
 p2
 
 ggsave("RAVLT B1.pdf", width = 7, height = 6, units = "in")
-ggsave("RAVLT B1.pdf", width = 7, height = 6,units="in")
+ggsave("RAVLT B1.jpeg", width = 7, height = 6,units="in")
 
 ```
 
@@ -756,7 +756,7 @@ p2 <- ggplot(RAVLT_Z, aes(x = GROUP, y = RAVLT_A6_Z, fill = GROUP)) +
 p2
 
 ggsave("RAVLT A6.pdf", width = 7, height = 6, units = "in")
-ggsave("RAVLT A6.pdf", width = 7, height = 6,units="in")
+ggsave("RAVLT A6.jpeg", width = 7, height = 6,units="in")
 
 ```
 
@@ -798,7 +798,7 @@ p2 <- ggplot(RAVLT_Z, aes(x = GROUP, y = RAVLT_A7_Z, fill = GROUP)) +
 p2
 
 ggsave("RAVLT A7.pdf", width = 7, height = 6, units = "in")
-ggsave("RAVLT A7.pdf", width = 7, height = 6,units="in")
+ggsave("RAVLT A7.jpeg", width = 7, height = 6,units="in")
 
 ```
 
@@ -840,7 +840,7 @@ p2 <- ggplot(RAVLT_Z, aes(x = GROUP, y = RAVLT_REC_Z, fill = GROUP)) +
 p2
 
 ggsave("RAVLT Recognition.pdf", width = 7, height = 6, units = "in")
-ggsave("RAVLT Recognition.pdf", width = 7, height = 6,units="in")
+ggsave("RAVLT Recognition.jpeg", width = 7, height = 6,units="in")
 
 ```
 
@@ -882,14 +882,18 @@ p2 <- ggplot(RAVLT_Z, aes(x = GROUP, y = RAVLT_TOTALSCORE_Z, fill = GROUP)) +
 p2
 
 ggsave("RAVLT Total Score.pdf", width = 7, height = 6, units = "in")
-ggsave("RAVLT Total Score.pdf", width = 7, height = 6,units="in")
+ggsave("RAVLT Total Score.jpeg", width = 7, height = 6,units="in")
 
 ```
 
 ```{r}
 
+library(dplyr)
+
 RAVLT_Z <- data %>% 
   select(GROUP,AGE,RAVLT_RETENTION_Z)
+
+RAVLT_Z <- RAVLT_Z %>% filter(RAVLT_RETENTION_Z < 10)
 
 names(RAVLT_Z)
 
@@ -924,7 +928,7 @@ p2 <- ggplot(RAVLT_Z, aes(x = GROUP, y = RAVLT_RETENTION_Z, fill = GROUP)) +
 p2
 
 ggsave("RAVLT Retention.pdf", width = 7, height = 6, units = "in")
-ggsave("RAVLT Retention.pdf", width = 7, height = 6,units="in")
+ggsave("RAVLT Retention.jpeg", width = 7, height = 6,units="in")
 
 ```
 
@@ -967,7 +971,7 @@ p2 <- ggplot(RAVLT_Z, aes(x = GROUP, y = RAVLT_PROAT_INTERFERENCE_Z, fill = GROU
 p2
 
 ggsave("RAVLT Interference.pdf", width = 7, height = 6, units = "in")
-ggsave("RAVLT Interference.pdf", width = 7, height = 6,units="in")
+ggsave("RAVLT Interference.jpeg", width = 7, height = 6,units="in")
 
 ```
 

@@ -38,9 +38,7 @@ list.files()
 
 data <- readxl::read_excel("Cópia de DADOS_BRUTOS_COVID_LONGA_SEQUENCIAMENTO.xlsx")
 
-data <- na.omit(data)
-
-data
+nrow(data)
 
 #######################################    Test.T BPAs #############################################
 
@@ -445,7 +443,7 @@ getwd()
 
 data <- readxl::read_xlsx ("Cópia de DADOS_BRUTOS_COVID_LONGA_SEQUENCIAMENTO.xlsx")
 
-data <- na.omit(data)
+
 
  
 ################################## BPA Z-Score   #####################################
@@ -2287,7 +2285,7 @@ p
 shapiro.test(df.RAVLTs$RAVLT_A5)
 
 
-ggsave(filename = "REGRESSAO-RAVLTs.pdf", plot = p, width = 14, height = 10)
+#ggsave(filename = "REGRESSAO-RAVLTs.pdf", plot = p, width = 14, height = 10)
 
 ```
 ```{r Line Plot}

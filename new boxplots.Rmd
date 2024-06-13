@@ -12,8 +12,6 @@ library(tidyverse)
 
 data <- readxl::read_excel("Cópia de DADOS_BRUTOS_COVID_LONGA_SEQUENCIAMENTO.xlsx")
 
-data <- na.omit(data)
-
 data
 
 ```
@@ -175,7 +173,7 @@ p1 <- ggplot(bpa_total, aes(x = GROUP, y = BPA_TOTAL, fill = GROUP)) +
     axis.title.x = element_blank()) +
   
   # Add p-value from the t-test
-  annotate("text", x = 1.5, y = max(BPA_TOTAL$) * 1.05, 
+  annotate("text", x = 1.5, y = max(bpa_total$BPA_TOTAL) * 1.05, 
            label = paste0("p-value = ", format(res_test$p.format, digits = 3), size = 5))
 # Show the plot
 p1
@@ -889,6 +887,8 @@ RAVLT <- data %>%
   select(GROUP,RAVLT_A1, RAVLT_A2,RAVLT_A3,RAVLT_A4,RAVLT_A5,RAVLT_B1,RAVLT_A6,RAVLT_A7,RAVLT_REC,RAVLT_TOTALSCORE,RAVLT_ALT,RAVLT_RETENTION,RAVLT_PROAT_INTERFERENCE,RAVLT_RETRO_INTERFERENCE)
 
 data$GROUP <- factor(data$GROUP, levels = c("CONTROL","CASE"))
+
+RAVLT <- RAVLT %>% filter(RAVLT_RETENTION < 6)
 
 # Perform t-test for later reference
 res_test <- compare_means(RAVLT_RETENTION ~ GROUP, data = RAVLT, method = "t.test",  size = 8)

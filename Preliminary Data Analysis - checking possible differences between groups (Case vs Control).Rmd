@@ -786,6 +786,8 @@ hist(data_RAVLT$RAVLT_REC_Z [data_RAVLT$GROUP == "CONTROL"], xlim = c(-5, 5),
 ```{r, eval=FALSE}
 data_RAVLT <- readxl::read_xlsx("./RAVLTs_EscoreZ.xlsx")
 
+data_RAVLT <- data_RAVLT %>% filter(RAVLT_RETENTION_Z < 5)
+
 
 glimpse(data_RAVLT)
 data_RAVLT$GROUP <- as.factor(data_RAVLT$GROUP)
